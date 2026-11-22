@@ -121,8 +121,6 @@
       background: var(--green-bright);
     }
 
-    .dot.offline { background: var(--gold); }
-
     button {
       cursor: pointer;
       border: 1px solid var(--border);
@@ -151,15 +149,10 @@
       color: #fff;
     }
 
-    button.primary:hover:not(:disabled) {
-      background: var(--green-bright);
-      color: #041209;
-    }
-
-    button.situation-btn {
-      background: linear-gradient(135deg, #1d4ed8, #6d28d9);
-      border-color: #818cf8;
-      color: #fff;
+    button.warn {
+      background: rgba(234, 179, 8, 0.15);
+      border-color: var(--gold);
+      color: #fde047;
     }
 
     .container {
@@ -213,9 +206,6 @@
     .card h2 {
       font-size: 1.02rem;
       margin-bottom: 0.35rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
     }
 
     .sub {
@@ -238,7 +228,7 @@
       margin-bottom: 0.3rem;
     }
 
-    input, select, textarea {
+    input, select {
       width: 100%;
       background: var(--bg);
       color: var(--text);
@@ -246,11 +236,6 @@
       border-radius: 8px;
       padding: 0.55rem 0.7rem;
       font-size: 0.88rem;
-    }
-
-    input:focus, select:focus, textarea:focus {
-      outline: none;
-      border-color: var(--green-bright);
     }
 
     .party-grid {
@@ -288,7 +273,6 @@
       align-items: center;
       justify-content: center;
       font-size: 1.15rem;
-      flex-shrink: 0;
     }
 
     .party-acronym {
@@ -318,17 +302,11 @@
       font-size: 0.84rem;
       border: 1px solid var(--border);
       background: var(--bg);
-      white-space: pre-line;
     }
 
     .status-box.ok {
       border-color: var(--green-bright);
       background: rgba(22, 163, 74, 0.12);
-    }
-
-    .status-box.err {
-      border-color: var(--red);
-      background: rgba(239, 68, 68, 0.12);
     }
 
     .uploader-chip {
@@ -361,7 +339,6 @@
     .ai-badge {
       display: inline-flex;
       align-items: center;
-      gap: 0.3rem;
       padding: 0.2rem 0.55rem;
       border-radius: 999px;
       font-size: 0.72rem;
@@ -385,14 +362,9 @@
       border-radius: 6px;
       font-size: 0.72rem;
       font-weight: 700;
-      background: var(--surface-2);
-      border: 1px solid var(--border);
-    }
-
-    .tag.verified {
-      background: rgba(22, 163, 74, 0.2);
-      border-color: var(--green-bright);
-      color: #86efac;
+      background: rgba(234, 179, 8, 0.2);
+      border: 1px solid var(--gold);
+      color: #fde047;
     }
 
     .winner-banner {
@@ -425,8 +397,6 @@
       max-width: 500px;
       width: 100%;
       padding: 1.25rem;
-      max-height: 90vh;
-      overflow-y: auto;
     }
 
     .modal-header {
@@ -436,26 +406,10 @@
       margin-bottom: 0.75rem;
     }
 
-    .platform-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0.6rem;
-      margin: 0.75rem 0 1rem;
-    }
-
-    .platform-btn {
-      text-align: left;
-      padding: 0.7rem 0.8rem;
-      border-radius: 9px;
-      background: var(--bg);
-      border: 1px solid var(--border);
-    }
-
     .hidden {
       display: none !important;
     }
 
-    /* Camera Scanner Styles */
     .camera-container {
       position: relative;
       width: 100%;
@@ -506,13 +460,14 @@
           <p>Citizen Polling Unit Collation &amp; Verification Portal</p>
         </div>
       </div>
-
       <div class="top-actions">
-        <div class="pill">
-          <span class="dot"></span>
-          <span>Online (WAT)</span>
-        </div>
-        <button type="button" class="situation-btn" onclick="openSituationRoom()">The Situation Room</button>
+        <div class="pill"><span class="dot"></span><span>Online (WAT)</span></div>
+      </div>
+    </div>
+    <div class="topbar-inner">
+      <div class="owner-banner" style="width: 100%;">
+        <span><strong>Property of Apps &amp; Algorithm Concept</strong> &bull; Attention: <strong>Douglas Idima</strong></span>
+        <span>All 22 INEC Parties &bull; 10m PU Lock &bull; 3-of-5 Consensus</span>
       </div>
     </div>
   </header>
@@ -541,24 +496,20 @@
 
     <div id="appLockedNotice" class="card" style="border-color: var(--gold); text-align:center; padding: 3rem 1rem;">
       <h2 style="justify-content:center;">Biometric Camera Lock Active</h2>
-      <p class="sub">
-        Select your status/role above and click <strong>Capture Face &amp; Thumbprint</strong> to unlock the portal.
-      </p>
+      <p class="sub">Select your status/role above and click <strong>Capture Face &amp; Thumbprint</strong>.</p>
       <div style="font-size: 3rem; margin-top: 1rem;">🔒</div>
     </div>
 
     <div id="mainAppContent" class="hidden">
-      <nav class="tabs" role="tablist">
+      <nav class="tabs">
         <button type="button" class="tab-btn active" data-tab="upload" onclick="switchTab('upload')">1. Upload Result Sheet</button>
         <button type="button" class="tab-btn" data-tab="consensus" onclick="switchTab('consensus')">2. Consensus &amp; Collation</button>
       </nav>
 
-      <!-- TAB 1: UPLOAD -->
       <section id="tab-upload" class="card">
         <h2>Polling Unit Result Sheet Upload</h2>
-        
         <div class="uploader-chip">
-          <img id="activeUploaderFaceImg" src="https://via.placeholder.com/48?text=Face" alt="Verified Uploader Face" />
+          <img id="activeUploaderFaceImg" src="https://via.placeholder.com/48?text=Face" alt="Face" />
           <div style="font-size:0.78rem;">
             <div><strong id="activeUploaderName">Verified Uploader</strong> &bull; <span id="activeUploaderRole">Role</span></div>
             <div style="color:var(--green-bright);" id="activeUploaderBioMeta">✅ Biometrics Verified</div>
@@ -580,7 +531,7 @@
         </div>
 
         <div style="margin-top:0.85rem; display:flex; flex-wrap:wrap; gap:0.5rem; align-items:center;">
-          <button type="button" onclick="simulateGps()">Capture Live GPS (Simulated)</button>
+          <button type="button" onclick="simulateGps()">Capture Live GPS</button>
           <span id="gpsReadout" class="pill" style="border-color:var(--red); color:var(--red);">GPS: Not captured</span>
         </div>
 
@@ -605,7 +556,6 @@
         <div id="uploadStatus" class="status-box hidden"></div>
       </section>
 
-      <!-- TAB 2: CONSENSUS -->
       <section id="tab-consensus" class="card hidden">
         <h2>3-of-5 Majority Consensus &amp; Collation</h2>
         <div id="winnerBanner" class="winner-banner">Waiting for verified polling unit results...</div>
@@ -614,52 +564,29 @@
     </div>
   </main>
 
-  <!-- BIOMETRIC CAMERA MODAL -->
   <div class="modal-backdrop" id="biometricModal">
     <div class="modal">
       <div class="modal-header">
         <h2>Biometric Scan</h2>
         <button type="button" onclick="closeBiometricModal()">Cancel</button>
       </div>
-      <p class="sub">Look at the camera to capture your Face Photograph, then scan your thumb.</p>
-      
       <div class="camera-container">
         <video id="videoFeed" autoplay playsinline></video>
         <img id="snapshotPreview" alt="Face Capture">
         <div class="scanner-overlay" id="faceOverlay"></div>
       </div>
-
       <div style="display: flex; flex-direction: column; gap: 10px;">
         <button type="button" id="btnCaptureFace" class="primary" onclick="captureFace()">1. Capture Face</button>
         <button type="button" id="btnScanThumb" class="warn" onclick="scanThumbprint()" disabled style="display:none;">2. Scan Bio Thumbprint</button>
         <button type="button" id="btnFinish" class="primary" onclick="completeUnlock()" disabled style="display:none;">Complete Unlock</button>
       </div>
-
       <div id="bioStatus" style="margin-top: 15px; text-align: center; font-weight: bold; color: var(--gold);">
         Awaiting face capture...
       </div>
     </div>
   </div>
 
-  <!-- SITUATION ROOM MODAL -->
-  <div class="modal-backdrop" id="situationModal">
-    <div class="modal">
-      <div class="modal-header">
-        <h2>The Situation Room</h2>
-        <button type="button" onclick="closeSituationRoom()">Close</button>
-      </div>
-      <p class="sub">Coordinate live with your team.</p>
-      <div class="platform-grid">
-        <button class="platform-btn" onclick="launchMeeting('https://zoom.us')">Zoom Meeting</button>
-        <button class="platform-btn" onclick="launchMeeting('https://meet.google.com')">Google Meet</button>
-        <button class="platform-btn" onclick="launchMeeting('https://teams.microsoft.com')">Microsoft Teams</button>
-        <button class="platform-btn" onclick="launchMeeting('https://meet.jit.si/NaijaWatch2027')">Jitsi Meet</button>
-      </div>
-    </div>
-  </div>
-
   <script>
-    // --- Global State ---
     let currentRole = "";
     let gpsCaptured = false;
     let submissions = []; 
@@ -668,7 +595,6 @@
     let thumbVerified = false;
     let faceImageBase64 = "";
 
-    // Party Data
     const parties = [
       { acronym: "A", name: "Accord", symbol: "🔺" }, { acronym: "AA", name: "Action Alliance", symbol: "🔷" },
       { acronym: "AAC", name: "African Action Congress", symbol: "🟢" }, { acronym: "ADC", name: "African Democratic Congress", symbol: "🟡" },
@@ -683,39 +609,32 @@
       { acronym: "YPP", name: "Young Peoples Party", symbol: "🌱" }, { acronym: "ZLP", name: "Zenith Labour Party", symbol: "🟨" }
     ];
 
-    // --- Initialization ---
-    document.addEventListener("DOMContentLoaded", () => {
-      renderPartyInputs();
-    });
+    document.addEventListener("DOMContentLoaded", () => { renderPartyInputs(); });
 
-    // --- Biometric Logic ---
     async function triggerBiometricGate() {
       currentRole = document.getElementById('roleSelect').value;
-      if (!currentRole) {
-        alert("Please select a status/role first.");
-        return;
-      }
+      if (!currentRole) { alert("Please select a status/role first."); return; }
 
-      // Show Modal
       document.getElementById('biometricModal').classList.add('open');
       document.getElementById('bioStatus').textContent = "Awaiting face capture...";
-      document.getElementById('faceOverlay').style.display = 'block';
+      document.getElementById('bioStatus').style.color = "var(--gold)";
       
-      // Reset state
-      faceVerified = false;
-      thumbVerified = false;
+      faceVerified = false; thumbVerified = false;
       document.getElementById('btnCaptureFace').style.display = 'block';
+      document.getElementById('btnCaptureFace').disabled = false;
       document.getElementById('btnScanThumb').style.display = 'none';
+      document.getElementById('btnScanThumb').disabled = false;
       document.getElementById('btnFinish').style.display = 'none';
       document.getElementById('snapshotPreview').style.display = 'none';
       document.getElementById('videoFeed').style.display = 'block';
+      document.getElementById('faceOverlay').style.display = 'none';
 
-      // Start Camera
       try {
         videoStream = await navigator.mediaDevices.getUserMedia({ video: true });
         document.getElementById('videoFeed').srcObject = videoStream;
+        document.getElementById('faceOverlay').style.display = 'block';
       } catch (err) {
-        alert("Camera access denied or unavailable. Please ensure you are using HTTPS and have granted permissions.");
+        alert("Camera access denied. Please use HTTPS and grant permissions.");
         closeBiometricModal();
       }
     }
@@ -730,14 +649,11 @@
       faceImageBase64 = canvas.toDataURL('image/jpeg');
       faceVerified = true;
 
-      // Show preview
-      const preview = document.getElementById('snapshotPreview');
-      preview.src = faceImageBase64;
-      preview.style.display = 'block';
+      document.getElementById('snapshotPreview').src = faceImageBase64;
+      document.getElementById('snapshotPreview').style.display = 'block';
       video.style.display = 'none';
       document.getElementById('faceOverlay').style.display = 'none';
 
-      // Update UI
       document.getElementById('btnCaptureFace').style.display = 'none';
       document.getElementById('btnScanThumb').style.display = 'block';
       document.getElementById('bioStatus').textContent = "Face Captured. Now scan thumb.";
@@ -745,10 +661,10 @@
     }
 
     function scanThumbprint() {
-      document.getElementById('bioStatus').textContent = "Scanning thumbprint...";
+      document.getElementById('bioStatus').textContent = "Scanning sensor... Please hold still.";
       document.getElementById('btnScanThumb').disabled = true;
       
-      // Simulate thumbprint delay
+      // Simulate scan delay
       setTimeout(() => {
         thumbVerified = true;
         document.getElementById('bioStatus').textContent = "Thumbprint Verified!";
@@ -760,50 +676,37 @@
 
     function completeUnlock() {
       if (faceVerified && thumbVerified) {
-        // Stop Camera
-        if (videoStream) {
-          videoStream.getTracks().forEach(track => track.stop());
-        }
+        if (videoStream) { videoStream.getTracks().forEach(track => track.stop()); }
         
-        // Update UI
         document.getElementById('roleDisplay').textContent = `Status: ${currentRole}`;
         document.getElementById('roleSubDisplay').textContent = "Biometric scan verified successfully.";
         document.getElementById('activeUploaderRole').textContent = currentRole;
-        if (faceImageBase64) {
-          document.getElementById('activeUploaderFaceImg').src = faceImageBase64;
-        }
+        if (faceImageBase64) { document.getElementById('activeUploaderFaceImg').src = faceImageBase64; }
 
         document.getElementById('appLockedNotice').classList.add('hidden');
         document.getElementById('mainAppContent').classList.remove('hidden');
         closeBiometricModal();
-        
         updateAiAuditPreview();
       }
     }
 
     function closeBiometricModal() {
-      if (videoStream) {
-        videoStream.getTracks().forEach(track => track.stop());
-      }
+      if (videoStream) { videoStream.getTracks().forEach(track => track.stop()); }
       document.getElementById('biometricModal').classList.remove('open');
     }
 
-    // --- App Logic ---
     function switchTab(tabName) {
       document.querySelectorAll('section').forEach(sec => {
         if(sec.id.startsWith('tab-')) sec.classList.add('hidden');
       });
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-      
       document.getElementById(`tab-${tabName}`).classList.remove('hidden');
       document.querySelector(`.tab-btn[data-tab="${tabName}"]`).classList.add('active');
-
       if(tabName === 'consensus') renderConsensus();
     }
 
     function renderPartyInputs() {
-      const grid = document.getElementById('partyInputsGrid');
-      grid.innerHTML = parties.map(p => `
+      document.getElementById('partyInputsGrid').innerHTML = parties.map(p => `
         <div class="party-box">
           <div class="party-meta">
             <div class="party-symbol">${p.symbol}</div>
@@ -839,19 +742,11 @@
       let score = 0;
       let checklist = [];
 
-      if (faceVerified && thumbVerified) {
-        score += 30;
-        checklist.push("✅ Biometrics Verified");
-      } else {
-        checklist.push("❌ Biometrics Pending");
-      }
+      if (faceVerified && thumbVerified) { score += 30; checklist.push("✅ Biometrics Verified"); } 
+      else { checklist.push("❌ Biometrics Pending"); }
 
-      if (gpsCaptured) {
-        score += 30;
-        checklist.push("✅ 10m Geofence Locked");
-      } else {
-        checklist.push("❌ GPS Pending");
-      }
+      if (gpsCaptured) { score += 30; checklist.push("✅ 10m Geofence Locked"); } 
+      else { checklist.push("❌ GPS Pending"); }
 
       let votesEntered = 0;
       parties.forEach(p => {
@@ -859,83 +754,55 @@
         if (val && parseInt(val) > 0) votesEntered++;
       });
       
-      if (votesEntered > 0) {
-        score += 40;
-        checklist.push(`✅ Votes Entered (${votesEntered} parties)`);
-      } else {
-        checklist.push("❌ No Votes Entered");
-      }
+      if (votesEntered > 0) { score += 40; checklist.push(`✅ Votes Entered (${votesEntered} parties)`); } 
+      else { checklist.push("❌ No Votes Entered"); }
 
       document.getElementById('aiTrustScoreBadge').textContent = `Estimated Trust Score: ${score} / 100`;
       document.getElementById('aiAuditChecklist').innerHTML = checklist.join('<br>');
     }
 
     function submitResultSheet() {
-      if (!faceVerified || !gpsCaptured) {
-        alert("You must complete biometrics and capture GPS first.");
-        return;
-      }
-
+      if (!faceVerified || !gpsCaptured) { alert("Complete biometrics and capture GPS first."); return; }
+      
       const votes = {};
       let totalVotes = 0;
       parties.forEach(p => {
         const val = parseInt(document.getElementById(`vote-${p.acronym}`).value) || 0;
-        votes[p.acronym] = val;
-        totalVotes += val;
+        votes[p.acronym] = val; totalVotes += val;
       });
 
-      if (totalVotes === 0) {
-        alert("Please enter at least one party's vote.");
-        return;
-      }
+      if (totalVotes === 0) { alert("Please enter at least one party's vote."); return; }
 
-      // Save Submission
       submissions.push({
         pu: document.getElementById('puSelect').value,
-        role: currentRole,
-        votes: votes,
-        timestamp: new Date().toISOString()
+        role: currentRole, votes: votes, timestamp: new Date().toISOString()
       });
 
-      // Show Success
       const statusBox = document.getElementById('uploadStatus');
-      statusBox.classList.remove('hidden');
-      statusBox.classList.add('ok');
-      statusBox.innerHTML = `<strong>Success!</strong> Result submitted for consensus. Total votes: ${totalVotes}`;
+      statusBox.classList.remove('hidden'); statusBox.classList.add('ok');
+      statusBox.innerHTML = `<strong>Success!</strong> Result submitted. Total votes: ${totalVotes}`;
       
-      // Clear form
       parties.forEach(p => document.getElementById(`vote-${p.acronym}`).value = "");
-      gpsCaptured = false;
-      onPollingUnitChange();
+      gpsCaptured = false; onPollingUnitChange();
     }
 
     function renderConsensus() {
       const ledger = document.getElementById('consensusLedger');
-      if (submissions.length === 0) {
-        ledger.innerHTML = "No submissions yet.";
-        return;
-      }
+      if (submissions.length === 0) { ledger.innerHTML = "No submissions yet."; return; }
       
-      // Simplified Consensus display for demo
-      ledger.innerHTML = submissions.map((sub, i) => {
+      ledger.innerHTML = submissions.map((sub) => {
         let topParty = Object.keys(sub.votes).reduce((a, b) => sub.votes[a] > sub.votes[b] ? a : b);
         return `
           <div class="ledger-item">
             <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
               <strong>PU: ${sub.pu.split('|')[1]}</strong>
-              <span class="tag pending">Pending Consensus</span>
+              <span class="tag">Pending Consensus</span>
             </div>
             <div>Leading: <strong>${topParty}</strong> (${sub.votes[topParty]} votes)</div>
-            <div style="font-size:0.75rem; color:var(--muted); margin-top:5px;">Submitted: ${new Date(sub.timestamp).toLocaleTimeString()}</div>
           </div>
         `;
       }).join('');
     }
-
-    // --- Situation Room ---
-    function openSituationRoom() { document.getElementById('situationModal').classList.add('open'); }
-    function closeSituationRoom() { document.getElementById('situationModal').classList.remove('open'); }
-    function launchMeeting(url) { window.open(url, '_blank'); closeSituationRoom(); }
   </script>
 </body>
 </html>
