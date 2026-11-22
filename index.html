@@ -162,12 +162,6 @@
       color: #fff;
     }
 
-    button.warn {
-      background: rgba(234, 179, 8, 0.15);
-      border-color: var(--gold);
-      color: #fde047;
-    }
-
     .container {
       max-width: 1180px;
       margin: 1.25rem auto;
@@ -233,12 +227,6 @@
     .grid-2 {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 0.85rem;
-    }
-
-    .grid-3 {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
       gap: 0.85rem;
     }
 
@@ -343,44 +331,6 @@
       background: rgba(239, 68, 68, 0.12);
     }
 
-    .status-box.warn {
-      border-color: var(--gold);
-      background: rgba(234, 179, 8, 0.12);
-    }
-
-    .preview-img {
-      margin-top: 0.65rem;
-      max-width: 100%;
-      max-height: 240px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      display: none;
-    }
-
-    .bio-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 0.9rem;
-      margin-top: 0.75rem;
-    }
-
-    .bio-card {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 0.85rem;
-    }
-
-    .bio-preview {
-      width: 100%;
-      height: 170px;
-      object-fit: cover;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      background: #040b07;
-      margin: 0.5rem 0;
-    }
-
     .uploader-chip {
       display: flex;
       align-items: center;
@@ -398,30 +348,6 @@
       border-radius: 8px;
       object-fit: cover;
       border: 1px solid var(--green-bright);
-    }
-
-    .evidence-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 0.85rem;
-      margin-top: 0.5rem;
-    }
-
-    .evidence-card {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 0.75rem;
-    }
-
-    .evidence-thumb {
-      width: 100%;
-      height: 135px;
-      object-fit: cover;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      margin-top: 0.45rem;
-      cursor: pointer;
     }
 
     .ai-panel {
@@ -453,14 +379,6 @@
       margin-bottom: 0.75rem;
     }
 
-    .ledger-top {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 0.5rem;
-      margin-bottom: 0.5rem;
-    }
-
     .tag {
       display: inline-block;
       padding: 0.2rem 0.55rem;
@@ -477,38 +395,6 @@
       color: #86efac;
     }
 
-    .tag.disputed {
-      background: rgba(239, 68, 68, 0.2);
-      border-color: var(--red);
-      color: #fca5a5;
-    }
-
-    .tag.pending {
-      background: rgba(234, 179, 8, 0.2);
-      border-color: var(--gold);
-      color: #fde047;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 0.65rem;
-      font-size: 0.84rem;
-    }
-
-    th, td {
-      text-align: left;
-      padding: 0.55rem 0.65rem;
-      border-bottom: 1px solid var(--border);
-    }
-
-    th {
-      color: var(--muted);
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
     .winner-banner {
       background: linear-gradient(135deg, rgba(22, 163, 74, 0.24), rgba(234, 179, 8, 0.14));
       border: 1px solid var(--green-bright);
@@ -520,7 +406,7 @@
     .modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.78);
+      background: rgba(0, 0, 0, 0.85);
       display: none;
       align-items: center;
       justify-content: center;
@@ -536,7 +422,7 @@
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 14px;
-      max-width: 560px;
+      max-width: 500px;
       width: 100%;
       padding: 1.25rem;
       max-height: 90vh;
@@ -565,56 +451,46 @@
       border: 1px solid var(--border);
     }
 
-    .platform-btn.selected {
-      border-color: #818cf8;
-      background: rgba(109, 40, 217, 0.22);
-    }
-
     .hidden {
       display: none !important;
     }
 
-    .footer-note {
-      margin-top: 1.5rem;
-      padding: 1rem 1.15rem;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      font-size: 0.78rem;
-      color: var(--muted);
-    }
-
-    .lightbox-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.88);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 1rem;
-      z-index: 100;
-    }
-
-    .lightbox-backdrop.open {
-      display: flex;
-    }
-
-    .lightbox-box {
-      max-width: 860px;
+    /* Camera Scanner Styles */
+    .camera-container {
+      position: relative;
       width: 100%;
-      background: var(--surface);
-      border: 1px solid var(--border);
+      height: 300px;
+      background: #000;
       border-radius: 12px;
-      padding: 1rem;
-      text-align: center;
+      overflow: hidden;
+      margin-bottom: 1rem;
+      border: 2px solid var(--border);
     }
 
-    .lightbox-box img {
-      max-width: 100%;
-      max-height: 72vh;
-      border-radius: 8px;
-      margin: 0.6rem auto;
-      display: block;
+    #videoFeed, #snapshotPreview {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    #snapshotPreview {
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    .scanner-overlay {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 200px;
+      height: 250px;
+      border: 2px dashed var(--green-bright);
+      border-radius: 50% 50% 45% 45%;
+      box-shadow: 0 0 0 999px rgba(0,0,0,0.5);
+      display: none;
     }
   </style>
 </head>
@@ -627,23 +503,16 @@
         </div>
         <div>
           <h1>NaijaWatch 2027</h1>
-          <p>Citizen Polling Unit Collation &amp; Verification Portal &bull; Nigeria</p>
+          <p>Citizen Polling Unit Collation &amp; Verification Portal</p>
         </div>
       </div>
 
       <div class="top-actions">
-        <div class="pill" id="netPill">
-          <span class="dot" id="netDot"></span>
-          <span id="netLabel">Online (WAT)</span>
+        <div class="pill">
+          <span class="dot"></span>
+          <span>Online (WAT)</span>
         </div>
-        <div class="pill" id="quotaPill">PU Uploads: 0 / 5</div>
         <button type="button" class="situation-btn" onclick="openSituationRoom()">The Situation Room</button>
-      </div>
-    </div>
-    <div class="topbar-inner">
-      <div class="owner-banner" style="width: 100%;">
-        <span><strong>Property of Apps &amp; Algorithm Concept</strong> &bull; Email: <strong>dev@connectorient.com.ng</strong> &bull; <strong>Attention: Douglas Idima</strong></span>
-        <span>All 22 INEC Parties &bull; 10m PU Lock &bull; 3-of-5 Consensus &bull; AI Verification</span>
       </div>
     </div>
   </header>
@@ -651,30 +520,31 @@
   <main class="container">
     <section class="gate-banner">
       <div>
-        <strong id="roleDisplay">Status: Not Selected</strong>
+        <strong id="roleDisplay">Status: Locked</strong>
         <div style="font-size:0.82rem; color:var(--muted);" id="roleSubDisplay">
-          Select your status/role first to trigger instant Face Photograph + Camera-Lens Bio Thumbprint capture before using the app.
+          Select your status/role first to trigger instant Face Photograph + Camera-Lens Bio Thumbprint capture.
         </div>
       </div>
       <div style="display:flex; flex-wrap:wrap; gap:0.5rem; align-items:center;">
-        <select id="roleSelect" aria-label="Select Your Status or Role" style="width:auto; min-width:225px;">
+        <select id="roleSelect" style="width:auto; min-width:225px;">
           <option value="">-- Select Your Status / Role --</option>
           <option value="Accredited Polling Observer">Accredited Polling Observer</option>
           <option value="Party Polling Agent">Party Polling Agent</option>
           <option value="Citizen Verifier">Citizen Verifier</option>
           <option value="Accredited Journalist / Media">Accredited Journalist / Media</option>
         </select>
-        <button type="button" id="openBioGateBtn" onclick="unlockApp()">
-          Unlock App (Biometric Bypass)
+        <button type="button" class="primary" onclick="triggerBiometricGate()">
+          Capture Face &amp; Thumbprint
         </button>
       </div>
     </section>
 
-    <div id="appLockedNotice" class="card" style="border-color: var(--gold);">
-      <h2>Biometric Camera Lock Active</h2>
+    <div id="appLockedNotice" class="card" style="border-color: var(--gold); text-align:center; padding: 3rem 1rem;">
+      <h2 style="justify-content:center;">Biometric Camera Lock Active</h2>
       <p class="sub">
-        Select your status/role above (or tap <strong>Unlock App</strong>) to simulate capturing your <strong>instant Face Photograph</strong> and <strong>Camera-Lens Bio Thumbprint</strong>. Full app access unlocks immediately.
+        Select your status/role above and click <strong>Capture Face &amp; Thumbprint</strong> to unlock the portal.
       </p>
+      <div style="font-size: 3rem; margin-top: 1rem;">🔒</div>
     </div>
 
     <div id="mainAppContent" class="hidden">
@@ -683,48 +553,39 @@
         <button type="button" class="tab-btn" data-tab="consensus" onclick="switchTab('consensus')">2. Consensus &amp; Collation</button>
       </nav>
 
-      <!-- TAB 1: UPLOAD RESULT SHEET -->
+      <!-- TAB 1: UPLOAD -->
       <section id="tab-upload" class="card">
-        <h2>Polling Unit Result Sheet &amp; Official Proof Upload</h2>
-        <p class="sub">
-          Requires strict <strong>10-meter proximity</strong>. Max <strong>5 uploads</strong> per Polling Unit.
-        </p>
-
+        <h2>Polling Unit Result Sheet Upload</h2>
+        
         <div class="uploader-chip">
-          <img id="activeUploaderFaceImg" src="https://via.placeholder.com/48" alt="Verified Uploader Face" />
+          <img id="activeUploaderFaceImg" src="https://via.placeholder.com/48?text=Face" alt="Verified Uploader Face" />
           <div style="font-size:0.78rem;">
             <div><strong id="activeUploaderName">Verified Uploader</strong> &bull; <span id="activeUploaderRole">Role</span></div>
-            <div style="color:var(--muted);" id="activeUploaderBioMeta">Biometrics Verified</div>
+            <div style="color:var(--green-bright);" id="activeUploaderBioMeta">✅ Biometrics Verified</div>
           </div>
         </div>
 
         <div class="grid-2" style="margin-top:0.85rem;">
           <div>
-            <label for="puSelect">Polling Unit (Target)</label>
+            <label>Polling Unit (Target)</label>
             <select id="puSelect" onchange="onPollingUnitChange()">
-              <option value="PU-24-01-01-001|Garki Village Square PU 001, AMAC, FCT|9.035800|7.495100">
-                Garki Village Square PU 001 (AMAC, FCT)
-              </option>
-              <option value="PU-25-12-04-008|Ikeja GRA Ward 04 PU 008, Ikeja, Lagos|6.583300|3.350000">
-                Ikeja GRA Ward 04 PU 008 (Ikeja, Lagos)
-              </option>
+              <option value="PU-24-01-01-001|Garki">Garki Village Square PU 001 (AMAC, FCT)</option>
+              <option value="PU-25-12-04-008|Ikeja">Ikeja GRA Ward 04 PU 008 (Ikeja, Lagos)</option>
             </select>
           </div>
           <div>
-            <label for="bvasAccredited">BVAS Accredited Voters Count</label>
-            <input id="bvasAccredited" type="number" min="0" value="250" oninput="updateAiAuditPreview()" />
+            <label>BVAS Accredited Voters Count</label>
+            <input id="bvasAccredited" type="number" value="250" oninput="updateAiAuditPreview()" />
           </div>
         </div>
 
         <div style="margin-top:0.85rem; display:flex; flex-wrap:wrap; gap:0.5rem; align-items:center;">
           <button type="button" onclick="simulateGps()">Capture Live GPS (Simulated)</button>
-          <span id="gpsReadout" class="pill">GPS: Not captured yet</span>
+          <span id="gpsReadout" class="pill" style="border-color:var(--red); color:var(--red);">GPS: Not captured</span>
         </div>
 
         <div style="margin-top:1rem;">
-          <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:0.5rem;">
-            <label style="margin:0;">All 22 INEC-Registered Political Parties</label>
-          </div>
+          <label style="margin:0;">All 22 INEC-Registered Political Parties</label>
           <div id="partyInputsGrid" class="party-grid"></div>
         </div>
 
@@ -738,38 +599,56 @@
           </div>
         </div>
 
-        <div style="margin-top:1rem; display:flex; flex-wrap:wrap; gap:0.6rem;">
-          <button type="button" class="primary" id="submitSheetBtn" onclick="submitResultSheet()">
-            Submit Result Sheet for Consensus
-          </button>
+        <div style="margin-top:1rem;">
+          <button type="button" class="primary" onclick="submitResultSheet()">Submit Result Sheet</button>
         </div>
-
         <div id="uploadStatus" class="status-box hidden"></div>
       </section>
 
-      <!-- TAB 2: CONSENSUS & COLLATION -->
+      <!-- TAB 2: CONSENSUS -->
       <section id="tab-consensus" class="card hidden">
-        <h2>3-of-5 Majority Consensus &amp; Central Collation</h2>
-        <p class="sub">
-          Each Polling Unit accepts up to <strong>5 submissions</strong>. Once <strong>at least 3 of the 5</strong> match, the PU result locks as <strong>VERIFIED</strong>.
-        </p>
-
+        <h2>3-of-5 Majority Consensus &amp; Collation</h2>
         <div id="winnerBanner" class="winner-banner">Waiting for verified polling unit results...</div>
-
-        <h3 style="font-size:0.95rem; margin-bottom:0.4rem;">Polling Unit Consensus Ledger</h3>
-        <div id="consensusLedger">No submissions yet.</div>
+        <div id="consensusLedger" style="margin-top: 1rem;">No submissions yet.</div>
       </section>
     </div>
   </main>
 
-  <!-- Situation Room Modal -->
+  <!-- BIOMETRIC CAMERA MODAL -->
+  <div class="modal-backdrop" id="biometricModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Biometric Scan</h2>
+        <button type="button" onclick="closeBiometricModal()">Cancel</button>
+      </div>
+      <p class="sub">Look at the camera to capture your Face Photograph, then scan your thumb.</p>
+      
+      <div class="camera-container">
+        <video id="videoFeed" autoplay playsinline></video>
+        <img id="snapshotPreview" alt="Face Capture">
+        <div class="scanner-overlay" id="faceOverlay"></div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <button type="button" id="btnCaptureFace" class="primary" onclick="captureFace()">1. Capture Face</button>
+        <button type="button" id="btnScanThumb" class="warn" onclick="scanThumbprint()" disabled style="display:none;">2. Scan Bio Thumbprint</button>
+        <button type="button" id="btnFinish" class="primary" onclick="completeUnlock()" disabled style="display:none;">Complete Unlock</button>
+      </div>
+
+      <div id="bioStatus" style="margin-top: 15px; text-align: center; font-weight: bold; color: var(--gold);">
+        Awaiting face capture...
+      </div>
+    </div>
+  </div>
+
+  <!-- SITUATION ROOM MODAL -->
   <div class="modal-backdrop" id="situationModal">
     <div class="modal">
       <div class="modal-header">
         <h2>The Situation Room</h2>
         <button type="button" onclick="closeSituationRoom()">Close</button>
       </div>
-      <p class="sub">Coordinate live with your team using your preferred platform.</p>
+      <p class="sub">Coordinate live with your team.</p>
       <div class="platform-grid">
         <button class="platform-btn" onclick="launchMeeting('https://zoom.us')">Zoom Meeting</button>
         <button class="platform-btn" onclick="launchMeeting('https://meet.google.com')">Google Meet</button>
@@ -783,84 +662,145 @@
     // --- Global State ---
     let currentRole = "";
     let gpsCaptured = false;
-    let submissions = []; // Stores all polling unit submissions
+    let submissions = []; 
+    let videoStream = null;
+    let faceVerified = false;
+    let thumbVerified = false;
+    let faceImageBase64 = "";
 
     // Party Data
     const parties = [
-      { acronym: "A", name: "Accord", symbol: "🔺" },
-      { acronym: "AA", name: "Action Alliance", symbol: "🔷" },
-      { acronym: "AAC", name: "African Action Congress", symbol: "🟢" },
-      { acronym: "ADC", name: "African Democratic Congress", symbol: "🟡" },
-      { acronym: "ADP", name: "Action Democratic Party", symbol: "🔵" },
-      { acronym: "APC", name: "All Progressives Congress", symbol: "🧹" },
-      { acronym: "APGA", name: "All Progressives Grand Alliance", symbol: "⛵" },
-      { acronym: "APM", name: "Allied Peoples Movement", symbol: "🟠" },
-      { acronym: "APP", name: "Action Peoples Party", symbol: "🟣" },
-      { acronym: "BP", name: "Boot Party", symbol: "👢" },
-      { acronym: "DLA", name: "Democratic Labour Party", symbol: "🔴" },
-      { acronym: "LP", name: "Labour Party", symbol: "🪣" },
-      { acronym: "NDC", name: "National Democratic Congress", symbol: "✌️" },
-      { acronym: "NDP", name: "National Democratic Party", symbol: "⚖️" },
-      { acronym: "NNPP", name: "New Nigeria Peoples Party", symbol: "📚" },
-      { acronym: "NRM", name: "National Rescue Movement", symbol: "🚜" },
-      { acronym: "PDP", name: "Peoples Democratic Party", symbol: "🦅" },
-      { acronym: "PRP", name: "Peoples Redemption Party", symbol: "🔻" },
-      { acronym: "SDP", name: "Social Democratic Party", symbol: "🟩" },
-      { acronym: "YP", name: "Young Progressives Party", symbol: "🕊️" },
-      { acronym: "YPP", name: "Young Peoples Party", symbol: "🌱" },
-      { acronym: "ZLP", name: "Zenith Labour Party", symbol: "🟨" }
+      { acronym: "A", name: "Accord", symbol: "🔺" }, { acronym: "AA", name: "Action Alliance", symbol: "🔷" },
+      { acronym: "AAC", name: "African Action Congress", symbol: "🟢" }, { acronym: "ADC", name: "African Democratic Congress", symbol: "🟡" },
+      { acronym: "ADP", name: "Action Democratic Party", symbol: "🔵" }, { acronym: "APC", name: "All Progressives Congress", symbol: "🧹" },
+      { acronym: "APGA", name: "All Progressives Grand Alliance", symbol: "⛵" }, { acronym: "APM", name: "Allied Peoples Movement", symbol: "🟠" },
+      { acronym: "APP", name: "Action Peoples Party", symbol: "🟣" }, { acronym: "BP", name: "Boot Party", symbol: "👢" },
+      { acronym: "DLA", name: "Democratic Labour Party", symbol: "🔴" }, { acronym: "LP", name: "Labour Party", symbol: "🪣" },
+      { acronym: "NDC", name: "National Democratic Congress", symbol: "✌️" }, { acronym: "NDP", name: "National Democratic Party", symbol: "⚖️" },
+      { acronym: "NNPP", name: "New Nigeria Peoples Party", symbol: "📚" }, { acronym: "NRM", name: "National Rescue Movement", symbol: "🚜" },
+      { acronym: "PDP", name: "Peoples Democratic Party", symbol: "🦅" }, { acronym: "PRP", name: "Peoples Redemption Party", symbol: "🔻" },
+      { acronym: "SDP", name: "Social Democratic Party", symbol: "🟩" }, { acronym: "YP", name: "Young Progressives Party", symbol: "🕊️" },
+      { acronym: "YPP", name: "Young Peoples Party", symbol: "🌱" }, { acronym: "ZLP", name: "Zenith Labour Party", symbol: "🟨" }
     ];
 
     // --- Initialization ---
     document.addEventListener("DOMContentLoaded", () => {
       renderPartyInputs();
-      updateQuotaPill();
     });
 
-    // --- Biometric Gate (Simulation) ---
-    function unlockApp() {
-      const selectedRole = document.getElementById('roleSelect').value;
-      if (!selectedRole) {
+    // --- Biometric Logic ---
+    async function triggerBiometricGate() {
+      currentRole = document.getElementById('roleSelect').value;
+      if (!currentRole) {
         alert("Please select a status/role first.");
         return;
       }
-      
-      currentRole = selectedRole;
-      
-      // Update UI to show unlocked state
-      document.getElementById('roleDisplay').textContent = `Status: ${currentRole}`;
-      document.getElementById('roleSubDisplay').textContent = "Biometric scan simulated successfully. App unlocked.";
-      document.getElementById('activeUploaderRole').textContent = currentRole;
-      
-      // Hide lock notice, show main content
-      document.getElementById('appLockedNotice').classList.add('hidden');
-      document.getElementById('mainAppContent').classList.remove('hidden');
-      
-      // Update Trust Score Preview
-      updateAiAuditPreview();
-    }
 
-    // --- Tab Switching ---
-    function switchTab(tabName) {
-      // Hide all sections
-      document.querySelectorAll('section').forEach(sec => {
-        if(sec.id.startsWith('tab-')) sec.classList.add('hidden');
-      });
+      // Show Modal
+      document.getElementById('biometricModal').classList.add('open');
+      document.getElementById('bioStatus').textContent = "Awaiting face capture...";
+      document.getElementById('faceOverlay').style.display = 'block';
       
-      // Remove active class from all buttons
-      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-      
-      // Show selected section and set button active
-      document.getElementById(`tab-${tabName}`).classList.remove('hidden');
-      document.querySelector(`.tab-btn[data-tab="${tabName}"]`).classList.add('active');
+      // Reset state
+      faceVerified = false;
+      thumbVerified = false;
+      document.getElementById('btnCaptureFace').style.display = 'block';
+      document.getElementById('btnScanThumb').style.display = 'none';
+      document.getElementById('btnFinish').style.display = 'none';
+      document.getElementById('snapshotPreview').style.display = 'none';
+      document.getElementById('videoFeed').style.display = 'block';
 
-      // If switching to consensus, refresh the view
-      if(tabName === 'consensus') {
-        renderConsensus();
+      // Start Camera
+      try {
+        videoStream = await navigator.mediaDevices.getUserMedia({ video: true });
+        document.getElementById('videoFeed').srcObject = videoStream;
+      } catch (err) {
+        alert("Camera access denied or unavailable. Please ensure you are using HTTPS and have granted permissions.");
+        closeBiometricModal();
       }
     }
 
-    // --- Render Party Inputs ---
+    function captureFace() {
+      const video = document.getElementById('videoFeed');
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+      
+      faceImageBase64 = canvas.toDataURL('image/jpeg');
+      faceVerified = true;
+
+      // Show preview
+      const preview = document.getElementById('snapshotPreview');
+      preview.src = faceImageBase64;
+      preview.style.display = 'block';
+      video.style.display = 'none';
+      document.getElementById('faceOverlay').style.display = 'none';
+
+      // Update UI
+      document.getElementById('btnCaptureFace').style.display = 'none';
+      document.getElementById('btnScanThumb').style.display = 'block';
+      document.getElementById('bioStatus').textContent = "Face Captured. Now scan thumb.";
+      document.getElementById('bioStatus').style.color = "var(--green-bright)";
+    }
+
+    function scanThumbprint() {
+      document.getElementById('bioStatus').textContent = "Scanning thumbprint...";
+      document.getElementById('btnScanThumb').disabled = true;
+      
+      // Simulate thumbprint delay
+      setTimeout(() => {
+        thumbVerified = true;
+        document.getElementById('bioStatus').textContent = "Thumbprint Verified!";
+        document.getElementById('btnScanThumb').style.display = 'none';
+        document.getElementById('btnFinish').style.display = 'block';
+        document.getElementById('btnFinish').disabled = false;
+      }, 1500);
+    }
+
+    function completeUnlock() {
+      if (faceVerified && thumbVerified) {
+        // Stop Camera
+        if (videoStream) {
+          videoStream.getTracks().forEach(track => track.stop());
+        }
+        
+        // Update UI
+        document.getElementById('roleDisplay').textContent = `Status: ${currentRole}`;
+        document.getElementById('roleSubDisplay').textContent = "Biometric scan verified successfully.";
+        document.getElementById('activeUploaderRole').textContent = currentRole;
+        if (faceImageBase64) {
+          document.getElementById('activeUploaderFaceImg').src = faceImageBase64;
+        }
+
+        document.getElementById('appLockedNotice').classList.add('hidden');
+        document.getElementById('mainAppContent').classList.remove('hidden');
+        closeBiometricModal();
+        
+        updateAiAuditPreview();
+      }
+    }
+
+    function closeBiometricModal() {
+      if (videoStream) {
+        videoStream.getTracks().forEach(track => track.stop());
+      }
+      document.getElementById('biometricModal').classList.remove('open');
+    }
+
+    // --- App Logic ---
+    function switchTab(tabName) {
+      document.querySelectorAll('section').forEach(sec => {
+        if(sec.id.startsWith('tab-')) sec.classList.add('hidden');
+      });
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      
+      document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+      document.querySelector(`.tab-btn[data-tab="${tabName}"]`).classList.add('active');
+
+      if(tabName === 'consensus') renderConsensus();
+    }
+
     function renderPartyInputs() {
       const grid = document.getElementById('partyInputsGrid');
       grid.innerHTML = parties.map(p => `
@@ -877,7 +817,6 @@
       `).join('');
     }
 
-    // --- GPS & Geofence Simulation ---
     function simulateGps() {
       gpsCaptured = true;
       const gpsReadout = document.getElementById('gpsReadout');
@@ -888,70 +827,55 @@
     }
 
     function onPollingUnitChange() {
-      // Reset GPS if Polling Unit changes
       gpsCaptured = false;
       const gpsReadout = document.getElementById('gpsReadout');
-      gpsReadout.textContent = "GPS: Not captured yet";
-      gpsReadout.style.borderColor = "var(--border)";
-      gpsReadout.style.color = "var(--text)";
+      gpsReadout.textContent = "GPS: Not captured";
+      gpsReadout.style.borderColor = "var(--red)";
+      gpsReadout.style.color = "var(--red)";
       updateAiAuditPreview();
     }
 
-    // --- AI Trust Score Calculation ---
     function updateAiAuditPreview() {
       let score = 0;
       let checklist = [];
 
-      // 1. Biometrics (30 points)
-      if (currentRole) {
+      if (faceVerified && thumbVerified) {
         score += 30;
-        checklist.push("✅ Biometrics Verified (Face + Thumbprint)");
+        checklist.push("✅ Biometrics Verified");
       } else {
         checklist.push("❌ Biometrics Pending");
       }
 
-      // 2. GPS Check (30 points)
       if (gpsCaptured) {
         score += 30;
-        checklist.push("✅ 10-meter Geofence Locked");
+        checklist.push("✅ 10m Geofence Locked");
       } else {
-        checklist.push("❌ GPS 10m Lock Pending");
+        checklist.push("❌ GPS Pending");
       }
 
-      // 3. Photos (20 points) - Simulated for now
-      score += 20;
-      checklist.push("✅ Evidence Photos Attached (Simulated)");
-
-      // 4. Party Votes Entered (20 points)
       let votesEntered = 0;
       parties.forEach(p => {
         const val = document.getElementById(`vote-${p.acronym}`).value;
         if (val && parseInt(val) > 0) votesEntered++;
       });
+      
       if (votesEntered > 0) {
-        score += 20;
-        checklist.push(`✅ Votes Entered for ${votesEntered} Parties`);
+        score += 40;
+        checklist.push(`✅ Votes Entered (${votesEntered} parties)`);
       } else {
-        checklist.push("❌ No Party Votes Entered");
+        checklist.push("❌ No Votes Entered");
       }
 
-      // Update UI
       document.getElementById('aiTrustScoreBadge').textContent = `Estimated Trust Score: ${score} / 100`;
       document.getElementById('aiAuditChecklist').innerHTML = checklist.join('<br>');
     }
 
-    // --- Submit Result Sheet ---
     function submitResultSheet() {
-      if (!currentRole) {
-        alert("Please unlock the app first.");
-        return;
-      }
-      if (!gpsCaptured) {
-        alert("You must capture a valid GPS location within 10 meters of the Polling Unit.");
+      if (!faceVerified || !gpsCaptured) {
+        alert("You must complete biometrics and capture GPS first.");
         return;
       }
 
-      // Gather Votes
       const votes = {};
       let totalVotes = 0;
       parties.forEach(p => {
@@ -962,4 +886,56 @@
 
       if (totalVotes === 0) {
         alert("Please enter at least one party's vote.");
-       
+        return;
+      }
+
+      // Save Submission
+      submissions.push({
+        pu: document.getElementById('puSelect').value,
+        role: currentRole,
+        votes: votes,
+        timestamp: new Date().toISOString()
+      });
+
+      // Show Success
+      const statusBox = document.getElementById('uploadStatus');
+      statusBox.classList.remove('hidden');
+      statusBox.classList.add('ok');
+      statusBox.innerHTML = `<strong>Success!</strong> Result submitted for consensus. Total votes: ${totalVotes}`;
+      
+      // Clear form
+      parties.forEach(p => document.getElementById(`vote-${p.acronym}`).value = "");
+      gpsCaptured = false;
+      onPollingUnitChange();
+    }
+
+    function renderConsensus() {
+      const ledger = document.getElementById('consensusLedger');
+      if (submissions.length === 0) {
+        ledger.innerHTML = "No submissions yet.";
+        return;
+      }
+      
+      // Simplified Consensus display for demo
+      ledger.innerHTML = submissions.map((sub, i) => {
+        let topParty = Object.keys(sub.votes).reduce((a, b) => sub.votes[a] > sub.votes[b] ? a : b);
+        return `
+          <div class="ledger-item">
+            <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+              <strong>PU: ${sub.pu.split('|')[1]}</strong>
+              <span class="tag pending">Pending Consensus</span>
+            </div>
+            <div>Leading: <strong>${topParty}</strong> (${sub.votes[topParty]} votes)</div>
+            <div style="font-size:0.75rem; color:var(--muted); margin-top:5px;">Submitted: ${new Date(sub.timestamp).toLocaleTimeString()}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // --- Situation Room ---
+    function openSituationRoom() { document.getElementById('situationModal').classList.add('open'); }
+    function closeSituationRoom() { document.getElementById('situationModal').classList.remove('open'); }
+    function launchMeeting(url) { window.open(url, '_blank'); closeSituationRoom(); }
+  </script>
+</body>
+</html>
