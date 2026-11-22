@@ -1,0 +1,2716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NaijaWatch 2027 — Citizen Collation & Verification Portal</title>
+  <style>
+    :root {
+      --bg: #07130d;
+      --surface: #0e2118;
+      --surface-2: #142f22;
+      --border: #254d39;
+      --text: #eef7f1;
+      --muted: #9eb8a8;
+      --green: #16a34a;
+      --green-bright: #22c55e;
+      --gold: #eab308;
+      --red: #ef4444;
+      --blue: #38bdf8;
+      --purple: #a855f7;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      background: radial-gradient(circle at top right, #113021, var(--bg) 55%);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    .topbar {
+      background: rgba(9, 24, 17, 0.94);
+      border-bottom: 1px solid var(--border);
+      padding: 0.9rem 1.25rem;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      backdrop-filter: blur(10px);
+    }
+
+    .topbar-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .brand-flag {
+      display: grid;
+      grid-template-columns: repeat(3, 8px);
+      height: 28px;
+      border-radius: 4px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .brand-flag span:nth-child(odd) { background: #16a34a; }
+    .brand-flag span:nth-child(even) { background: #ffffff; }
+
+    .brand h1 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+    }
+
+    .brand p {
+      font-size: 0.76rem;
+      color: var(--muted);
+    }
+
+    .owner-banner {
+      margin-top: 0.55rem;
+      padding-top: 0.5rem;
+      border-top: 1px dashed rgba(158, 184, 168, 0.25);
+      font-size: 0.75rem;
+      color: #d8efe2;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      justify-content: space-between;
+    }
+
+    .top-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.35rem 0.65rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green-bright);
+    }
+
+    .dot.offline { background: var(--gold); }
+    .dot.locked { background: var(--red); }
+
+    button {
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text);
+      padding: 0.52rem 0.85rem;
+      border-radius: 8px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      transition: 0.15s ease;
+    }
+
+    button:hover:not(:disabled) {
+      border-color: var(--green-bright);
+      transform: translateY(-1px);
+    }
+
+    button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    button.primary {
+      background: var(--green);
+      border-color: var(--green-bright);
+      color: #fff;
+    }
+
+    button.primary:hover:not(:disabled) {
+      background: var(--green-bright);
+      color: #041209;
+    }
+
+    button.situation-btn {
+      background: linear-gradient(135deg, #1d4ed8, #6d28d9);
+      border-color: #818cf8;
+      color: #fff;
+    }
+
+    button.warn {
+      background: rgba(234, 179, 8, 0.15);
+      border-color: var(--gold);
+      color: #fde047;
+    }
+
+    .container {
+      max-width: 1180px;
+      margin: 1.25rem auto;
+      padding: 0 1rem 3rem;
+    }
+
+    body.desktop-mode .container {
+      max-width: 1540px;
+    }
+
+    body.desktop-mode .desktop-workspace {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 370px;
+      gap: 1.25rem;
+      align-items: start;
+    }
+
+    .situation-rail {
+      display: none;
+    }
+
+    body.desktop-mode .situation-rail {
+      display: block;
+      position: sticky;
+      top: 84px;
+    }
+
+    .gate-banner {
+      background: linear-gradient(135deg, rgba(22, 163, 74, 0.16), rgba(14, 33, 24, 0.96));
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem 1.15rem;
+      margin-bottom: 1.15rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.1rem;
+    }
+
+    .tab-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 0.6rem 0.95rem;
+      border-radius: 9px;
+      font-size: 0.86rem;
+    }
+
+    .tab-btn.active {
+      background: var(--green);
+      border-color: var(--green-bright);
+      color: #fff;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.15rem;
+      margin-bottom: 1rem;
+    }
+
+    .card h2 {
+      font-size: 1.02rem;
+      margin-bottom: 0.35rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .sub {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-bottom: 0.9rem;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 0.85rem;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 0.85rem;
+    }
+
+    body.desktop-mode .grid-2 {
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+
+    label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 0.3rem;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.55rem 0.7rem;
+      font-size: 0.88rem;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--green-bright);
+    }
+
+    .party-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(225px, 1fr));
+      gap: 0.7rem;
+      margin-top: 0.6rem;
+    }
+
+    body.desktop-mode .party-grid {
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    }
+
+    .party-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 0.65rem 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.6rem;
+    }
+
+    .party-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      min-width: 0;
+    }
+
+    .party-symbol {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+      flex-shrink: 0;
+    }
+
+    .party-acronym {
+      font-weight: 800;
+      font-size: 0.88rem;
+    }
+
+    .party-name {
+      font-size: 0.7rem;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 112px;
+    }
+
+    .party-box input {
+      width: 78px;
+      text-align: right;
+      font-weight: 700;
+    }
+
+    .status-box {
+      margin-top: 0.85rem;
+      padding: 0.8rem 0.95rem;
+      border-radius: 9px;
+      font-size: 0.84rem;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      white-space: pre-line;
+    }
+
+    .status-box.ok {
+      border-color: var(--green-bright);
+      background: rgba(22, 163, 74, 0.12);
+    }
+
+    .status-box.err {
+      border-color: var(--red);
+      background: rgba(239, 68, 68, 0.12);
+    }
+
+    .status-box.warn {
+      border-color: var(--gold);
+      background: rgba(234, 179, 8, 0.12);
+    }
+
+    .preview-img {
+      margin-top: 0.65rem;
+      max-width: 100%;
+      max-height: 240px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      display: none;
+    }
+
+    .preview-video {
+      margin-top: 0.65rem;
+      max-width: 100%;
+      max-height: 240px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      display: none;
+    }
+
+    .bio-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 0.9rem;
+      margin-top: 0.75rem;
+    }
+
+    .bio-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.85rem;
+    }
+
+    .bio-preview {
+      width: 100%;
+      height: 170px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #040b07;
+      margin: 0.5rem 0;
+    }
+
+    .uploader-chip {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.55rem 0.7rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .uploader-chip img {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      object-fit: cover;
+      border: 1px solid var(--green-bright);
+    }
+
+    .evidence-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 0.85rem;
+      margin-top: 0.5rem;
+    }
+
+    .evidence-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.75rem;
+    }
+
+    .evidence-thumb {
+      width: 100%;
+      height: 135px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      margin-top: 0.45rem;
+      cursor: pointer;
+    }
+
+    .ai-panel {
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.08), rgba(168, 85, 247, 0.08));
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      border-radius: 10px;
+      padding: 0.85rem 0.95rem;
+      margin-top: 0.85rem;
+    }
+
+    .ai-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      background: rgba(56, 189, 248, 0.16);
+      color: #7dd3fc;
+      border: 1px solid rgba(56, 189, 248, 0.4);
+    }
+
+    .ledger-item {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.9rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .ledger-top {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 0.2rem 0.55rem;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+    }
+
+    .tag.verified {
+      background: rgba(22, 163, 74, 0.2);
+      border-color: var(--green-bright);
+      color: #86efac;
+    }
+
+    .tag.disputed {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: var(--red);
+      color: #fca5a5;
+    }
+
+    .tag.pending {
+      background: rgba(234, 179, 8, 0.2);
+      border-color: var(--gold);
+      color: #fde047;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.65rem;
+      font-size: 0.84rem;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 0.55rem 0.65rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .winner-banner {
+      background: linear-gradient(135deg, rgba(22, 163, 74, 0.24), rgba(234, 179, 8, 0.14));
+      border: 1px solid var(--green-bright);
+      border-radius: 10px;
+      padding: 0.9rem 1rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.72);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      z-index: 60;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      max-width: 560px;
+      width: 100%;
+      padding: 1.25rem;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .platform-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.6rem;
+      margin: 0.75rem 0 1rem;
+    }
+
+    .platform-btn {
+      text-align: left;
+      padding: 0.7rem 0.8rem;
+      border-radius: 9px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+    }
+
+    .platform-btn.selected {
+      border-color: #818cf8;
+      background: rgba(109, 40, 217, 0.22);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .footer-note {
+      margin-top: 1.5rem;
+      padding: 1rem 1.15rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .lightbox-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.88);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      z-index: 80;
+    }
+
+    .lightbox-backdrop.open {
+      display: flex;
+    }
+
+    .lightbox-box {
+      max-width: 860px;
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .lightbox-box img {
+      max-width: 100%;
+      max-height: 72vh;
+      border-radius: 8px;
+      margin: 0.6rem auto;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-flag" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </div>
+        <div>
+          <h1>NaijaWatch 2027</h1>
+          <p>Citizen Polling Unit Collation &amp; Verification Portal • Nigeria</p>
+        </div>
+      </div>
+
+      <div class="top-actions">
+        <div class="pill" id="netPill">
+          <span class="dot" id="netDot"></span>
+          <span id="netLabel">Checking Network...</span>
+        </div>
+        <div class="pill" id="quotaPill">PU Uploads: 0 / 5</div>
+        <button type="button" id="desktopModeBtn" onclick="toggleDesktopMode()">Desktop Mode: OFF</button>
+        <button type="button" class="situation-btn" onclick="openSituationRoom()">The Situation Room</button>
+        <button type="button" class="warn" id="syncBtn" onclick="syncOfflineQueue()">Sync Queue (0)</button>
+      </div>
+    </div>
+    <div class="topbar-inner">
+      <div class="owner-banner" style="width: 100%;">
+        <span><strong>Property of Apps &amp; Algorithm Concept</strong> • Email: <strong>dev@connectorient.com.ng</strong> • <strong>Attention: Douglas Idima</strong></span>
+        <span>All 22 INEC Parties • 10m PU Lock • 3-of-5 Consensus • AI Verification</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="gate-banner">
+      <div>
+        <strong id="roleDisplay">Status: Not Selected</strong>
+        <div style="font-size:0.82rem; color:var(--muted);" id="roleSubDisplay">
+          Select your status/role first to trigger instant Face Photograph + Camera-Lens Bio Thumbprint capture before using the app.
+        </div>
+      </div>
+      <div style="display:flex; flex-wrap:wrap; gap:0.5rem; align-items:center;">
+        <select id="roleSelect" style="width:auto; min-width:225px;" onchange="onRoleSelected(this.value)">
+          <option value="">-- Select Your Status / Role --</option>
+          <option value="Accredited Polling Observer">Accredited Polling Observer</option>
+          <option value="Party Polling Agent">Party Polling Agent</option>
+          <option value="Citizen Verifier">Citizen Verifier</option>
+          <option value="Accredited Journalist / Media">Accredited Journalist / Media</option>
+        </select>
+        <button type="button" id="reverifyBtn" class="hidden" onclick="openBiometricGate(document.getElementById('roleSelect').value || currentRole)">
+          Re-Capture Face &amp; Thumbprint
+        </button>
+      </div>
+    </section>
+
+    <div id="appLockedNotice" class="card" style="border-color: var(--gold);">
+      <h2>Biometric Camera Lock Active</h2>
+      <p class="sub">
+        Select your status/role above to capture your <strong>instant Face Photograph</strong> and <strong>Camera-Lens Bio Thumbprint</strong>. Full app access unlocks immediately after both biometric scans are verified.
+      </p>
+    </div>
+
+    <div id="mainAppContent" class="hidden">
+      <nav class="tabs" role="tablist">
+        <button type="button" class="tab-btn active" data-tab="upload" onclick="switchTab('upload')">1. Upload Result Sheet</button>
+        <button type="button" class="tab-btn" data-tab="consensus" onclick="switchTab('consensus')">2. Consensus &amp; Collation</button>
+        <button type="button" class="tab-btn" data-tab="status" onclick="switchTab('status')">3. Role &amp; Accreditation</button>
+        <button type="button" class="tab-btn" data-tab="incidents" onclick="switchTab('incidents')">4. Incident Reports (Photo &amp; Video)</button>
+        <button type="button" class="tab-btn" data-tab="cloud" onclick="switchTab('cloud')">5. Cloud Save &amp; Recall</button>
+      </nav>
+
+      <div class="desktop-workspace">
+        <div class="workspace-main">
+          <!-- TAB 1: UPLOAD RESULT SHEET -->
+          <section id="tab-upload" class="card">
+            <h2>Polling Unit Result Sheet &amp; Official Proof Upload</h2>
+            <p class="sub">
+              Requires strict <strong>10-meter proximity</strong> to the selected Polling Unit GPS coordinates, live sheet photo, <strong>Presiding Officer holding the signed result sheet</strong>, and <strong>Ad-Hoc Staff</strong> photo. Max <strong>5 uploads</strong> per Polling Unit; verified by <strong>3-of-5 consensus</strong>.
+            </p>
+
+            <div class="uploader-chip">
+              <img id="activeUploaderFaceImg" alt="Verified Uploader Face" />
+              <div style="font-size:0.78rem;">
+                <div><strong id="activeUploaderName">Verified Uploader</strong> • <span id="activeUploaderRole">Role</span></div>
+                <div style="color:var(--muted);" id="activeUploaderBioMeta">Face &amp; Camera-Lens Thumbprint Hash Ready</div>
+              </div>
+            </div>
+
+            <div class="grid-3">
+              <div>
+                <label for="electionType">2027 Election Type</label>
+                <select id="electionType" onchange="validateElectionSchedule()">
+                  <option value="PRESIDENTIAL">Presidential Election (Sat, Feb 6, 2027)</option>
+                  <option value="NATIONAL_ASSEMBLY">National Assembly — Senate &amp; Reps (Sat, Feb 6, 2027)</option>
+                  <option value="GUBERNATORIAL">Governorship Election (Sat, Feb 20, 2027)</option>
+                  <option value="STATE_ASSEMBLY">State House of Assembly (Sat, Feb 20, 2027)</option>
+                  <option value="FCT_AREA_COUNCIL">FCT Area Council Election (Sat, Feb 20, 2027)</option>
+                </select>
+              </div>
+              <div>
+                <label for="modeSelect">Submission Mode</label>
+                <select id="modeSelect" onchange="validateElectionSchedule()">
+                  <option value="LIVE">Live 2027 Election (Date-Locked)</option>
+                  <option value="MOCK">Mock / Simulation Drill (Testing)</option>
+                </select>
+              </div>
+              <div>
+                <label for="sheetSerialInput">Result Sheet Serial / Batch No.</label>
+                <input id="sheetSerialInput" type="text" placeholder="e.g. EC8A-2027-049281" oninput="updateAiAuditPreview()" />
+              </div>
+            </div>
+
+            <div id="scheduleBanner" class="status-box warn" style="margin-top:0.75rem;"></div>
+
+            <div class="grid-2" style="margin-top:0.85rem;">
+              <div>
+                <label for="puSelect">Polling Unit (10m Geofence Target)</label>
+                <select id="puSelect" onchange="onPollingUnitChange()">
+                  <option value="PU-24-01-01-001|Garki Village Square PU 001, AMAC, FCT|9.035800|7.495100">
+                    Garki Village Square PU 001 (AMAC, FCT) — 10m Lock
+                  </option>
+                  <option value="PU-25-12-04-008|Ikeja GRA Ward 04 PU 008, Ikeja, Lagos|6.583300|3.350000">
+                    Ikeja GRA Ward 04 PU 008 (Ikeja, Lagos) — 10m Lock
+                  </option>
+                  <option value="PU-20-08-02-014|Nasarawa Gwammaja PU 014, Kano Municipal, Kano|12.002200|8.531900">
+                    Nasarawa Gwammaja PU 014 (Nasarawa, Kano) — 10m Lock
+                  </option>
+                  <option value="PU-33-05-03-003|Trans-Amadi Civic Centre PU 003, Port Harcourt, Rivers|4.815600|7.049800">
+                    Trans-Amadi Civic Centre PU 003 (Port Harcourt, Rivers) — 10m Lock
+                  </option>
+                </select>
+              </div>
+              <div>
+                <label for="bvasAccredited">BVAS Accredited Voters Count</label>
+                <input id="bvasAccredited" type="number" min="0" value="250" oninput="updateAiAuditPreview()" />
+              </div>
+            </div>
+
+            <div style="margin-top:0.85rem; display:flex; flex-wrap:wrap; gap:0.5rem; align-items:center;">
+              <button type="button" onclick="captureGpsLocation()">Capture Live GPS (10m Check)</button>
+              <button type="button" onclick="simulateInside10m()">Simulate Inside 10m (Testing)</button>
+              <span id="gpsReadout" class="pill">GPS: Not captured yet</span>
+            </div>
+
+            <div class="grid-2" style="margin-top:0.85rem;">
+              <div>
+                <label for="poSignedCheck">Presiding Officer Signed Sheet?</label>
+                <select id="poSignedCheck" onchange="updateAiAuditPreview()">
+                  <option value="YES">Yes — Signed &amp; Stamped by Presiding Officer</option>
+                  <option value="NO">No — Unsigned / Incomplete</option>
+                </select>
+              </div>
+              <div>
+                <label for="agentsSignedCheck">Party Agents Countersigned?</label>
+                <select id="agentsSignedCheck" onchange="updateAiAuditPreview()">
+                  <option value="YES">Yes — Countersigned by Polling Agents</option>
+                  <option value="PARTIAL">Partial — Some Agents Signed</option>
+                  <option value="NO">No — Agent Sign-Off Missing</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="evidence-grid" style="margin-top:0.9rem;">
+              <div class="evidence-card">
+                <label for="sheetPhotoInput">1. Result Sheet Photo (Required)</label>
+                <input id="sheetPhotoInput" type="file" accept="image/*" capture="environment" onchange="handleEvidencePhotoChange(event, 'sheet')" />
+                <img id="sheetPreview" class="preview-img" alt="Result sheet preview" onclick="openLightbox(this.src, 'Result Sheet Photo')" />
+              </div>
+
+              <div class="evidence-card">
+                <label for="poHoldingPhotoInput">2. Presiding Officer Holding Result (Required)</label>
+                <input id="poHoldingPhotoInput" type="file" accept="image/*" capture="environment" onchange="handleEvidencePhotoChange(event, 'po')" />
+                <img id="poHoldingPreview" class="preview-img" alt="Presiding officer holding result preview" onclick="openLightbox(this.src, 'Presiding Officer Holding Result')" />
+              </div>
+
+              <div class="evidence-card">
+                <label for="adhocStaffPhotoInput">3. Ad-Hoc Staff Photo (Required)</label>
+                <input id="adhocStaffPhotoInput" type="file" accept="image/*" capture="environment" onchange="handleEvidencePhotoChange(event, 'adhoc')" />
+                <img id="adhocStaffPreview" class="preview-img" alt="Ad-hoc staff preview" onclick="openLightbox(this.src, 'Polling Unit Ad-Hoc Staff')" />
+              </div>
+            </div>
+
+            <div style="margin-top:1rem;">
+              <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:0.5rem;">
+                <label style="margin:0;">All 22 INEC-Registered Political Parties &amp; Ballot Symbols</label>
+                <button type="button" onclick="runAiSheetDraft()">AI Auto-Draft Votes from Sheet</button>
+              </div>
+              <div id="partyInputsGrid" class="party-grid"></div>
+            </div>
+
+            <div class="ai-panel" id="aiPreSubmitPanel">
+              <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:0.5rem; margin-bottom:0.4rem;">
+                <span class="ai-badge">AI Pre-Submit Audit &amp; Trust Score Engine</span>
+                <strong id="aiTrustScoreBadge">Estimated Trust Score: -- / 100</strong>
+              </div>
+              <div id="aiAuditChecklist" style="font-size:0.8rem; color:var(--muted);">
+                Awaiting GPS, sheet photo, Presiding Officer holding result photo, and Ad-Hoc Staff photo...
+              </div>
+            </div>
+
+            <div style="margin-top:1rem; display:flex; flex-wrap:wrap; gap:0.6rem;">
+              <button type="button" class="primary" id="submitSheetBtn" onclick="submitResultSheet()">
+                Submit Result Sheet for Consensus
+              </button>
+              <button type="button" onclick="resetResultForm()">Clear Form</button>
+            </div>
+
+            <div id="uploadStatus" class="status-box hidden"></div>
+          </section>
+
+          <!-- TAB 2: CONSENSUS & COLLATION -->
+          <section id="tab-consensus" class="card hidden">
+            <h2>3-of-5 Majority Consensus &amp; Central Collation</h2>
+            <p class="sub">
+              Each Polling Unit accepts up to <strong>5 submissions</strong>. Once <strong>at least 3 of the 5</strong> match on party vote totals, the PU result locks as <strong>VERIFIED (3-of-5 Consensus)</strong>.
+            </p>
+
+            <div class="grid-2" style="margin-bottom:0.85rem;">
+              <div>
+                <label for="filterElection">Filter by 2027 Election</label>
+                <select id="filterElection" onchange="renderConsensusAndCollation()">
+                  <option value="ALL">All 2027 Elections</option>
+                  <option value="PRESIDENTIAL">Presidential</option>
+                  <option value="NATIONAL_ASSEMBLY">National Assembly</option>
+                  <option value="GUBERNATORIAL">Gubernatorial</option>
+                  <option value="STATE_ASSEMBLY">State House of Assembly</option>
+                  <option value="FCT_AREA_COUNCIL">FCT Area Council</option>
+                </select>
+              </div>
+              <div>
+                <label for="filterMode">Filter by Mode</label>
+                <select id="filterMode" onchange="renderConsensusAndCollation()">
+                  <option value="ALL">Live &amp; Mock</option>
+                  <option value="LIVE">Live 2027 Only</option>
+                  <option value="MOCK">Mock Drill Only</option>
+                </select>
+              </div>
+            </div>
+
+            <div id="winnerBanner" class="winner-banner"></div>
+
+            <h3 style="font-size:0.95rem; margin-bottom:0.4rem;">Polling Unit Consensus Ledger</h3>
+            <div id="consensusLedger"></div>
+
+            <h3 style="font-size:0.95rem; margin-top:1.1rem; margin-bottom:0.35rem;">
+              Aggregated Standings (All 22 INEC Parties — Verified 3-of-5 Polling Units)
+            </h3>
+            <div style="overflow-x:auto;">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Rank</th>
+                    <th>Symbol</th>
+                    <th>Party</th>
+                    <th>Verified Votes</th>
+                    <th>Vote Share</th>
+                  </tr>
+                </thead>
+                <tbody id="collationTableBody"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- TAB 3: ROLE & ACCREDITATION -->
+          <section id="tab-status" class="card hidden">
+            <h2>Role &amp; Biometric Accreditation Verification</h2>
+            <p class="sub">
+              Inspect your active role, verified Face Photograph, Camera-Lens Bio Thumbprint hash, and accreditation record.
+            </p>
+
+            <div class="grid-2">
+              <div>
+                <label for="lookupRole">Role / Status</label>
+                <select id="lookupRole">
+                  <option value="Accredited Polling Observer">Accredited Polling Observer</option>
+                  <option value="Party Polling Agent">Party Polling Agent</option>
+                  <option value="Citizen Verifier">Citizen Verifier</option>
+                  <option value="Accredited Journalist / Media">Accredited Journalist / Media</option>
+                </select>
+              </div>
+              <div>
+                <label for="lookupCode">Accreditation / Badge ID (Optional)</label>
+                <input id="lookupCode" type="text" placeholder="e.g. INEC-OBS-2027-8841" />
+              </div>
+            </div>
+
+            <div style="margin-top:0.85rem; display:flex; flex-wrap:wrap; gap:0.5rem;">
+              <button type="button" class="primary" onclick="verifyRoleStatus()">Verify Status &amp; Biometrics</button>
+              <button type="button" onclick="openBiometricGate(document.getElementById('lookupRole').value)">
+                Update Face &amp; Thumbprint
+              </button>
+            </div>
+
+            <div id="statusResultBox" class="status-box" style="margin-top:0.85rem;"></div>
+          </section>
+
+          <!-- TAB 4: INCIDENT REPORTS -->
+          <section id="tab-incidents" class="card hidden">
+            <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:0.5rem;">
+              <div>
+                <h2>Election Incident Reporting (Photos &amp; Videos)</h2>
+                <p class="sub" style="margin-bottom:0.4rem;">
+                  Report polling unit incidents with photographic or video evidence, automatic AI classification, GPS coordinates, and WAT timestamps.
+                </p>
+              </div>
+              <button type="button" class="situation-btn" onclick="openSituationRoom()">Open The Situation Room</button>
+            </div>
+
+            <div class="grid-3" style="margin-top:0.75rem;">
+              <div>
+                <label for="incCategory">Incident Category</label>
+                <select id="incCategory">
+                  <option value="Ballot Box Snatching / Disruption">Ballot Box Snatching / Disruption</option>
+                  <option value="BVAS Malfunction / Accreditation Delay">BVAS Malfunction / Accreditation Delay</option>
+                  <option value="Voter Intimidation / Violence">Voter Intimidation / Violence</option>
+                  <option value="Vote Buying / Inducement">Vote Buying / Inducement</option>
+                  <option value="Late Arrival of Officials / Materials">Late Arrival of Officials / Materials</option>
+                  <option value="Result Sheet Alteration / Non-Upload">Result Sheet Alteration / Non-Upload</option>
+                </select>
+              </div>
+              <div>
+                <label for="incSeverity">Severity Level</label>
+                <select id="incSeverity">
+                  <option value="CRITICAL">Critical</option>
+                  <option value="HIGH">High</option>
+                  <option value="MEDIUM">Medium</option>
+                </select>
+              </div>
+              <div>
+                <label for="incLocation">Location / Polling Unit</label>
+                <input id="incLocation" type="text" placeholder="e.g. PU 004, Wuse II, Abuja" />
+              </div>
+            </div>
+
+            <div style="margin-top:0.75rem;">
+              <label for="incDesc">Incident Description</label>
+              <textarea id="incDesc" rows="3" placeholder="Describe what happened clearly (AI will also assist with category & severity analysis)..." oninput="runAiIncidentAssist()"></textarea>
+            </div>
+
+            <div id="aiIncidentHint" class="ai-panel" style="margin-top:0.65rem;">
+              <span class="ai-badge">AI Incident Classifier</span>
+              <span id="aiIncidentText" style="font-size:0.8rem; color:var(--muted); margin-left:0.4rem;">
+                Type a description to run automatic incident classification &amp; severity check.
+              </span>
+            </div>
+
+            <div class="grid-2" style="margin-top:0.75rem;">
+              <div>
+                <label for="incPhoto">Attach Picture Evidence</label>
+                <input id="incPhoto" type="file" accept="image/*" capture="environment" onchange="handleIncidentMedia(event, 'photo')" />
+                <img id="incPhotoPreview" class="preview-img" alt="Incident photo preview" />
+              </div>
+              <div>
+                <label for="incVideo">Attach Video Evidence</label>
+                <input id="incVideo" type="file" accept="video/*" capture="environment" onchange="handleIncidentMedia(event, 'video')" />
+                <video id="incVideoPreview" class="preview-video" controls></video>
+              </div>
+            </div>
+
+            <div style="margin-top:0.9rem; display:flex; flex-wrap:wrap; gap:0.6rem;">
+              <button type="button" class="primary" onclick="submitIncidentReport()">Submit Incident Report</button>
+              <button type="button" onclick="resetIncidentForm()">Clear Incident Form</button>
+            </div>
+
+            <div id="incidentStatus" class="status-box hidden"></div>
+
+            <h3 style="font-size:0.95rem; margin-top:1.15rem; margin-bottom:0.5rem;">Logged Incident Feed</h3>
+            <div id="incidentFeed"></div>
+          </section>
+
+          <!-- TAB 5: CLOUD SAVE & RECALL -->
+          <section id="tab-cloud" class="card hidden">
+            <h2>Cloud Save &amp; Recall Vault</h2>
+            <p class="sub">
+              Save result sheets and incident reports to the Cloud Vault (and optionally a custom Cloud API endpoint) and recall any saved record back into the app anytime.
+            </p>
+
+            <div class="grid-2">
+              <div>
+                <label for="cloudEndpointInput">Optional Cloud API / Webhook URL (JSON POST)</label>
+                <input id="cloudEndpointInput" type="url" placeholder="https://your-cloud-endpoint.example.com/naijawatch" />
+              </div>
+              <div>
+                <label for="cloudSearchInput">Recall Search (ID, Polling Unit, Election, or Location)</label>
+                <input id="cloudSearchInput" type="text" placeholder="Search saved cloud uploads..." oninput="renderCloudVault()" />
+              </div>
+            </div>
+
+            <div style="margin-top:0.85rem; display:flex; flex-wrap:wrap; gap:0.55rem;">
+              <button type="button" class="primary" onclick="saveAllToCloudVault(true)">Save All Uploads to Cloud Now</button>
+              <button type="button" onclick="recallAllFromCloudVault()">Recall All Cloud Uploads to App</button>
+              <button type="button" onclick="exportCloudBundleJson()">Download JSON Backup</button>
+            </div>
+
+            <div id="cloudStatus" class="status-box" style="margin-top:0.85rem;">
+              Cloud Vault ready. New submissions automatically sync to the Cloud Vault.
+            </div>
+
+            <div id="cloudVaultList" style="margin-top:0.85rem;"></div>
+          </section>
+        </div>
+
+        <!-- DOCKED DESKTOP SITUATION ROOM RAIL -->
+        <aside class="situation-rail">
+          <div class="card" style="border-color:#818cf8;">
+            <h2>The Situation Room (Desktop Monitor)</h2>
+            <p class="sub">Live multi-user video coordination rail active in Desktop Mode.</p>
+
+            <label for="railPlatform">Video Platform</label>
+            <select id="railPlatform" onchange="syncSituationRoomFields('rail')">
+              <option value="Zoom">Zoom</option>
+              <option value="Google Meet">Google Meet</option>
+              <option value="Microsoft Teams">Microsoft Teams</option>
+              <option value="Jitsi Meet">Jitsi Meet</option>
+            </select>
+
+            <div style="margin-top:0.6rem;">
+              <label for="railRoomUrl">Situation Room Link / Meeting ID</label>
+              <input id="railRoomUrl" type="text" oninput="syncSituationRoomFields('rail')" />
+            </div>
+
+            <div style="margin-top:0.6rem;">
+              <label for="railNotes">Monitoring Desk Notes</label>
+              <textarea id="railNotes" rows="3" oninput="syncSituationRoomFields('rail')"></textarea>
+            </div>
+
+            <div style="margin-top:0.75rem; display:flex; flex-wrap:wrap; gap:0.5rem;">
+              <button type="button" class="situation-btn" style="flex:1;" onclick="launchSituationCall()">Launch Call</button>
+              <button type="button" onclick="copySituationInvite()">Copy Link</button>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    <footer class="footer-note">
+      <strong>Ownership &amp; Legal Notice:</strong> NaijaWatch 2027 is the property of <strong>Apps &amp; Algorithm Concept</strong> • Contact Email: <strong>dev@connectorient.com.ng</strong> • <strong>Attention: Douglas Idima</strong>. Always verify against official INEC statutory declarations.
+    </footer>
+  </main>
+
+  <!-- BIOMETRIC GATE MODAL: FACE PHOTO + CAMERA-LENS BIO THUMBPRINT -->
+  <div class="modal-backdrop" id="biometricModal">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <h3>Instant Biometric Verification</h3>
+          <p style="font-size:0.78rem; color:var(--muted);" id="bioModalRoleLabel">Role: --</p>
+        </div>
+        <button type="button" onclick="closeBiometricGate()">Close</button>
+      </div>
+      <p class="sub">
+        Both a <strong>live Face Photograph</strong> and a <strong>Camera-Lens Bio Thumbprint</strong> scan are required before using NaijaWatch 2027.
+      </p>
+
+      <div class="bio-grid">
+        <div class="bio-card">
+          <strong>1. Instant Face Photograph</strong>
+          <p style="font-size:0.75rem; color:var(--muted);">Use live camera or snap/upload face photo.</p>
+          <video id="faceVideo" autoplay playsinline muted class="bio-preview hidden"></video>
+          <canvas id="faceCanvas" width="320" height="240" class="hidden"></canvas>
+          <img id="faceCapturedImg" class="bio-preview" alt="Captured face photograph" />
+          <div style="display:flex; flex-wrap:wrap; gap:0.4rem;">
+            <button type="button" onclick="startCameraFor('face')">Open Camera</button>
+            <button type="button" class="primary" onclick="snapPhotoFromCamera('face')">Snap Face</button>
+            <label style="margin:0; cursor:pointer;" class="pill">
+              Upload Face
+              <input type="file" accept="image/*" capture="user" style="display:none;" onchange="handleBiometricFile(event, 'face')" />
+            </label>
+          </div>
+        </div>
+
+        <div class="bio-card">
+          <strong>2. Camera-Lens Bio Thumbprint</strong>
+          <p style="font-size:0.75rem; color:var(--muted);">Press thumb against camera lens / scan ridge pattern.</p>
+          <video id="thumbVideo" autoplay playsinline muted class="bio-preview hidden"></video>
+          <canvas id="thumbCanvas" width="320" height="240" class="hidden"></canvas>
+          <img id="thumbCapturedImg" class="bio-preview" alt="Captured thumbprint scan" />
+          <div style="display:flex; flex-wrap:wrap; gap:0.4rem;">
+            <button type="button" onclick="startCameraFor('thumb')">Open Lens</button>
+            <button type="button" class="primary" onclick="snapPhotoFromCamera('thumb')">Scan Thumb</button>
+            <label style="margin:0; cursor:pointer;" class="pill">
+              Upload Scan
+              <input type="file" accept="image/*" capture="environment" style="display:none;" onchange="handleBiometricFile(event, 'thumb')" />
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div id="bioModalStatus" class="status-box" style="margin-top:0.8rem;">
+        Pending: Capture both Face Photograph and Camera-Lens Bio Thumbprint.
+      </div>
+
+      <div style="margin-top:0.9rem; display:flex; justify-content:flex-end; gap:0.5rem;">
+        <button type="button" class="primary" id="confirmBiometricsBtn" disabled onclick="confirmBiometricsAndUnlock()">
+          Verify &amp; Unlock App
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- THE SITUATION ROOM MODAL -->
+  <div class="modal-backdrop" id="situationModal">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <h3>The Situation Room</h3>
+          <p style="font-size:0.78rem; color:var(--muted);">Multi-user live video coordination for observers, agents, and desk monitors</p>
+        </div>
+        <button type="button" onclick="closeSituationRoom()">Close</button>
+      </div>
+
+      <label>Select Conferencing Platform</label>
+      <div class="platform-grid">
+        <button type="button" class="platform-btn selected" data-platform="Zoom" onclick="selectPlatform('Zoom')">
+          <strong>Zoom</strong><br /><span style="font-size:0.74rem; color:var(--muted);">Multi-user war room video</span>
+        </button>
+        <button type="button" class="platform-btn" data-platform="Google Meet" onclick="selectPlatform('Google Meet')">
+          <strong>Google Meet</strong><br /><span style="font-size:0.74rem; color:var(--muted);">Browser &amp; mobile room</span>
+        </button>
+        <button type="button" class="platform-btn" data-platform="Microsoft Teams" onclick="selectPlatform('Microsoft Teams')">
+          <strong>Microsoft Teams</strong><br /><span style="font-size:0.74rem; color:var(--muted);">Team channel bridge</span>
+        </button>
+        <button type="button" class="platform-btn" data-platform="Jitsi Meet" onclick="selectPlatform('Jitsi Meet')">
+          <strong>Jitsi Meet</strong><br /><span style="font-size:0.74rem; color:var(--muted);">Instant open room link</span>
+        </button>
+      </div>
+
+      <div class="grid-2">
+        <div>
+          <label for="modalRoomUrl">Room Link or Meeting ID</label>
+          <input id="modalRoomUrl" type="text" oninput="syncSituationRoomFields('modal')" />
+        </div>
+        <div>
+          <label for="modalPasscode">Passcode / Room Key (Optional)</label>
+          <input id="modalPasscode" type="text" placeholder="e.g. NW2027" oninput="syncSituationRoomFields('modal')" />
+        </div>
+      </div>
+
+      <div style="margin-top:0.75rem;">
+        <label for="modalNotes">Situation Room Briefing / Desk Note</label>
+        <textarea id="modalNotes" rows="2" oninput="syncSituationRoomFields('modal')"></textarea>
+      </div>
+
+      <div id="situationStatus" class="status-box" style="margin-top:0.75rem;"></div>
+
+      <div style="margin-top:0.9rem; display:flex; flex-wrap:wrap; gap:0.5rem; justify-content:flex-end;">
+        <button type="button" onclick="copySituationInvite()">Copy Invite</button>
+        <button type="button" class="situation-btn" onclick="launchSituationCall()">Join The Situation Room</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- EVIDENCE LIGHTBOX -->
+  <div class="lightbox-backdrop" id="lightboxModal" onclick="closeLightbox()">
+    <div class="lightbox-box" onclick="event.stopPropagation()">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <strong id="lightboxTitle">Evidence Preview</strong>
+        <button type="button" onclick="closeLightbox()">Close</button>
+      </div>
+      <img id="lightboxImg" alt="Full-size evidence preview" />
+    </div>
+  </div>
+
+  <script>
+    const INEC_PARTIES = [
+      { acronym: "A", name: "Accord", symbol: "🤝" },
+      { acronym: "AA", name: "Action Alliance", symbol: "🛡️" },
+      { acronym: "AAC", name: "African Action Congress", symbol: "⚖️" },
+      { acronym: "ADC", name: "African Democratic Congress", symbol: "🔑" },
+      { acronym: "ADP", name: "Action Democratic Party", symbol: "🌿" },
+      { acronym: "APC", name: "All Progressives Congress", symbol: "🧹" },
+      { acronym: "APGA", name: "All Progressives Grand Alliance", symbol: "🐓" },
+      { acronym: "APM", name: "Allied Peoples Movement", symbol: "☀️" },
+      { acronym: "APP", name: "Action Peoples Party", symbol: "🌱" },
+      { acronym: "BP", name: "Boot Party", symbol: "🥾" },
+      { acronym: "DLA", name: "Dynamic Labour Alliance", symbol: "⚙️" },
+      { acronym: "LP", name: "Labour Party", symbol: "👪" },
+      {
+        acronym: "NDC",
+        name: "National Democratic Congress",
+        symbol: "✌️",
+        symbolSvg: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-label="NDC Two Fingers V Sign"><path d="M9 12V4a1.5 1.5 0 0 1 3 0v8"/><path d="M12 11V5a1.5 1.5 0 0 1 3 0v7"/><path d="M8 11l-2.2 2.2a1.6 1.6 0 0 0 0 2.3l2.4 2.4A5 5 0 0 0 11.7 19H14a4 4 0 0 0 4-4v-3.5a1.5 1.5 0 0 0-3 0"/></svg>`
+      },
+      { acronym: "NDP", name: "National Democratic Party", symbol: "🕊️" },
+      { acronym: "NNPP", name: "New Nigeria Peoples Party", symbol: "🏀" },
+      { acronym: "NRM", name: "National Rescue Movement", symbol: "🦁" },
+      { acronym: "PDP", name: "Peoples Democratic Party", symbol: "☂️" },
+      { acronym: "PRP", name: "Peoples Redemption Party", symbol: "🔑" },
+      { acronym: "SDP", name: "Social Democratic Party", symbol: "🐎" },
+      { acronym: "YP", name: "Youth Party", symbol: "🔥" },
+      { acronym: "YPP", name: "Young Progressives Party", symbol: "🦅" },
+      { acronym: "ZLP", name: "Zenith Labour Party", symbol: "🧭" }
+    ];
+
+    const ELECTION_DATES_2027 = {
+      PRESIDENTIAL: "2027-02-06",
+      NATIONAL_ASSEMBLY: "2027-02-06",
+      GUBERNATORIAL: "2027-02-20",
+      STATE_ASSEMBLY: "2027-02-20",
+      FCT_AREA_COUNCIL: "2027-02-20"
+    };
+
+    const STORAGE_KEYS = {
+      RECORDS: "nw2027_records_v3",
+      QUEUE: "nw2027_queue_v3",
+      INCIDENTS: "nw2027_incidents_v3",
+      CLOUD: "nw2027_cloud_vault_v3",
+      BIOMETRICS: "nw2027_biometrics_v3",
+      SITUATION: "nw2027_situation_v3",
+      DESKTOP: "nw2027_desktop_v3"
+    };
+
+    let currentRole = "";
+    let currentGps = null;
+    let sheetPhotoDataUrl = "";
+    let poHoldingPhotoDataUrl = "";
+    let adhocStaffPhotoDataUrl = "";
+    let incPhotoDataUrl = "";
+    let incVideoDataUrl = "";
+    let activeStream = null;
+    let activeCamTarget = null;
+    let pendingFaceDataUrl = "";
+    let pendingThumbDataUrl = "";
+
+    let situationState = loadJson(STORAGE_KEYS.SITUATION, {
+      platform: "Zoom",
+      roomUrl: "https://zoom.us/j/2027000000",
+      passcode: "NW2027",
+      notes: "NaijaWatch 2027 Situation Room — Live Polling Unit & Collation Desk"
+    });
+
+    function loadJson(key, fallback) {
+      try {
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : fallback;
+      } catch (_) {
+        return fallback;
+      }
+    }
+
+    function saveJson(key, val) {
+      try {
+        localStorage.setItem(key, JSON.stringify(val));
+      } catch (err) {
+        console.warn("Storage quota warning:", err);
+      }
+    }
+
+    function getWatTimestamp(dateObj = new Date()) {
+      return new Intl.DateTimeFormat("en-NG", {
+        timeZone: "Africa/Lagos",
+        dateStyle: "medium",
+        timeStyle: "medium"
+      }).format(dateObj) + " WAT";
+    }
+
+    function getWatIsoDate(dateObj = new Date()) {
+      const parts = new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Africa/Lagos",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit"
+      }).format(dateObj);
+      return parts;
+    }
+
+    function simpleHash(str) {
+      let h1 = 0x811c9dc5;
+      let h2 = 0x01000193;
+      for (let i = 0; i < str.length; i++) {
+        const ch = str.charCodeAt(i);
+        h1 ^= ch;
+        h1 = Math.imul(h1, 0x01000193);
+        h2 ^= ch + i;
+        h2 = Math.imul(h2, 0x85ebca6b);
+      }
+      return ("00000000" + (h1 >>> 0).toString(16)).slice(-8) +
+             ("00000000" + (h2 >>> 0).toString(16)).slice(-8);
+    }
+
+    function haversineMeters(lat1, lon1, lat2, lon2) {
+      const R = 6371000;
+      const toRad = (deg) => (deg * Math.PI) / 180;
+      const dLat = toRad(lat2 - lat1);
+      const dLon = toRad(lon2 - lon1);
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      return 2 * R * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    }
+
+    function updateNetworkPill() {
+      const online = navigator.onLine;
+      const dot = document.getElementById("netDot");
+      const label = document.getElementById("netLabel");
+      const queue = loadJson(STORAGE_KEYS.QUEUE, []);
+      const syncBtn = document.getElementById("syncBtn");
+
+      dot.className = online ? "dot" : "dot offline";
+      label.textContent = online ? "Online (WAT)" : "Offline Mode";
+      syncBtn.textContent = `Sync Queue (${queue.length})`;
+    }
+
+    function toggleDesktopMode(forceValue = null) {
+      const isCurrentlyOn = document.body.classList.contains("desktop-mode");
+      const nextState = typeof forceValue === "boolean" ? forceValue : !isCurrentlyOn;
+      document.body.classList.toggle("desktop-mode", nextState);
+      document.getElementById("desktopModeBtn").textContent = `Desktop Mode: ${nextState ? "ON" : "OFF"}`;
+      saveJson(STORAGE_KEYS.DESKTOP, nextState);
+    }
+
+    function renderPartyInputs() {
+      const grid = document.getElementById("partyInputsGrid");
+      if (!grid) return;
+      grid.innerHTML = INEC_PARTIES.map((p) => {
+        const iconHtml = p.symbolSvg ? p.symbolSvg : `<span>${p.symbol}</span>`;
+        return `
+          <div class="party-box">
+            <div class="party-meta">
+              <div class="party-symbol" title="${p.name}">${iconHtml}</div>
+              <div>
+                <div class="party-acronym">${p.acronym}</div>
+                <div class="party-name" title="${p.name}">${p.name}</div>
+              </div>
+            </div>
+            <input
+              type="number"
+              min="0"
+              value="0"
+              class="party-vote-input"
+              data-party="${p.acronym}"
+              oninput="updateAiAuditPreview()"
+            />
+          </div>
+        `;
+      }).join("");
+    }
+
+    function onRoleSelected(role) {
+      if (!role) return;
+      openBiometricGate(role);
+    }
+
+    function openBiometricGate(role) {
+      currentRole = role || "Citizen Verifier";
+      document.getElementById("bioModalRoleLabel").textContent = `Selected Status: ${currentRole}`;
+      const savedBio = loadJson(STORAGE_KEYS.BIOMETRICS, null);
+      pendingFaceDataUrl = savedBio && savedBio.role === currentRole ? savedBio.faceDataUrl : "";
+      pendingThumbDataUrl = savedBio && savedBio.role === currentRole ? savedBio.thumbDataUrl : "";
+
+      const faceImg = document.getElementById("faceCapturedImg");
+      const thumbImg = document.getElementById("thumbCapturedImg");
+      faceImg.src = pendingFaceDataUrl || "";
+      thumbImg.src = pendingThumbDataUrl || "";
+      updateBiometricModalState();
+      document.getElementById("biometricModal").classList.add("open");
+    }
+
+    function closeBiometricGate() {
+      stopActiveCamera();
+      document.getElementById("biometricModal").classList.remove("open");
+      const savedBio = loadJson(STORAGE_KEYS.BIOMETRICS, null);
+      if (!savedBio || !savedBio.faceDataUrl || !savedBio.thumbDataUrl) {
+        document.getElementById("roleSelect").value = "";
+      }
+    }
+
+    function stopActiveCamera() {
+      if (activeStream) {
+        activeStream.getTracks().forEach((t) => t.stop());
+        activeStream = null;
+      }
+      document.getElementById("faceVideo").classList.add("hidden");
+      document.getElementById("thumbVideo").classList.add("hidden");
+    }
+
+    async function startCameraFor(target) {
+      stopActiveCamera();
+      activeCamTarget = target;
+      const videoEl = document.getElementById(target === "face" ? "faceVideo" : "thumbVideo");
+      const statusEl = document.getElementById("bioModalStatus");
+
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        statusEl.className = "status-box warn";
+        statusEl.textContent = "Camera API unavailable in this browser. Use 'Upload Face' / 'Upload Scan' or test snap.";
+        return;
+      }
+
+      try {
+        const constraints = {
+          video: {
+            facingMode: target === "face" ? "user" : "environment",
+            width: { ideal: 640 },
+            height: { ideal: 480 }
+          },
+          audio: false
+        };
+        activeStream = await navigator.mediaDevices.getUserMedia(constraints);
+        videoEl.srcObject = activeStream;
+        videoEl.classList.remove("hidden");
+        statusEl.className = "status-box ok";
+        statusEl.textContent =
+          target === "face"
+            ? "Face camera active. Position face clearly and click 'Snap Face'."
+            : "Camera lens active. Place thumb gently over lens/ridge target and click 'Scan Thumb'.";
+      } catch (err) {
+        statusEl.className = "status-box warn";
+        statusEl.textContent = `Camera permission/device notice (${err.message || "unavailable"}). You can upload an image or click Snap to generate a test capture.`;
+      }
+    }
+
+    function generateSyntheticBiometricCanvas(kind) {
+      const c = document.createElement("canvas");
+      c.width = 320;
+      c.height = 240;
+      const ctx = c.getContext("2d");
+      ctx.fillStyle = "#091811";
+      ctx.fillRect(0, 0, c.width, c.height);
+
+      if (kind === "face") {
+        ctx.fillStyle = "#16a34a";
+        ctx.beginPath();
+        ctx.arc(160, 102, 48, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = "#eef7f1";
+        ctx.beginPath();
+        ctx.arc(144, 94, 6, 0, Math.PI * 2);
+        ctx.arc(176, 94, 6, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = "#eef7f1";
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.arc(160, 114, 18, 0.2 * Math.PI, 0.8 * Math.PI);
+        ctx.stroke();
+        ctx.fillStyle = "#22c55e";
+        ctx.beginPath();
+        ctx.ellipse(160, 192, 72, 34, 0, 0, Math.PI * 2);
+        ctx.fill();
+      } else {
+        ctx.strokeStyle = "#22c55e";
+        ctx.lineWidth = 2.5;
+        for (let r = 14; r <= 88; r += 10) {
+          ctx.beginPath();
+          ctx.ellipse(160, 120, r * 0.72, r * 1.15, 0.15, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+      }
+
+      ctx.fillStyle = "rgba(0,0,0,0.65)";
+      ctx.fillRect(0, 212, 320, 28);
+      ctx.fillStyle = "#eef7f1";
+      ctx.font = "11px monospace";
+      ctx.fillText(`${kind.toUpperCase()} • ${getWatTimestamp()}`, 8, 230);
+      return c.toDataURL("image/jpeg", 0.82);
+    }
+
+    function snapPhotoFromCamera(target) {
+      const videoEl = document.getElementById(target === "face" ? "faceVideo" : "thumbVideo");
+      const canvasEl = document.getElementById(target === "face" ? "faceCanvas" : "thumbCanvas");
+      let dataUrl = "";
+
+      if (!videoEl.classList.contains("hidden") && videoEl.videoWidth > 0) {
+        canvasEl.width = videoEl.videoWidth;
+        canvasEl.height = videoEl.videoHeight;
+        const ctx = canvasEl.getContext("2d");
+        ctx.drawImage(videoEl, 0, 0, canvasEl.width, canvasEl.height);
+        dataUrl = canvasEl.toDataURL("image/jpeg", 0.84);
+      } else {
+        dataUrl = generateSyntheticBiometricCanvas(target);
+      }
+
+      if (target === "face") {
+        pendingFaceDataUrl = dataUrl;
+        document.getElementById("faceCapturedImg").src = dataUrl;
+      } else {
+        pendingThumbDataUrl = dataUrl;
+        document.getElementById("thumbCapturedImg").src = dataUrl;
+      }
+
+      stopActiveCamera();
+      updateBiometricModalState();
+    }
+
+    function handleBiometricFile(event, target) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        if (target === "face") {
+          pendingFaceDataUrl = e.target.result;
+          document.getElementById("faceCapturedImg").src = pendingFaceDataUrl;
+        } else {
+          pendingThumbDataUrl = e.target.result;
+          document.getElementById("thumbCapturedImg").src = pendingThumbDataUrl;
+        }
+        updateBiometricModalState();
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function updateBiometricModalState() {
+      const btn = document.getElementById("confirmBiometricsBtn");
+      const statusEl = document.getElementById("bioModalStatus");
+      const ready = Boolean(pendingFaceDataUrl && pendingThumbDataUrl);
+      btn.disabled = !ready;
+
+      if (ready) {
+        const fHash = simpleHash(pendingFaceDataUrl.slice(0, 4000) + currentRole);
+        const tHash = simpleHash(pendingThumbDataUrl.slice(0, 4000) + "THUMB");
+        statusEl.className = "status-box ok";
+        statusEl.textContent = `Biometrics Ready • Face Hash: ${fHash.slice(0, 10)} • Thumb Hash: ${tHash.slice(0, 10)}`;
+      } else {
+        statusEl.className = "status-box warn";
+        statusEl.textContent = `Face: ${pendingFaceDataUrl ? "Captured" : "Missing"} | Camera-Lens Thumbprint: ${pendingThumbDataUrl ? "Captured" : "Missing"}`;
+      }
+    }
+
+    function confirmBiometricsAndUnlock() {
+      if (!pendingFaceDataUrl || !pendingThumbDataUrl) return;
+      const faceHash = "FACE-" + simpleHash(pendingFaceDataUrl.slice(0, 5000) + currentRole);
+      const thumbHash = "THMB-" + simpleHash(pendingThumbDataUrl.slice(0, 5000) + currentRole);
+      const bioRecord = {
+        role: currentRole,
+        faceDataUrl: pendingFaceDataUrl,
+        thumbDataUrl: pendingThumbDataUrl,
+        faceHash,
+        thumbHash,
+        verifiedAt: getWatTimestamp()
+      };
+      saveJson(STORAGE_KEYS.BIOMETRICS, bioRecord);
+      stopActiveCamera();
+      document.getElementById("biometricModal").classList.remove("open");
+      applyUnlockedSession(bioRecord);
+    }
+
+    function applyUnlockedSession(bioRecord) {
+      currentRole = bioRecord.role;
+      document.getElementById("roleSelect").value = bioRecord.role;
+      document.getElementById("lookupRole").value = bioRecord.role;
+      document.getElementById("roleDisplay").textContent = `Status: ${bioRecord.role} (Biometrically Verified)`;
+      document.getElementById("roleSubDisplay").textContent =
+        `Verified ${bioRecord.verifiedAt} • Face ID: ${bioRecord.faceHash} • Thumbprint ID: ${bioRecord.thumbHash}`;
+      document.getElementById("reverifyBtn").classList.remove("hidden");
+      document.getElementById("appLockedNotice").classList.add("hidden");
+      document.getElementById("mainAppContent").classList.remove("hidden");
+
+      document.getElementById("activeUploaderFaceImg").src = bioRecord.faceDataUrl;
+      document.getElementById("activeUploaderName").textContent = `Verified ${bioRecord.role}`;
+      document.getElementById("activeUploaderRole").textContent = bioRecord.verifiedAt;
+      document.getElementById("activeUploaderBioMeta").textContent =
+        `Face: ${bioRecord.faceHash} | Lens Thumbprint: ${bioRecord.thumbHash}`;
+
+      onPollingUnitChange();
+      updateAiAuditPreview();
+      renderConsensusAndCollation();
+      renderIncidents();
+      renderCloudVault();
+      verifyRoleStatus();
+    }
+
+    function switchTab(tabName) {
+      document.querySelectorAll(".tab-btn").forEach((btn) => {
+        btn.classList.toggle("active", btn.dataset.tab === tabName);
+      });
+      ["upload", "consensus", "status", "incidents", "cloud"].forEach((name) => {
+        const el = document.getElementById(`tab-${name}`);
+        if (el) el.classList.toggle("hidden", name !== tabName);
+      });
+      if (tabName === "consensus") renderConsensusAndCollation();
+      if (tabName === "incidents") renderIncidents();
+      if (tabName === "cloud") renderCloudVault();
+    }
+
+    function getSelectedPollingUnit() {
+      const val = document.getElementById("puSelect").value;
+      const [code, name, latStr, lngStr] = val.split("|");
+      return {
+        code,
+        name,
+        lat: parseFloat(latStr),
+        lng: parseFloat(lngStr)
+      };
+    }
+
+    function onPollingUnitChange() {
+      const pu = getSelectedPollingUnit();
+      const records = loadJson(STORAGE_KEYS.RECORDS, []);
+      const puCount = records.filter((r) => r.puCode === pu.code).length;
+      document.getElementById("quotaPill").textContent = `PU Uploads: ${puCount} / 5`;
+
+      if (currentGps) {
+        const dist = haversineMeters(currentGps.lat, currentGps.lng, pu.lat, pu.lng);
+        currentGps.distanceMeters = dist;
+        renderGpsReadout();
+      }
+      updateAiAuditPreview();
+    }
+
+    function renderGpsReadout() {
+      const el = document.getElementById("gpsReadout");
+      if (!currentGps) {
+        el.textContent = "GPS: Not captured yet";
+        return;
+      }
+      const inside = currentGps.distanceMeters <= 10;
+      el.textContent = `${inside ? "10m LOCKED" : "OUTSIDE 10m"} • ${currentGps.distanceMeters.toFixed(1)}m (±${Math.round(currentGps.accuracy || 5)}m)`;
+    }
+
+    function captureGpsLocation() {
+      const pu = getSelectedPollingUnit();
+      const readout = document.getElementById("gpsReadout");
+      if (!navigator.geolocation) {
+        readout.textContent = "GPS unsupported — use 'Simulate Inside 10m'";
+        return;
+      }
+      readout.textContent = "Acquiring GPS...";
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const dist = haversineMeters(pos.coords.latitude, pos.coords.longitude, pu.lat, pu.lng);
+          currentGps = {
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude,
+            accuracy: pos.coords.accuracy || 5,
+            distanceMeters: dist
+          };
+          renderGpsReadout();
+          updateAiAuditPreview();
+        },
+        (err) => {
+          readout.textContent = `GPS error (${err.message}) — try 'Simulate Inside 10m'`;
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+      );
+    }
+
+    function simulateInside10m() {
+      const pu = getSelectedPollingUnit();
+      currentGps = {
+        lat: pu.lat + 0.00004,
+        lng: pu.lng + 0.00003,
+        accuracy: 4,
+        distanceMeters: 5.5
+      };
+      renderGpsReadout();
+      updateAiAuditPreview();
+    }
+
+    function validateElectionSchedule() {
+      const electionType = document.getElementById("electionType").value;
+      const mode = document.getElementById("modeSelect").value;
+      const requiredDate = ELECTION_DATES_2027[electionType];
+      const todayIso = getWatIsoDate();
+      const banner = document.getElementById("scheduleBanner");
+
+      if (mode === "MOCK") {
+        banner.className = "status-box warn";
+        banner.textContent = `MOCK DRILL MODE ACTIVE • Target Statutory Date: ${requiredDate} (WAT) • Current WAT Date: ${todayIso}. Mock submissions are tagged MOCK and excluded from official live tallies.`;
+        return true;
+      }
+
+      if (todayIso !== requiredDate) {
+        banner.className = "status-box err";
+        banner.textContent = `DATE LOCK ACTIVE • ${electionType.replace(/_/g, " ")} is locked to statutory date ${requiredDate} (WAT). Today in WAT is ${todayIso}. Switch Mode to 'Mock / Simulation Drill' to test now.`;
+        return false;
+      }
+
+      banner.className = "status-box ok";
+      banner.textContent = `STATUTORY ELECTION DAY VERIFIED • ${electionType.replace(/_/g, " ")} matches ${requiredDate} (WAT).`;
+      return true;
+    }
+
+    function handleEvidencePhotoChange(event, kind) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const dataUrl = e.target.result;
+        if (kind === "sheet") {
+          sheetPhotoDataUrl = dataUrl;
+          const img = document.getElementById("sheetPreview");
+          img.src = dataUrl;
+          img.style.display = "block";
+        } else if (kind === "po") {
+          poHoldingPhotoDataUrl = dataUrl;
+          const img = document.getElementById("poHoldingPreview");
+          img.src = dataUrl;
+          img.style.display = "block";
+        } else if (kind === "adhoc") {
+          adhocStaffPhotoDataUrl = dataUrl;
+          const img = document.getElementById("adhocStaffPreview");
+          img.src = dataUrl;
+          img.style.display = "block";
+        }
+        updateAiAuditPreview();
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function getVotesFromForm() {
+      const votes = {};
+      let total = 0;
+      document.querySelectorAll(".party-vote-input").forEach((input) => {
+        const val = Math.max(0, parseInt(input.value || "0", 10) || 0);
+        votes[input.dataset.party] = val;
+        total += val;
+      });
+      return { votes, total };
+    }
+
+    function runAiSheetDraft() {
+      const accredited = Math.max(20, parseInt(document.getElementById("bvasAccredited").value || "250", 10) || 250);
+      const targetTurnout = Math.max(15, Math.round(accredited * 0.68));
+      const inputs = Array.from(document.querySelectorAll(".party-vote-input"));
+      if (!inputs.length) return;
+
+      const weights = inputs.map((_, idx) => {
+        if (idx === 5) return 34;
+        if (idx === 11) return 24;
+        if (idx === 14) return 14;
+        if (idx === 16) return 18;
+        return 1;
+      });
+      const weightSum = weights.reduce((a, b) => a + b, 0);
+
+      let allocated = 0;
+      inputs.forEach((inp, idx) => {
+        if (idx < inputs.length - 1) {
+          const v = Math.floor((targetTurnout * weights[idx]) / weightSum);
+          inp.value = v;
+          allocated += v;
+        } else {
+          inp.value = Math.max(0, targetTurnout - allocated);
+        }
+      });
+
+      updateAiAuditPreview();
+    }
+
+    function computeTrustScorePreview() {
+      const bio = loadJson(STORAGE_KEYS.BIOMETRICS, null);
+      const { total } = getVotesFromForm();
+      const accredited = Math.max(0, parseInt(document.getElementById("bvasAccredited").value || "0", 10) || 0);
+      const serial = document.getElementById("sheetSerialInput").value.trim();
+      const poSigned = document.getElementById("poSignedCheck").value;
+      const agentsSigned = document.getElementById("agentsSignedCheck").value;
+
+      let score = 0;
+      const notes = [];
+
+      if (bio && bio.faceDataUrl && bio.thumbDataUrl) {
+        score += 20;
+        notes.push("Face + Lens Thumbprint verified (+20)");
+      } else {
+        notes.push("Missing biometric proof (0/20)");
+      }
+
+      if (currentGps && currentGps.distanceMeters <= 10) {
+        score += 20;
+        notes.push(`Inside 10m PU geofence at ${currentGps.distanceMeters.toFixed(1)}m (+20)`);
+      } else {
+        notes.push("10m PU geofence not locked (0/20)");
+      }
+
+      if (sheetPhotoDataUrl) {
+        score += 15;
+        notes.push("Result sheet photo attached (+15)");
+      } else {
+        notes.push("Result sheet photo missing (0/15)");
+      }
+
+      if (poHoldingPhotoDataUrl) {
+        score += 15;
+        notes.push("Presiding Officer holding result photo attached (+15)");
+      } else {
+        notes.push("Presiding Officer holding result photo missing (0/15)");
+      }
+
+      if (adhocStaffPhotoDataUrl) {
+        score += 10;
+        notes.push("Ad-Hoc Staff photo attached (+10)");
+      } else {
+        notes.push("Ad-Hoc Staff photo missing (0/10)");
+      }
+
+      if (serial.length >= 4) {
+        score += 10;
+        notes.push(`Sheet serial '${serial}' logged (+10)`);
+      } else {
+        notes.push("Sheet serial number missing (0/10)");
+      }
+
+      if (poSigned === "YES" && (agentsSigned === "YES" || agentsSigned === "PARTIAL")) {
+        score += 10;
+        notes.push("Official/Agent sign-off recorded (+10)");
+      } else {
+        notes.push("Sign-off incomplete (0/10)");
+      }
+
+      if (total > accredited && accredited > 0) {
+        score = Math.max(0, score - 25);
+        notes.push(`AI Over-Voting Alert: Total votes (${total}) exceed BVAS accredited (${accredited}) (-25)`);
+      }
+
+      return { score: Math.min(100, score), notes, totalVotes: total, accredited };
+    }
+
+    function updateAiAuditPreview() {
+      const audit = computeTrustScorePreview();
+      const badge = document.getElementById("aiTrustScoreBadge");
+      const list = document.getElementById("aiAuditChecklist");
+      if (!badge || !list) return;
+
+      badge.textContent = `Estimated Trust Score: ${audit.score} / 100 • Total Votes: ${audit.totalVotes}`;
+      list.textContent = audit.notes.join(" • ");
+    }
+
+    async function stampEvidenceImage(dataUrl, lines, uploaderFaceUrl) {
+      return new Promise((resolve) => {
+        if (!dataUrl) return resolve("");
+        const img = new Image();
+        img.onload = () => {
+          const maxW = 900;
+          const scale = img.width > maxW ? maxW / img.width : 1;
+          const w = Math.max(360, Math.round(img.width * scale));
+          const h = Math.max(240, Math.round(img.height * scale));
+          const canvas = document.createElement("canvas");
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, w, h);
+
+          const footerH = Math.max(66, lines.length * 16 + 18);
+          ctx.fillStyle = "rgba(7, 19, 13, 0.86)";
+          ctx.fillRect(0, h - footerH, w, footerH);
+
+          ctx.fillStyle = "#eef7f1";
+          ctx.font = "bold 12px monospace";
+          lines.forEach((line, idx) => {
+            ctx.fillText(line, 12, h - footerH + 18 + idx * 15);
+          });
+
+          const finish = () => resolve(canvas.toDataURL("image/jpeg", 0.82));
+          if (uploaderFaceUrl) {
+            const face = new Image();
+            face.onload = () => {
+              const size = Math.min(68, footerH - 10);
+              ctx.drawImage(face, w - size - 10, h - footerH + 5, size, size);
+              ctx.strokeStyle = "#22c55e";
+              ctx.lineWidth = 2;
+              ctx.strokeRect(w - size - 10, h - footerH + 5, size, size);
+              finish();
+            };
+            face.onerror = finish;
+            face.src = uploaderFaceUrl;
+          } else {
+            finish();
+          }
+        };
+        img.onerror = () => resolve(dataUrl);
+        img.src = dataUrl;
+      });
+    }
+
+    function showUploadStatus(type, msg) {
+      const box = document.getElementById("uploadStatus");
+      box.className = `status-box ${type}`;
+      box.classList.remove("hidden");
+      box.textContent = msg;
+    }
+
+    async function submitResultSheet() {
+      const bio = loadJson(STORAGE_KEYS.BIOMETRICS, null);
+      if (!bio || !bio.faceDataUrl || !bio.thumbDataUrl) {
+        showUploadStatus("err", "Biometric verification required before uploading results.");
+        return;
+      }
+
+      const scheduleOk = validateElectionSchedule();
+      if (!scheduleOk) {
+        showUploadStatus("err", "Blocked by 2027 Statutory Election Date Lock. Switch Mode to 'Mock / Simulation Drill' to test outside election day.");
+        return;
+      }
+
+      const pu = getSelectedPollingUnit();
+      if (!currentGps || currentGps.distanceMeters > 10) {
+        showUploadStatus("err", "10-Meter Geofence Lock Failed: You must be within 10 meters of the Polling Unit (or use 'Simulate Inside 10m').");
+        return;
+      }
+
+      if (!sheetPhotoDataUrl) {
+        showUploadStatus("err", "Missing Required Photo 1: Attach a photograph of the Polling Unit result sheet.");
+        return;
+      }
+      if (!poHoldingPhotoDataUrl) {
+        showUploadStatus("err", "Missing Required Photo 2: Attach a photograph of the Presiding Officer holding the result sheet.");
+        return;
+      }
+      if (!adhocStaffPhotoDataUrl) {
+        showUploadStatus("err", "Missing Required Photo 3: Attach a photograph of the Polling Unit Ad-Hoc Staff.");
+        return;
+      }
+
+      const records = loadJson(STORAGE_KEYS.RECORDS, []);
+      const puExisting = records.filter((r) => r.puCode === pu.code);
+      if (puExisting.length >= 5) {
+        showUploadStatus("err", `Quota Reached: ${pu.name} already has the maximum 5 submissions.`);
+        return;
+      }
+
+      const { votes, total } = getVotesFromForm();
+      if (total <= 0) {
+        showUploadStatus("err", "Enter party vote counts (or click 'AI Auto-Draft Votes from Sheet') before submitting.");
+        return;
+      }
+
+      const serial = document.getElementById("sheetSerialInput").value.trim() || `UNSERIALIZED-${Date.now().toString().slice(-6)}`;
+      const accredited = Math.max(0, parseInt(document.getElementById("bvasAccredited").value || "0", 10) || 0);
+      const poSigned = document.getElementById("poSignedCheck").value;
+      const agentsSigned = document.getElementById("agentsSignedCheck").value;
+      const electionType = document.getElementById("electionType").value;
+      const mode = document.getElementById("modeSelect").value;
+      const watTime = getWatTimestamp();
+      const audit = computeTrustScorePreview();
+
+      const stampBase = [
+        `NW2027 • ${pu.code} • Serial: ${serial}`,
+        `WAT: ${watTime} • Dist: ${currentGps.distanceMeters.toFixed(1)}m • Trust: ${audit.score}/100`,
+        `Role: ${bio.role} • Face: ${bio.faceHash}`
+      ];
+
+      const stampedSheet = await stampEvidenceImage(sheetPhotoDataUrl, ["SHEET EVIDENCE", ...stampBase], bio.faceDataUrl);
+      const stampedPo = await stampEvidenceImage(poHoldingPhotoDataUrl, ["PRESIDING OFFICER HOLDING RESULT", ...stampBase], bio.faceDataUrl);
+      const stampedAdhoc = await stampEvidenceImage(adhocStaffPhotoDataUrl, ["PU AD-HOC STAFF", ...stampBase], bio.faceDataUrl);
+
+      const payloadHash = "SHA256-" + simpleHash(JSON.stringify({ pu: pu.code, serial, votes, watTime, face: bio.faceHash }));
+
+      const record = {
+        id: "REC-" + Date.now().toString(36).toUpperCase(),
+        electionType,
+        mode,
+        puCode: pu.code,
+        puName: pu.name,
+        serial,
+        accredited,
+        poSigned,
+        agentsSigned,
+        votes,
+        totalVotes: total,
+        trustScore: audit.score,
+        distanceMeters: Number(currentGps.distanceMeters.toFixed(1)),
+        gpsAccuracy: Math.round(currentGps.accuracy || 5),
+        watTime,
+        payloadHash,
+        uploaderRole: bio.role,
+        uploaderFaceHash: bio.faceHash,
+        uploaderThumbHash: bio.thumbHash,
+        uploaderFacePhoto: bio.faceDataUrl,
+        sheetPhoto: stampedSheet,
+        poHoldingPhoto: stampedPo,
+        adhocStaffPhoto: stampedAdhoc,
+        synced: navigator.onLine
+      };
+
+      records.push(record);
+      saveJson(STORAGE_KEYS.RECORDS, records);
+
+      if (!navigator.onLine) {
+        const queue = loadJson(STORAGE_KEYS.QUEUE, []);
+        queue.push(record);
+        saveJson(STORAGE_KEYS.QUEUE, queue);
+      }
+
+      saveAllToCloudVault(false);
+      onPollingUnitChange();
+      updateNetworkPill();
+      renderConsensusAndCollation();
+
+      showUploadStatus(
+        "ok",
+        `Submitted ${record.id} for ${pu.name} (${puExisting.length + 1}/5 quota used).
+Trust Score: ${record.trustScore}/100 • Total Votes: ${record.totalVotes} • Includes Sheet, Presiding Officer Holding Result & Ad-Hoc Staff photos.`
+      );
+    }
+
+    function resetResultForm() {
+      sheetPhotoDataUrl = "";
+      poHoldingPhotoDataUrl = "";
+      adhocStaffPhotoDataUrl = "";
+      document.getElementById("sheetPhotoInput").value = "";
+      document.getElementById("poHoldingPhotoInput").value = "";
+      document.getElementById("adhocStaffPhotoInput").value = "";
+      document.getElementById("sheetPreview").style.display = "none";
+      document.getElementById("poHoldingPreview").style.display = "none";
+      document.getElementById("adhocStaffPreview").style.display = "none";
+      document.querySelectorAll(".party-vote-input").forEach((i) => (i.value = 0));
+      updateAiAuditPreview();
+    }
+
+    function syncOfflineQueue() {
+      const queue = loadJson(STORAGE_KEYS.QUEUE, []);
+      if (!navigator.onLine) {
+        alert("Still offline. Items remain safely queued until network connectivity returns.");
+        return;
+      }
+      if (!queue.length) {
+        alert("Offline queue is already empty.");
+        return;
+      }
+      const records = loadJson(STORAGE_KEYS.RECORDS, []);
+      const queuedIds = new Set(queue.map((q) => q.id));
+      records.forEach((r) => {
+        if (queuedIds.has(r.id)) r.synced = true;
+      });
+      saveJson(STORAGE_KEYS.RECORDS, records);
+      saveJson(STORAGE_KEYS.QUEUE, []);
+      saveAllToCloudVault(false);
+      updateNetworkPill();
+      renderConsensusAndCollation();
+      alert(`Synced ${queue.length} queued submission(s).`);
+    }
+
+    function computeConsensusGroups(filteredRecords) {
+      const byPu = {};
+      filteredRecords.forEach((rec) => {
+        const key = `${rec.electionType}|${rec.mode}|${rec.puCode}`;
+        if (!byPu[key]) {
+          byPu[key] = {
+            key,
+            electionType: rec.electionType,
+            mode: rec.mode,
+            puCode: rec.puCode,
+            puName: rec.puName,
+            submissions: []
+          };
+        }
+        byPu[key].submissions.push(rec);
+      });
+
+      return Object.values(byPu).map((group) => {
+        const signatureCounts = {};
+        const signatureVotes = {};
+        group.submissions.forEach((s) => {
+          const sig = INEC_PARTIES.map((p) => `${p.acronym}:${s.votes[p.acronym] || 0}`).join("|");
+          signatureCounts[sig] = (signatureCounts[sig] || 0) + 1;
+          signatureVotes[sig] = s.votes;
+        });
+
+        let winningSig = null;
+        let maxCount = 0;
+        Object.entries(signatureCounts).forEach(([sig, count]) => {
+          if (count >= 3 && count > maxCount) {
+            maxCount = count;
+            winningSig = sig;
+          }
+        });
+
+        let status = "PENDING_CONSENSUS";
+        let verifiedVotes = null;
+        if (winningSig) {
+          status = "VERIFIED";
+          verifiedVotes = signatureVotes[winningSig];
+        } else if (group.submissions.length >= 5) {
+          status = "DISPUTED";
+        }
+
+        return {
+          ...group,
+          status,
+          consensusCount: maxCount,
+          verifiedVotes
+        };
+      });
+    }
+
+    function renderConsensusAndCollation() {
+      const ledgerEl = document.getElementById("consensusLedger");
+      const tbodyEl = document.getElementById("collationTableBody");
+      const winnerEl = document.getElementById("winnerBanner");
+      if (!ledgerEl || !tbodyEl || !winnerEl) return;
+
+      const fElection = document.getElementById("filterElection").value;
+      const fMode = document.getElementById("filterMode").value;
+
+      const allRecords = loadJson(STORAGE_KEYS.RECORDS, []);
+      const filtered = allRecords.filter((r) => {
+        if (fElection !== "ALL" && r.electionType !== fElection) return false;
+        if (fMode !== "ALL" && r.mode !== fMode) return false;
+        return true;
+      });
+
+      const groups = computeConsensusGroups(filtered);
+      const totalsByParty = {};
+      INEC_PARTIES.forEach((p) => (totalsByParty[p.acronym] = 0));
+
+      let verifiedPuCount = 0;
+      groups.forEach((g) => {
+        if (g.status === "VERIFIED" && g.verifiedVotes) {
+          verifiedPuCount += 1;
+          INEC_PARTIES.forEach((p) => {
+            totalsByParty[p.acronym] += g.verifiedVotes[p.acronym] || 0;
+          });
+        }
+      });
+
+      const grandTotal = Object.values(totalsByParty).reduce((a, b) => a + b, 0);
+      const ranked = INEC_PARTIES
+        .map((p) => ({
+          ...p,
+          votes: totalsByParty[p.acronym] || 0,
+          share: grandTotal > 0 ? (((totalsByParty[p.acronym] || 0) / grandTotal) * 100).toFixed(2) : "0.00"
+        }))
+        .sort((a, b) => b.votes - a.votes);
+
+      if (verifiedPuCount === 0 || grandTotal === 0) {
+        winnerEl.innerHTML = `
+          <strong>Projected Standings (Awaiting 3-of-5 Verified Polling Units)</strong>
+          <div style="font-size:0.82rem; color:var(--muted); margin-top:0.2rem;">
+            ${groups.length} Polling Unit group(s) in filter • ${verifiedPuCount} reached 3-of-5 majority consensus. Submit at least 3 matching sheets for a Polling Unit to lock verified votes.
+          </div>
+        `;
+      } else {
+        const leader = ranked[0];
+        const leaderIcon = leader.symbolSvg ? `${leader.symbol} ` : `${leader.symbol} `;
+        winnerEl.innerHTML = `
+          <strong>Leading Verified Projection: ${leaderIcon}${leader.acronym} (${leader.name}) — ${leader.votes.toLocaleString()} votes (${leader.share}%)</strong>
+          <div style="font-size:0.82rem; color:var(--muted); margin-top:0.2rem;">
+            Based on ${verifiedPuCount} Polling Unit(s) locked via 3-of-5 majority consensus (${grandTotal.toLocaleString()} total verified votes).
+          </div>
+        `;
+      }
+
+      if (!filtered.length) {
+        ledgerEl.innerHTML = `<div class="status-box">No result sheets match the current filter yet.</div>`;
+      } else {
+        ledgerEl.innerHTML = groups.map((g) => {
+          const tagClass =
+            g.status === "VERIFIED" ? "verified" : g.status === "DISPUTED" ? "disputed" : "pending";
+          const tagLabel =
+            g.status === "VERIFIED"
+              ? `VERIFIED (${g.consensusCount}/5 Consensus)`
+              : g.status === "DISPUTED"
+              ? "DISPUTED (5/5 Without 3-of-5 Match)"
+              : `PENDING (${g.submissions.length}/5 Uploaded)`;
+
+          const cardsHtml = g.submissions.map((sub) => {
+            const topParties = Object.entries(sub.votes)
+              .filter(([, v]) => v > 0)
+              .sort((a, b) => b[1] - a[1])
+              .slice(0, 5)
+              .map(([k, v]) => `${k}: ${v}`)
+              .join(" • ");
+
+            return `
+              <div style="margin-top:0.65rem; padding-top:0.65rem; border-top:1px dashed var(--border);">
+                <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:0.5rem;">
+                  <div style="display:flex; align-items:center; gap:0.55rem;">
+                    ${sub.uploaderFacePhoto ? `<img src="${sub.uploaderFacePhoto}" alt="Uploader face" style="width:42px; height:42px; border-radius:8px; object-fit:cover; border:1px solid var(--green-bright);" onclick="openLightbox(this.src, 'Uploader Face — ${sub.id}')" />` : ""}
+                    <div style="font-size:0.8rem;">
+                      <strong>${sub.id}</strong> • <span>${sub.uploaderRole}</span>
+                      <div style="color:var(--muted); font-size:0.74rem;">
+                        ${sub.watTime} • Serial: <strong>${sub.serial}</strong> • Trust Score: <strong>${sub.trustScore}/100</strong> • ${sub.synced ? "Synced" : "Queued"}
+                      </div>
+                    </div>
+                  </div>
+                  <span class="tag">Total: ${sub.totalVotes}</span>
+                </div>
+                <div style="font-size:0.78rem; color:var(--muted); margin-top:0.35rem;">
+                  ${topParties || "No votes recorded"}
+                </div>
+                <div class="evidence-grid" style="margin-top:0.55rem;">
+                  ${sub.sheetPhoto ? `<div class="evidence-card" style="padding:0.45rem;"><div style="font-size:0.7rem; color:var(--muted);">Result Sheet</div><img src="${sub.sheetPhoto}" class="evidence-thumb" style="height:95px;" onclick="openLightbox(this.src, 'Result Sheet — ${sub.id}')" /></div>` : ""}
+                  ${sub.poHoldingPhoto ? `<div class="evidence-card" style="padding:0.45rem;"><div style="font-size:0.7rem; color:var(--muted);">Presiding Officer Holding Result</div><img src="${sub.poHoldingPhoto}" class="evidence-thumb" style="height:95px;" onclick="openLightbox(this.src, 'Presiding Officer Holding Result — ${sub.id}')" /></div>` : ""}
+                  ${sub.adhocStaffPhoto ? `<div class="evidence-card" style="padding:0.45rem;"><div style="font-size:0.7rem; color:var(--muted);">Ad-Hoc Staff</div><img src="${sub.adhocStaffPhoto}" class="evidence-thumb" style="height:95px;" onclick="openLightbox(this.src, 'Ad-Hoc Staff — ${sub.id}')" /></div>` : ""}
+                </div>
+              </div>
+            `;
+          }).join("");
+
+          return `
+            <div class="ledger-item">
+              <div class="ledger-top">
+                <div>
+                  <strong>${g.puName}</strong> <span style="font-size:0.78rem; color:var(--muted);">(${g.puCode})</span>
+                  <div style="font-size:0.76rem; color:var(--muted);">${g.electionType.replace(/_/g, " ")} • ${g.mode}</div>
+                </div>
+                <span class="tag ${tagClass}">${tagLabel}</span>
+              </div>
+              ${cardsHtml}
+            </div>
+          `;
+        }).join("");
+      }
+
+      tbodyEl.innerHTML = ranked.map((p, idx) => {
+        const symCell = p.symbolSvg ? `<span style="display:inline-flex; align-items:center; gap:0.35rem;">${p.symbolSvg}</span>` : `<span>${p.symbol}</span>`;
+        return `
+          <tr>
+            <td><strong>#${idx + 1}</strong></td>
+            <td>${symCell}</td>
+            <td><strong>${p.acronym}</strong> <span style="color:var(--muted); font-size:0.78rem;">— ${p.name}</span></td>
+            <td><strong>${p.votes.toLocaleString()}</strong></td>
+            <td>${p.share}%</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function verifyRoleStatus() {
+      const role = document.getElementById("lookupRole").value;
+      const code = document.getElementById("lookupCode").value.trim() || "UNSPECIFIED-BADGE";
+      const bio = loadJson(STORAGE_KEYS.BIOMETRICS, null);
+      const box = document.getElementById("statusResultBox");
+
+      if (!bio || !bio.faceDataUrl || !bio.thumbDataUrl) {
+        box.className = "status-box warn";
+        box.textContent = `Role: ${role} • Badge: ${code} • Biometric Status: NOT VERIFIED. Complete Face Photograph & Camera-Lens Bio Thumbprint first.`;
+        return;
+      }
+
+      box.className = "status-box ok";
+      box.textContent = [
+        `STATUS: VERIFIED & BIOMETRICALLY BOUND`,
+        `Role: ${role} • Badge/Code: ${code}`,
+        `Verified At: ${bio.verifiedAt}`,
+        `Face Biometric Hash: ${bio.faceHash}`,
+        `Camera-Lens Thumbprint Hash: ${bio.thumbHash}`,
+        `Owner: Apps & Algorithm Concept (dev@connectorient.com.ng • Attn: Douglas Idima)`
+      ].join("
+");
+    }
+
+    function runAiIncidentAssist() {
+      const desc = (document.getElementById("incDesc").value || "").toLowerCase();
+      const catEl = document.getElementById("incCategory");
+      const sevEl = document.getElementById("incSeverity");
+      const txtEl = document.getElementById("aiIncidentText");
+
+      if (!desc.trim()) {
+        txtEl.textContent = "Type a description to run automatic incident classification & severity check.";
+        return;
+      }
+
+      let suggestedCat = catEl.value;
+      let suggestedSev = sevEl.value;
+
+      if (desc.includes("snatch") || desc.includes("ballot box") || desc.includes("cart away")) {
+        suggestedCat = "Ballot Box Snatching / Disruption";
+        suggestedSev = "CRITICAL";
+      } else if (desc.includes("bvas") || desc.includes("accredit") || desc.includes("fingerprint")) {
+        suggestedCat = "BVAS Malfunction / Accreditation Delay";
+        suggestedSev = "HIGH";
+      } else if (desc.includes("shoot") || desc.includes("attack") || desc.includes("thug") || desc.includes("intimidation") || desc.includes("fight")) {
+        suggestedCat = "Voter Intimidation / Violence";
+        suggestedSev = "CRITICAL";
+      } else if (desc.includes("money") || desc.includes("naira") || desc.includes("buy") || desc.includes("induce")) {
+        suggestedCat = "Vote Buying / Inducement";
+        suggestedSev = "HIGH";
+      } else if (desc.includes("late") || desc.includes("arrive") || desc.includes("material")) {
+        suggestedCat = "Late Arrival of Officials / Materials";
+        suggestedSev = "MEDIUM";
+      } else if (desc.includes("alter") || desc.includes("result") || desc.includes("ec8a") || desc.includes("irev")) {
+        suggestedCat = "Result Sheet Alteration / Non-Upload";
+        suggestedSev = "CRITICAL";
+      }
+
+      catEl.value = suggestedCat;
+      sevEl.value = suggestedSev;
+      txtEl.textContent = `Classified as "${suggestedCat}" with severity "${suggestedSev}".`;
+    }
+
+    function handleIncidentMedia(event, kind) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        if (kind === "photo") {
+          incPhotoDataUrl = e.target.result;
+          const img = document.getElementById("incPhotoPreview");
+          img.src = incPhotoDataUrl;
+          img.style.display = "block";
+        } else {
+          incVideoDataUrl = e.target.result;
+          const vid = document.getElementById("incVideoPreview");
+          vid.src = incVideoDataUrl;
+          vid.style.display = "block";
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function submitIncidentReport() {
+      const bio = loadJson(STORAGE_KEYS.BIOMETRICS, null);
+      const category = document.getElementById("incCategory").value;
+      const severity = document.getElementById("incSeverity").value;
+      const location = document.getElementById("incLocation").value.trim() || getSelectedPollingUnit().name;
+      const desc = document.getElementById("incDesc").value.trim();
+      const statusBox = document.getElementById("incidentStatus");
+
+      if (!desc) {
+        statusBox.className = "status-box err";
+        statusBox.classList.remove("hidden");
+        statusBox.textContent = "Please enter an incident description before submitting.";
+        return;
+      }
+
+      const incidents = loadJson(STORAGE_KEYS.INCIDENTS, []);
+      const item = {
+        id: "INC-" + Date.now().toString(36).toUpperCase(),
+        category,
+        severity,
+        location,
+        desc,
+        watTime: getWatTimestamp(),
+        gps: currentGps ? `${currentGps.lat.toFixed(5)}, ${currentGps.lng.toFixed(5)}` : "GPS Not Captured",
+        reporterRole: bio ? bio.role : "Verified User",
+        reporterFace: bio ? bio.faceDataUrl : "",
+        photo: incPhotoDataUrl,
+        video: incVideoDataUrl
+      };
+
+      incidents.unshift(item);
+      saveJson(STORAGE_KEYS.INCIDENTS, incidents);
+      saveAllToCloudVault(false);
+      renderIncidents();
+      resetIncidentForm();
+
+      statusBox.className = "status-box ok";
+      statusBox.classList.remove("hidden");
+      statusBox.textContent = `Incident ${item.id} logged (${severity} • ${category}) and saved to Cloud Vault.`;
+    }
+
+    function resetIncidentForm() {
+      incPhotoDataUrl = "";
+      incVideoDataUrl = "";
+      document.getElementById("incLocation").value = "";
+      document.getElementById("incDesc").value = "";
+      document.getElementById("incPhoto").value = "";
+      document.getElementById("incVideo").value = "";
+      document.getElementById("incPhotoPreview").style.display = "none";
+      document.getElementById("incVideoPreview").style.display = "none";
+      runAiIncidentAssist();
+    }
+
+    function renderIncidents() {
+      const feed = document.getElementById("incidentFeed");
+      if (!feed) return;
+      const incidents = loadJson(STORAGE_KEYS.INCIDENTS, []);
+      if (!incidents.length) {
+        feed.innerHTML = `<div class="status-box">No incidents reported yet.</div>`;
+        return;
+      }
+
+      feed.innerHTML = incidents.map((inc) => {
+        const sevClass = inc.severity === "CRITICAL" ? "disputed" : inc.severity === "HIGH" ? "pending" : "verified";
+        return `
+          <div class="ledger-item">
+            <div class="ledger-top">
+              <div>
+                <strong>${inc.id} — ${inc.category}</strong>
+                <div style="font-size:0.76rem; color:var(--muted);">${inc.location} • ${inc.watTime} • GPS: ${inc.gps} • By ${inc.reporterRole}</div>
+              </div>
+              <span class="tag ${sevClass}">${inc.severity}</span>
+            </div>
+            <p style="font-size:0.84rem; margin-top:0.35rem;">${inc.desc}</p>
+            <div class="evidence-grid" style="margin-top:0.6rem;">
+              ${inc.photo ? `<img src="${inc.photo}" class="evidence-thumb" onclick="openLightbox(this.src, 'Incident Photo — ${inc.id}')" />` : ""}
+              ${inc.video ? `<video src="${inc.video}" controls style="width:100%; max-height:170px; border-radius:8px; border:1px solid var(--border);"></video>` : ""}
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    async function saveAllToCloudVault(showFeedback = true) {
+      const records = loadJson(STORAGE_KEYS.RECORDS, []);
+      const incidents = loadJson(STORAGE_KEYS.INCIDENTS, []);
+      const cloudVault = loadJson(STORAGE_KEYS.CLOUD, []);
+
+      const existingMap = new Map(cloudVault.map((entry) => [entry.id, entry]));
+
+      records.forEach((r) => {
+        existingMap.set(r.id, {
+          id: r.id,
+          kind: "RESULT_SHEET",
+          title: `${r.puName} (${r.electionType})`,
+          savedAt: getWatTimestamp(),
+          data: r
+        });
+      });
+
+      incidents.forEach((inc) => {
+        existingMap.set(inc.id, {
+          id: inc.id,
+          kind: "INCIDENT_REPORT",
+          title: `${inc.category} — ${inc.location}`,
+          savedAt: getWatTimestamp(),
+          data: inc
+        });
+      });
+
+      const updatedVault = Array.from(existingMap.values());
+      saveJson(STORAGE_KEYS.CLOUD, updatedVault);
+
+      const endpoint = (document.getElementById("cloudEndpointInput")?.value || "").trim();
+      let remoteMsg = "";
+      if (endpoint && navigator.onLine) {
+        try {
+          await fetch(endpoint, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              owner: "Apps & Algorithm Concept (dev@connectorient.com.ng, Attn: Douglas Idima)",
+              exportedAt: new Date().toISOString(),
+              items: updatedVault
+            })
+          });
+          remoteMsg = ` • Pushed to ${endpoint}`;
+        } catch (err) {
+          remoteMsg = ` • Remote endpoint unreachable (${err.message}); saved locally in Cloud Vault`;
+        }
+      }
+
+      renderCloudVault();
+      if (showFeedback) {
+        const st = document.getElementById("cloudStatus");
+        st.className = "status-box ok";
+        st.textContent = `Cloud Vault updated: ${updatedVault.length} total item(s) stored at ${getWatTimestamp()}${remoteMsg}.`;
+      }
+    }
+
+    function recallSingleFromCloud(itemId) {
+      const vault = loadJson(STORAGE_KEYS.CLOUD, []);
+      const found = vault.find((x) => x.id === itemId);
+      if (!found) return;
+
+      if (found.kind === "RESULT_SHEET") {
+        const records = loadJson(STORAGE_KEYS.RECORDS, []);
+        if (!records.some((r) => r.id === found.data.id)) {
+          records.push(found.data);
+          saveJson(STORAGE_KEYS.RECORDS, records);
+        }
+        renderConsensusAndCollation();
+        switchTab("consensus");
+      } else if (found.kind === "INCIDENT_REPORT") {
+        const incidents = loadJson(STORAGE_KEYS.INCIDENTS, []);
+        if (!incidents.some((i) => i.id === found.data.id)) {
+          incidents.unshift(found.data);
+          saveJson(STORAGE_KEYS.INCIDENTS, incidents);
+        }
+        renderIncidents();
+        switchTab("incidents");
+      }
+      onPollingUnitChange();
+      alert(`Recalled ${found.id} into active app view.`);
+    }
+
+    function recallAllFromCloudVault() {
+      const vault = loadJson(STORAGE_KEYS.CLOUD, []);
+      if (!vault.length) {
+        alert("Cloud Vault is empty.");
+        return;
+      }
+
+      const records = loadJson(STORAGE_KEYS.RECORDS, []);
+      const incidents = loadJson(STORAGE_KEYS.INCIDENTS, []);
+      const recIds = new Set(records.map((r) => r.id));
+      const incIds = new Set(incidents.map((i) => i.id));
+
+      let added = 0;
+      vault.forEach((entry) => {
+        if (entry.kind === "RESULT_SHEET" && !recIds.has(entry.data.id)) {
+          records.push(entry.data);
+          recIds.add(entry.data.id);
+          added++;
+        } else if (entry.kind === "INCIDENT_REPORT" && !incIds.has(entry.data.id)) {
+          incidents.unshift(entry.data);
+          incIds.add(entry.data.id);
+          added++;
+        }
+      });
+
+      saveJson(STORAGE_KEYS.RECORDS, records);
+      saveJson(STORAGE_KEYS.INCIDENTS, incidents);
+      onPollingUnitChange();
+      renderConsensusAndCollation();
+      renderIncidents();
+      alert(`Recalled ${added} new cloud item(s) into the app.`);
+    }
+
+    function exportCloudBundleJson() {
+      const vault = loadJson(STORAGE_KEYS.CLOUD, []);
+      const blob = new Blob([JSON.stringify({
+        portal: "NaijaWatch 2027",
+        propertyOf: "Apps & Algorithm Concept",
+        contactEmail: "dev@connectorient.com.ng",
+        attention: "Douglas Idima",
+        exportedAt: getWatTimestamp(),
+        items: vault
+      }, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `naijawatch-2027-cloud-vault-${Date.now()}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function renderCloudVault() {
+      const listEl = document.getElementById("cloudVaultList");
+      if (!listEl) return;
+      const query = (document.getElementById("cloudSearchInput")?.value || "").trim().toLowerCase();
+      const vault = loadJson(STORAGE_KEYS.CLOUD, []);
+
+      const filtered = vault.filter((item) => {
+        if (!query) return true;
+        return (
+          item.id.toLowerCase().includes(query) ||
+          item.kind.toLowerCase().includes(query) ||
+          item.title.toLowerCase().includes(query)
+        );
+      });
+
+      if (!filtered.length) {
+        listEl.innerHTML = `<div class="status-box">No cloud vault items match your filter.</div>`;
+        return;
+      }
+
+      listEl.innerHTML = filtered.map((item) => `
+        <div class="ledger-item">
+          <div class="ledger-top">
+            <div>
+              <strong>${item.id}</strong> • <span class="tag">${item.kind}</span>
+              <div style="font-size:0.82rem; margin-top:0.2rem;">${item.title}</div>
+              <div style="font-size:0.74rem; color:var(--muted);">Saved: ${item.savedAt}</div>
+            </div>
+            <button type="button" class="primary" onclick="recallSingleFromCloud('${item.id}')">Recall to App</button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function openSituationRoom() {
+      syncSituationRoomFields("state");
+      document.getElementById("situationModal").classList.add("open");
+    }
+
+    function closeSituationRoom() {
+      document.getElementById("situationModal").classList.remove("open");
+    }
+
+    function selectPlatform(platform) {
+      situationState.platform = platform;
+      document.querySelectorAll(".platform-btn").forEach((b) => {
+        b.classList.toggle("selected", b.dataset.platform === platform);
+      });
+      syncSituationRoomFields("state");
+    }
+
+    function syncSituationRoomFields(source) {
+      const modalUrl = document.getElementById("modalRoomUrl");
+      const modalPass = document.getElementById("modalPasscode");
+      const modalNotes = document.getElementById("modalNotes");
+      const railPlat = document.getElementById("railPlatform");
+      const railUrl = document.getElementById("railRoomUrl");
+      const railNotes = document.getElementById("railNotes");
+
+      if (source === "modal") {
+        situationState.roomUrl = modalUrl.value;
+        situationState.passcode = modalPass.value;
+        situationState.notes = modalNotes.value;
+      } else if (source === "rail") {
+        situationState.platform = railPlat.value;
+        situationState.roomUrl = railUrl.value;
+        situationState.notes = railNotes.value;
+      }
+
+      if (modalUrl) modalUrl.value = situationState.roomUrl || "";
+      if (modalPass) modalPass.value = situationState.passcode || "";
+      if (modalNotes) modalNotes.value = situationState.notes || "";
+      if (railPlat) railPlat.value = situationState.platform || "Zoom";
+      if (railUrl) railUrl.value = situationState.roomUrl || "";
+      if (railNotes) railNotes.value = situationState.notes || "";
+
+      document.querySelectorAll(".platform-btn").forEach((b) => {
+        b.classList.toggle("selected", b.dataset.platform === situationState.platform);
+      });
+
+      const st = document.getElementById("situationStatus");
+      if (st) {
+        st.textContent = `Platform: ${situationState.platform} • Room: ${situationState.roomUrl || "Not set"} ${situationState.passcode ? "• Passcode: " + situationState.passcode : ""}`;
+      }
+
+      saveJson(STORAGE_KEYS.SITUATION, situationState);
+    }
+
+    function launchSituationCall() {
+      syncSituationRoomFields("state");
+      let url = (situationState.roomUrl || "").trim();
+      if (!url) {
+        url = "https://zoom.us/j/2027000000";
+      } else if (!/^https?:\/\//i.test(url)) {
+        const cleanedId = url.replace(/\s+/g, "");
+        if (situationState.platform === "Google Meet") {
+          url = `https://meet.google.com/${cleanedId}`;
+        } else if (situationState.platform === "Jitsi Meet") {
+          url = `https://meet.jit.si/${encodeURIComponent(cleanedId)}`;
+        } else {
+          url = `https://zoom.us/j/${encodeURIComponent(cleanedId)}`;
+        }
+      }
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
+
+    function copySituationInvite() {
+      syncSituationRoomFields("state");
+      const text = `The Situation Room (${situationState.platform})
+Link/Room: ${situationState.roomUrl}
+Passcode: ${situationState.passcode || "N/A"}
+Briefing: ${situationState.notes || ""}`;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => alert("Situation Room invite copied.")).catch(() => alert(text));
+      } else {
+        alert(text);
+      }
+    }
+
+    function openLightbox(src, title) {
+      if (!src) return;
+      document.getElementById("lightboxTitle").textContent = title || "Evidence Preview";
+      document.getElementById("lightboxImg").src = src;
+      document.getElementById("lightboxModal").classList.add("open");
+    }
+
+    function closeLightbox() {
+      document.getElementById("lightboxModal").classList.remove("open");
+    }
+
+    window.addEventListener("online", updateNetworkPill);
+    window.addEventListener("offline", updateNetworkPill);
+
+    document.addEventListener("DOMContentLoaded", () => {
+      renderPartyInputs();
+      validateElectionSchedule();
+      updateNetworkPill();
+      syncSituationRoomFields("state");
+
+      const savedDesktop = loadJson(STORAGE_KEYS.DESKTOP, false);
+      if (savedDesktop) toggleDesktopMode(true);
+
+      const savedBio = loadJson(STORAGE_KEYS.BIOMETRICS, null);
+      if (savedBio && savedBio.faceDataUrl && savedBio.thumbDataUrl) {
+        applyUnlockedSession(savedBio);
+      }
+    });
+  </script>
+</body>
+</html>
