@@ -174,27 +174,6 @@
       padding: 0 1rem 3rem;
     }
 
-    body.desktop-mode .container {
-      max-width: 1540px;
-    }
-
-    body.desktop-mode .desktop-workspace {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 370px;
-      gap: 1.25rem;
-      align-items: start;
-    }
-
-    .situation-rail {
-      display: none;
-    }
-
-    body.desktop-mode .situation-rail {
-      display: block;
-      position: sticky;
-      top: 84px;
-    }
-
     .gate-banner {
       background: linear-gradient(135deg, rgba(22, 163, 74, 0.16), rgba(14, 33, 24, 0.96));
       border: 1px solid var(--border);
@@ -370,15 +349,6 @@
     }
 
     .preview-img {
-      margin-top: 0.65rem;
-      max-width: 100%;
-      max-height: 240px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      display: none;
-    }
-
-    .preview-video {
       margin-top: 0.65rem;
       max-width: 100%;
       max-height: 240px;
@@ -667,9 +637,7 @@
           <span id="netLabel">Online (WAT)</span>
         </div>
         <div class="pill" id="quotaPill">PU Uploads: 0 / 5</div>
-        <button type="button" id="desktopModeBtn" onclick="toggleDesktopMode()">Desktop Mode: OFF</button>
         <button type="button" class="situation-btn" onclick="openSituationRoom()">The Situation Room</button>
-        <button type="button" class="warn" id="syncBtn" onclick="syncOfflineQueue()">Sync Queue (0)</button>
       </div>
     </div>
     <div class="topbar-inner">
@@ -696,8 +664,8 @@
           <option value="Citizen Verifier">Citizen Verifier</option>
           <option value="Accredited Journalist / Media">Accredited Journalist / Media</option>
         </select>
-        <button type="button" id="openBioGateBtn" onclick="openBiometricGate(document.getElementById('roleSelect').value || currentRole || 'Citizen Verifier')">
-          Capture Face &amp; Thumbprint
+        <button type="button" id="openBioGateBtn" onclick="unlockApp()">
+          Unlock App (Biometric Bypass)
         </button>
       </div>
     </section>
@@ -705,7 +673,7 @@
     <div id="appLockedNotice" class="card" style="border-color: var(--gold);">
       <h2>Biometric Camera Lock Active</h2>
       <p class="sub">
-        Select your status/role above (or tap <strong>Capture Face &amp; Thumbprint</strong>) to capture your <strong>instant Face Photograph</strong> and <strong>Camera-Lens Bio Thumbprint</strong>. Full app access unlocks immediately after both biometric scans are verified.
+        Select your status/role above (or tap <strong>Unlock App</strong>) to simulate capturing your <strong>instant Face Photograph</strong> and <strong>Camera-Lens Bio Thumbprint</strong>. Full app access unlocks immediately.
       </p>
     </div>
 
@@ -713,246 +681,285 @@
       <nav class="tabs" role="tablist">
         <button type="button" class="tab-btn active" data-tab="upload" onclick="switchTab('upload')">1. Upload Result Sheet</button>
         <button type="button" class="tab-btn" data-tab="consensus" onclick="switchTab('consensus')">2. Consensus &amp; Collation</button>
-        <button type="button" class="tab-btn" data-tab="status" onclick="switchTab('status')">3. Role &amp; Accreditation</button>
-        <button type="button" class="tab-btn" data-tab="incidents" onclick="switchTab('incidents')">4. Incident Reports (Photo &amp; Video)</button>
-        <button type="button" class="tab-btn" data-tab="cloud" onclick="switchTab('cloud')">5. Cloud Save &amp; Recall</button>
       </nav>
 
-      <div class="desktop-workspace">
-        <div class="workspace-main">
-          <!-- TAB 1: UPLOAD RESULT SHEET -->
-          <section id="tab-upload" class="card">
-            <h2>Polling Unit Result Sheet &amp; Official Proof Upload</h2>
-            <p class="sub">
-              Requires strict <strong>10-meter proximity</strong> to the selected Polling Unit GPS coordinates, live sheet photo, <strong>Presiding Officer holding the signed result sheet</strong>, and <strong>Ad-Hoc Staff</strong> photo. Max <strong>5 uploads</strong> per Polling Unit; verified by <strong>3-of-5 consensus</strong>.
-            </p>
+      <!-- TAB 1: UPLOAD RESULT SHEET -->
+      <section id="tab-upload" class="card">
+        <h2>Polling Unit Result Sheet &amp; Official Proof Upload</h2>
+        <p class="sub">
+          Requires strict <strong>10-meter proximity</strong>. Max <strong>5 uploads</strong> per Polling Unit.
+        </p>
 
-            <div class="uploader-chip">
-              <img id="activeUploaderFaceImg" alt="Verified Uploader Face" />
-              <div style="font-size:0.78rem;">
-                <div><strong id="activeUploaderName">Verified Uploader</strong> &bull; <span id="activeUploaderRole">Role</span></div>
-                <div style="color:var(--muted);" id="activeUploaderBioMeta">Face &amp; Camera-Lens Thumbprint Hash Ready</div>
-              </div>
+        <div class="uploader-chip">
+          <img id="activeUploaderFaceImg" src="https://via.placeholder.com/48" alt="Verified Uploader Face" />
+          <div style="font-size:0.78rem;">
+            <div><strong id="activeUploaderName">Verified Uploader</strong> &bull; <span id="activeUploaderRole">Role</span></div>
+            <div style="color:var(--muted);" id="activeUploaderBioMeta">Biometrics Verified</div>
+          </div>
+        </div>
+
+        <div class="grid-2" style="margin-top:0.85rem;">
+          <div>
+            <label for="puSelect">Polling Unit (Target)</label>
+            <select id="puSelect" onchange="onPollingUnitChange()">
+              <option value="PU-24-01-01-001|Garki Village Square PU 001, AMAC, FCT|9.035800|7.495100">
+                Garki Village Square PU 001 (AMAC, FCT)
+              </option>
+              <option value="PU-25-12-04-008|Ikeja GRA Ward 04 PU 008, Ikeja, Lagos|6.583300|3.350000">
+                Ikeja GRA Ward 04 PU 008 (Ikeja, Lagos)
+              </option>
+            </select>
+          </div>
+          <div>
+            <label for="bvasAccredited">BVAS Accredited Voters Count</label>
+            <input id="bvasAccredited" type="number" min="0" value="250" oninput="updateAiAuditPreview()" />
+          </div>
+        </div>
+
+        <div style="margin-top:0.85rem; display:flex; flex-wrap:wrap; gap:0.5rem; align-items:center;">
+          <button type="button" onclick="simulateGps()">Capture Live GPS (Simulated)</button>
+          <span id="gpsReadout" class="pill">GPS: Not captured yet</span>
+        </div>
+
+        <div style="margin-top:1rem;">
+          <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:0.5rem;">
+            <label style="margin:0;">All 22 INEC-Registered Political Parties</label>
+          </div>
+          <div id="partyInputsGrid" class="party-grid"></div>
+        </div>
+
+        <div class="ai-panel" id="aiPreSubmitPanel">
+          <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:0.5rem; margin-bottom:0.4rem;">
+            <span class="ai-badge">AI Pre-Submit Audit</span>
+            <strong id="aiTrustScoreBadge">Estimated Trust Score: -- / 100</strong>
+          </div>
+          <div id="aiAuditChecklist" style="font-size:0.8rem; color:var(--muted);">
+            Awaiting GPS capture...
+          </div>
+        </div>
+
+        <div style="margin-top:1rem; display:flex; flex-wrap:wrap; gap:0.6rem;">
+          <button type="button" class="primary" id="submitSheetBtn" onclick="submitResultSheet()">
+            Submit Result Sheet for Consensus
+          </button>
+        </div>
+
+        <div id="uploadStatus" class="status-box hidden"></div>
+      </section>
+
+      <!-- TAB 2: CONSENSUS & COLLATION -->
+      <section id="tab-consensus" class="card hidden">
+        <h2>3-of-5 Majority Consensus &amp; Central Collation</h2>
+        <p class="sub">
+          Each Polling Unit accepts up to <strong>5 submissions</strong>. Once <strong>at least 3 of the 5</strong> match, the PU result locks as <strong>VERIFIED</strong>.
+        </p>
+
+        <div id="winnerBanner" class="winner-banner">Waiting for verified polling unit results...</div>
+
+        <h3 style="font-size:0.95rem; margin-bottom:0.4rem;">Polling Unit Consensus Ledger</h3>
+        <div id="consensusLedger">No submissions yet.</div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Situation Room Modal -->
+  <div class="modal-backdrop" id="situationModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>The Situation Room</h2>
+        <button type="button" onclick="closeSituationRoom()">Close</button>
+      </div>
+      <p class="sub">Coordinate live with your team using your preferred platform.</p>
+      <div class="platform-grid">
+        <button class="platform-btn" onclick="launchMeeting('https://zoom.us')">Zoom Meeting</button>
+        <button class="platform-btn" onclick="launchMeeting('https://meet.google.com')">Google Meet</button>
+        <button class="platform-btn" onclick="launchMeeting('https://teams.microsoft.com')">Microsoft Teams</button>
+        <button class="platform-btn" onclick="launchMeeting('https://meet.jit.si/NaijaWatch2027')">Jitsi Meet</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- Global State ---
+    let currentRole = "";
+    let gpsCaptured = false;
+    let submissions = []; // Stores all polling unit submissions
+
+    // Party Data
+    const parties = [
+      { acronym: "A", name: "Accord", symbol: "🔺" },
+      { acronym: "AA", name: "Action Alliance", symbol: "🔷" },
+      { acronym: "AAC", name: "African Action Congress", symbol: "🟢" },
+      { acronym: "ADC", name: "African Democratic Congress", symbol: "🟡" },
+      { acronym: "ADP", name: "Action Democratic Party", symbol: "🔵" },
+      { acronym: "APC", name: "All Progressives Congress", symbol: "🧹" },
+      { acronym: "APGA", name: "All Progressives Grand Alliance", symbol: "⛵" },
+      { acronym: "APM", name: "Allied Peoples Movement", symbol: "🟠" },
+      { acronym: "APP", name: "Action Peoples Party", symbol: "🟣" },
+      { acronym: "BP", name: "Boot Party", symbol: "👢" },
+      { acronym: "DLA", name: "Democratic Labour Party", symbol: "🔴" },
+      { acronym: "LP", name: "Labour Party", symbol: "🪣" },
+      { acronym: "NDC", name: "National Democratic Congress", symbol: "✌️" },
+      { acronym: "NDP", name: "National Democratic Party", symbol: "⚖️" },
+      { acronym: "NNPP", name: "New Nigeria Peoples Party", symbol: "📚" },
+      { acronym: "NRM", name: "National Rescue Movement", symbol: "🚜" },
+      { acronym: "PDP", name: "Peoples Democratic Party", symbol: "🦅" },
+      { acronym: "PRP", name: "Peoples Redemption Party", symbol: "🔻" },
+      { acronym: "SDP", name: "Social Democratic Party", symbol: "🟩" },
+      { acronym: "YP", name: "Young Progressives Party", symbol: "🕊️" },
+      { acronym: "YPP", name: "Young Peoples Party", symbol: "🌱" },
+      { acronym: "ZLP", name: "Zenith Labour Party", symbol: "🟨" }
+    ];
+
+    // --- Initialization ---
+    document.addEventListener("DOMContentLoaded", () => {
+      renderPartyInputs();
+      updateQuotaPill();
+    });
+
+    // --- Biometric Gate (Simulation) ---
+    function unlockApp() {
+      const selectedRole = document.getElementById('roleSelect').value;
+      if (!selectedRole) {
+        alert("Please select a status/role first.");
+        return;
+      }
+      
+      currentRole = selectedRole;
+      
+      // Update UI to show unlocked state
+      document.getElementById('roleDisplay').textContent = `Status: ${currentRole}`;
+      document.getElementById('roleSubDisplay').textContent = "Biometric scan simulated successfully. App unlocked.";
+      document.getElementById('activeUploaderRole').textContent = currentRole;
+      
+      // Hide lock notice, show main content
+      document.getElementById('appLockedNotice').classList.add('hidden');
+      document.getElementById('mainAppContent').classList.remove('hidden');
+      
+      // Update Trust Score Preview
+      updateAiAuditPreview();
+    }
+
+    // --- Tab Switching ---
+    function switchTab(tabName) {
+      // Hide all sections
+      document.querySelectorAll('section').forEach(sec => {
+        if(sec.id.startsWith('tab-')) sec.classList.add('hidden');
+      });
+      
+      // Remove active class from all buttons
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      
+      // Show selected section and set button active
+      document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+      document.querySelector(`.tab-btn[data-tab="${tabName}"]`).classList.add('active');
+
+      // If switching to consensus, refresh the view
+      if(tabName === 'consensus') {
+        renderConsensus();
+      }
+    }
+
+    // --- Render Party Inputs ---
+    function renderPartyInputs() {
+      const grid = document.getElementById('partyInputsGrid');
+      grid.innerHTML = parties.map(p => `
+        <div class="party-box">
+          <div class="party-meta">
+            <div class="party-symbol">${p.symbol}</div>
+            <div>
+              <div class="party-acronym">${p.acronym}</div>
+              <div class="party-name" title="${p.name}">${p.name}</div>
             </div>
+          </div>
+          <input type="number" id="vote-${p.acronym}" min="0" placeholder="0" oninput="updateAiAuditPreview()" />
+        </div>
+      `).join('');
+    }
 
-            <div class="grid-3">
-              <div>
-                <label for="electionType">2027 Election Type</label>
-                <select id="electionType" onchange="validateElectionSchedule()">
-                  <option value="PRESIDENTIAL">Presidential Election (Sat, Feb 6, 2027)</option>
-                  <option value="NATIONAL_ASSEMBLY">National Assembly &mdash; Senate &amp; Reps (Sat, Feb 6, 2027)</option>
-                  <option value="GUBERNATORIAL">Governorship Election (Sat, Feb 20, 2027)</option>
-                  <option value="STATE_ASSEMBLY">State House of Assembly (Sat, Feb 20, 2027)</option>
-                  <option value="FCT_AREA_COUNCIL">FCT Area Council Election (Sat, Feb 20, 2027)</option>
-                </select>
-              </div>
-              <div>
-                <label for="modeSelect">Submission Mode</label>
-                <select id="modeSelect" onchange="validateElectionSchedule()">
-                  <option value="LIVE">Live 2027 Election (Date-Locked)</option>
-                  <option value="MOCK">Mock / Simulation Drill (Testing)</option>
-                </select>
-              </div>
-              <div>
-                <label for="sheetSerialInput">Result Sheet Serial / Batch No.</label>
-                <input id="sheetSerialInput" type="text" placeholder="e.g. EC8A-2027-049281" oninput="updateAiAuditPreview()" />
-              </div>
-            </div>
+    // --- GPS & Geofence Simulation ---
+    function simulateGps() {
+      gpsCaptured = true;
+      const gpsReadout = document.getElementById('gpsReadout');
+      gpsReadout.textContent = "GPS: Inside 10m (Locked)";
+      gpsReadout.style.borderColor = "var(--green-bright)";
+      gpsReadout.style.color = "var(--green-bright)";
+      updateAiAuditPreview();
+    }
 
-            <div id="scheduleBanner" class="status-box warn" style="margin-top:0.75rem;"></div>
+    function onPollingUnitChange() {
+      // Reset GPS if Polling Unit changes
+      gpsCaptured = false;
+      const gpsReadout = document.getElementById('gpsReadout');
+      gpsReadout.textContent = "GPS: Not captured yet";
+      gpsReadout.style.borderColor = "var(--border)";
+      gpsReadout.style.color = "var(--text)";
+      updateAiAuditPreview();
+    }
 
-            <div class="grid-2" style="margin-top:0.85rem;">
-              <div>
-                <label for="puSelect">Polling Unit (10m Geofence Target)</label>
-                <select id="puSelect" onchange="onPollingUnitChange()">
-                  <option value="PU-24-01-01-001|Garki Village Square PU 001, AMAC, FCT|9.035800|7.495100">
-                    Garki Village Square PU 001 (AMAC, FCT) &mdash; 10m Lock
-                  </option>
-                  <option value="PU-25-12-04-008|Ikeja GRA Ward 04 PU 008, Ikeja, Lagos|6.583300|3.350000">
-                    Ikeja GRA Ward 04 PU 008 (Ikeja, Lagos) &mdash; 10m Lock
-                  </option>
-                  <option value="PU-20-08-02-014|Nasarawa Gwammaja PU 014, Kano Municipal, Kano|12.002200|8.531900">
-                    Nasarawa Gwammaja PU 014 (Nasarawa, Kano) &mdash; 10m Lock
-                  </option>
-                  <option value="PU-33-05-03-003|Trans-Amadi Civic Centre PU 003, Port Harcourt, Rivers|4.815600|7.049800">
-                    Trans-Amadi Civic Centre PU 003 (Port Harcourt, Rivers) &mdash; 10m Lock
-                  </option>
-                </select>
-              </div>
-              <div>
-                <label for="bvasAccredited">BVAS Accredited Voters Count</label>
-                <input id="bvasAccredited" type="number" min="0" value="250" oninput="updateAiAuditPreview()" />
-              </div>
-            </div>
+    // --- AI Trust Score Calculation ---
+    function updateAiAuditPreview() {
+      let score = 0;
+      let checklist = [];
 
-            <div style="margin-top:0.85rem; display:flex; flex-wrap:wrap; gap:0.5rem; align-items:center;">
-              <button type="button" onclick="captureGpsLocation()">Capture Live GPS (10m Check)</button>
-              <button type="button" onclick="simulateInside10m()">Simulate Inside 10m (Testing)</button>
-              <span id="gpsReadout" class="pill">GPS: Not captured yet</span>
-            </div>
+      // 1. Biometrics (30 points)
+      if (currentRole) {
+        score += 30;
+        checklist.push("✅ Biometrics Verified (Face + Thumbprint)");
+      } else {
+        checklist.push("❌ Biometrics Pending");
+      }
 
-            <div class="grid-2" style="margin-top:0.85rem;">
-              <div>
-                <label for="poSignedCheck">Presiding Officer Signed Sheet?</label>
-                <select id="poSignedCheck" onchange="updateAiAuditPreview()">
-                  <option value="YES">Yes &mdash; Signed &amp; Stamped by Presiding Officer</option>
-                  <option value="NO">No &mdash; Unsigned / Incomplete</option>
-                </select>
-              </div>
-              <div>
-                <label for="agentsSignedCheck">Party Agents Countersigned?</label>
-                <select id="agentsSignedCheck" onchange="updateAiAuditPreview()">
-                  <option value="YES">Yes &mdash; Countersigned by Polling Agents</option>
-                  <option value="PARTIAL">Partial &mdash; Some Agents Signed</option>
-                  <option value="NO">No &mdash; Agent Sign-Off Missing</option>
-                </select>
-              </div>
-            </div>
+      // 2. GPS Check (30 points)
+      if (gpsCaptured) {
+        score += 30;
+        checklist.push("✅ 10-meter Geofence Locked");
+      } else {
+        checklist.push("❌ GPS 10m Lock Pending");
+      }
 
-            <div class="evidence-grid" style="margin-top:0.9rem;">
-              <div class="evidence-card">
-                <label for="sheetPhotoInput">1. Result Sheet Photo (Required)</label>
-                <input id="sheetPhotoInput" type="file" accept="image/*" capture="environment" onchange="handleEvidencePhotoChange(event, 'sheet')" />
-                <img id="sheetPreview" class="preview-img" alt="Result sheet preview" onclick="openLightbox(this.src, 'Result Sheet Photo')" />
-              </div>
+      // 3. Photos (20 points) - Simulated for now
+      score += 20;
+      checklist.push("✅ Evidence Photos Attached (Simulated)");
 
-              <div class="evidence-card">
-                <label for="poHoldingPhotoInput">2. Presiding Officer Holding Result (Required)</label>
-                <input id="poHoldingPhotoInput" type="file" accept="image/*" capture="environment" onchange="handleEvidencePhotoChange(event, 'po')" />
-                <img id="poHoldingPreview" class="preview-img" alt="Presiding officer holding result preview" onclick="openLightbox(this.src, 'Presiding Officer Holding Result')" />
-              </div>
+      // 4. Party Votes Entered (20 points)
+      let votesEntered = 0;
+      parties.forEach(p => {
+        const val = document.getElementById(`vote-${p.acronym}`).value;
+        if (val && parseInt(val) > 0) votesEntered++;
+      });
+      if (votesEntered > 0) {
+        score += 20;
+        checklist.push(`✅ Votes Entered for ${votesEntered} Parties`);
+      } else {
+        checklist.push("❌ No Party Votes Entered");
+      }
 
-              <div class="evidence-card">
-                <label for="adhocStaffPhotoInput">3. Ad-Hoc Staff Photo (Required)</label>
-                <input id="adhocStaffPhotoInput" type="file" accept="image/*" capture="environment" onchange="handleEvidencePhotoChange(event, 'adhoc')" />
-                <img id="adhocStaffPreview" class="preview-img" alt="Ad-hoc staff preview" onclick="openLightbox(this.src, 'Polling Unit Ad-Hoc Staff')" />
-              </div>
-            </div>
+      // Update UI
+      document.getElementById('aiTrustScoreBadge').textContent = `Estimated Trust Score: ${score} / 100`;
+      document.getElementById('aiAuditChecklist').innerHTML = checklist.join('<br>');
+    }
 
-            <div style="margin-top:1rem;">
-              <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:0.5rem;">
-                <label style="margin:0;">All 22 INEC-Registered Political Parties &amp; Ballot Symbols</label>
-                <button type="button" onclick="runAiSheetDraft()">AI Auto-Draft Votes from Sheet</button>
-              </div>
-              <div id="partyInputsGrid" class="party-grid"></div>
-            </div>
+    // --- Submit Result Sheet ---
+    function submitResultSheet() {
+      if (!currentRole) {
+        alert("Please unlock the app first.");
+        return;
+      }
+      if (!gpsCaptured) {
+        alert("You must capture a valid GPS location within 10 meters of the Polling Unit.");
+        return;
+      }
 
-            <div class="ai-panel" id="aiPreSubmitPanel">
-              <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:0.5rem; margin-bottom:0.4rem;">
-                <span class="ai-badge">AI Pre-Submit Audit &amp; Trust Score Engine</span>
-                <strong id="aiTrustScoreBadge">Estimated Trust Score: -- / 100</strong>
-              </div>
-              <div id="aiAuditChecklist" style="font-size:0.8rem; color:var(--muted);">
-                Awaiting GPS, sheet photo, Presiding Officer holding result photo, and Ad-Hoc Staff photo...
-              </div>
-            </div>
+      // Gather Votes
+      const votes = {};
+      let totalVotes = 0;
+      parties.forEach(p => {
+        const val = parseInt(document.getElementById(`vote-${p.acronym}`).value) || 0;
+        votes[p.acronym] = val;
+        totalVotes += val;
+      });
 
-            <div style="margin-top:1rem; display:flex; flex-wrap:wrap; gap:0.6rem;">
-              <button type="button" class="primary" id="submitSheetBtn" onclick="submitResultSheet()">
-                Submit Result Sheet for Consensus
-              </button>
-              <button type="button" onclick="resetResultForm()">Clear Form</button>
-            </div>
-
-            <div id="uploadStatus" class="status-box hidden"></div>
-          </section>
-
-          <!-- TAB 2: CONSENSUS & COLLATION -->
-          <section id="tab-consensus" class="card hidden">
-            <h2>3-of-5 Majority Consensus &amp; Central Collation</h2>
-            <p class="sub">
-              Each Polling Unit accepts up to <strong>5 submissions</strong>. Once <strong>at least 3 of the 5</strong> match on party vote totals, the PU result locks as <strong>VERIFIED (3-of-5 Consensus)</strong>.
-            </p>
-
-            <div class="grid-2" style="margin-bottom:0.85rem;">
-              <div>
-                <label for="filterElection">Filter by 2027 Election</label>
-                <select id="filterElection" onchange="renderConsensusAndCollation()">
-                  <option value="ALL">All 2027 Elections</option>
-                  <option value="PRESIDENTIAL">Presidential</option>
-                  <option value="NATIONAL_ASSEMBLY">National Assembly</option>
-                  <option value="GUBERNATORIAL">Gubernatorial</option>
-                  <option value="STATE_ASSEMBLY">State House of Assembly</option>
-                  <option value="FCT_AREA_COUNCIL">FCT Area Council</option>
-                </select>
-              </div>
-              <div>
-                <label for="filterMode">Filter by Mode</label>
-                <select id="filterMode" onchange="renderConsensusAndCollation()">
-                  <option value="ALL">Live &amp; Mock</option>
-                  <option value="LIVE">Live 2027 Only</option>
-                  <option value="MOCK">Mock Drill Only</option>
-                </select>
-              </div>
-            </div>
-
-            <div id="winnerBanner" class="winner-banner"></div>
-
-            <h3 style="font-size:0.95rem; margin-bottom:0.4rem;">Polling Unit Consensus Ledger</h3>
-            <div id="consensusLedger"></div>
-
-            <h3 style="font-size:0.95rem; margin-top:1.1rem; margin-bottom:0.35rem;">
-              Aggregated Standings (All 22 INEC Parties &mdash; Verified 3-of-5 Polling Units)
-            </h3>
-            <div style="overflow-x:auto;">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Rank</th>
-                    <th>Symbol</th>
-                    <th>Party</th>
-                    <th>Verified Votes</th>
-                    <th>Vote Share</th>
-                  </tr>
-                </thead>
-                <tbody id="collationTableBody"></tbody>
-              </table>
-            </div>
-          </section>
-
-          <!-- TAB 3: ROLE & ACCREDITATION -->
-          <section id="tab-status" class="card hidden">
-            <h2>Role &amp; Biometric Accreditation Verification</h2>
-            <p class="sub">
-              Inspect your active role, verified Face Photograph, Camera-Lens Bio Thumbprint hash, and accreditation record.
-            </p>
-
-            <div class="grid-2">
-              <div>
-                <label for="lookupRole">Role / Status</label>
-                <select id="lookupRole">
-                  <option value="Accredited Polling Observer">Accredited Polling Observer</option>
-                  <option value="Party Polling Agent">Party Polling Agent</option>
-                  <option value="Citizen Verifier">Citizen Verifier</option>
-                  <option value="Accredited Journalist / Media">Accredited Journalist / Media</option>
-                </select>
-              </div>
-              <div>
-                <label for="lookupCode">Accreditation / Badge ID (Optional)</label>
-                <input id="lookupCode" type="text" placeholder="e.g. INEC-OBS-2027-8841" />
-              </div>
-            </div>
-
-            <div style="margin-top:0.85rem; display:flex; flex-wrap:wrap; gap:0.5rem;">
-              <button type="button" class="primary" onclick="verifyRoleStatus()">Verify Status &amp; Biometrics</button>
-              <button type="button" onclick="openBiometricGate(document.getElementById('lookupRole').value)">
-                Update Face &amp; Thumbprint
-              </button>
-            </div>
-
-            <div id="statusResultBox" class="status-box" style="margin-top:0.85rem;"></div>
-          </section>
-
-          <!-- TAB 4: INCIDENT REPORTS -->
-          <section id="tab-incidents" class="card hidden">
-            <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:0.5rem;">
-              <div>
-                <h2>Election Incident Reporting (Photos &amp; Videos)</h2>
-                <p class="sub" style="margin-bottom:0.4rem;">
-                  Report polling unit incidents with photographic or video evidence, automatic AI classification, GPS coordinates, and WAT timestamps.
-                </p>
-              </div>
-              <button type="button" class="situation-btn" onclick="openSituationRoom()">Open The Situation Room</button>
-            </div>
-
-            <div class="grid-3" style="margin-top:0.75rem;">
+      if (totalVotes === 0) {
+        alert("Please enter at least one party's vote.");
+       
