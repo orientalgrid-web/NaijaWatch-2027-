@@ -201,3 +201,758 @@
       border-radius: 12px;
       padding: 1rem 1.15rem;
       margin-bottom: 1.15rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.1rem;
+    }
+
+    .tab-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 0.6rem 0.95rem;
+      border-radius: 9px;
+      font-size: 0.86rem;
+    }
+
+    .tab-btn.active {
+      background: var(--green);
+      border-color: var(--green-bright);
+      color: #fff;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.15rem;
+      margin-bottom: 1rem;
+    }
+
+    .card h2 {
+      font-size: 1.02rem;
+      margin-bottom: 0.35rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .sub {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-bottom: 0.9rem;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 0.85rem;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 0.85rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 0.3rem;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.55rem 0.7rem;
+      font-size: 0.88rem;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--green-bright);
+    }
+
+    .party-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(225px, 1fr));
+      gap: 0.7rem;
+      margin-top: 0.6rem;
+    }
+
+    .party-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 0.65rem 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.6rem;
+    }
+
+    .party-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      min-width: 0;
+    }
+
+    .party-symbol {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+      flex-shrink: 0;
+    }
+
+    .party-acronym {
+      font-weight: 800;
+      font-size: 0.88rem;
+    }
+
+    .party-name {
+      font-size: 0.7rem;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 112px;
+    }
+
+    .party-box input {
+      width: 78px;
+      text-align: right;
+      font-weight: 700;
+    }
+
+    .status-box {
+      margin-top: 0.85rem;
+      padding: 0.8rem 0.95rem;
+      border-radius: 9px;
+      font-size: 0.84rem;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      white-space: pre-line;
+    }
+
+    .status-box.ok {
+      border-color: var(--green-bright);
+      background: rgba(22, 163, 74, 0.12);
+    }
+
+    .status-box.err {
+      border-color: var(--red);
+      background: rgba(239, 68, 68, 0.12);
+    }
+
+    .status-box.warn {
+      border-color: var(--gold);
+      background: rgba(234, 179, 8, 0.12);
+    }
+
+    .preview-img {
+      margin-top: 0.65rem;
+      max-width: 100%;
+      max-height: 240px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      display: none;
+    }
+
+    .preview-video {
+      margin-top: 0.65rem;
+      max-width: 100%;
+      max-height: 240px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      display: none;
+    }
+
+    .bio-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 0.9rem;
+      margin-top: 0.75rem;
+    }
+
+    .bio-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.85rem;
+    }
+
+    .bio-preview {
+      width: 100%;
+      height: 170px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #040b07;
+      margin: 0.5rem 0;
+    }
+
+    .uploader-chip {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.55rem 0.7rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .uploader-chip img {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      object-fit: cover;
+      border: 1px solid var(--green-bright);
+    }
+
+    .evidence-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 0.85rem;
+      margin-top: 0.5rem;
+    }
+
+    .evidence-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.75rem;
+    }
+
+    .evidence-thumb {
+      width: 100%;
+      height: 135px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      margin-top: 0.45rem;
+      cursor: pointer;
+    }
+
+    .ai-panel {
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.08), rgba(168, 85, 247, 0.08));
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      border-radius: 10px;
+      padding: 0.85rem 0.95rem;
+      margin-top: 0.85rem;
+    }
+
+    .ai-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      background: rgba(56, 189, 248, 0.16);
+      color: #7dd3fc;
+      border: 1px solid rgba(56, 189, 248, 0.4);
+    }
+
+    .ledger-item {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.9rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .ledger-top {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 0.2rem 0.55rem;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+    }
+
+    .tag.verified {
+      background: rgba(22, 163, 74, 0.2);
+      border-color: var(--green-bright);
+      color: #86efac;
+    }
+
+    .tag.disputed {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: var(--red);
+      color: #fca5a5;
+    }
+
+    .tag.pending {
+      background: rgba(234, 179, 8, 0.2);
+      border-color: var(--gold);
+      color: #fde047;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.65rem;
+      font-size: 0.84rem;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 0.55rem 0.65rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .winner-banner {
+      background: linear-gradient(135deg, rgba(22, 163, 74, 0.24), rgba(234, 179, 8, 0.14));
+      border: 1px solid var(--green-bright);
+      border-radius: 10px;
+      padding: 0.9rem 1rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.78);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      z-index: 90;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      max-width: 560px;
+      width: 100%;
+      padding: 1.25rem;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .platform-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.6rem;
+      margin: 0.75rem 0 1rem;
+    }
+
+    .platform-btn {
+      text-align: left;
+      padding: 0.7rem 0.8rem;
+      border-radius: 9px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+    }
+
+    .platform-btn.selected {
+      border-color: #818cf8;
+      background: rgba(109, 40, 217, 0.22);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .footer-note {
+      margin-top: 1.5rem;
+      padding: 1rem 1.15rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .lightbox-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.88);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      z-index: 100;
+    }
+
+    .lightbox-backdrop.open {
+      display: flex;
+    }
+
+    .lightbox-box {
+      max-width: 860px;
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .lightbox-box img {
+      max-width: 100%;
+      max-height: 72vh;
+      border-radius: 8px;
+      margin: 0.6rem auto;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-flag" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </div>
+        <div>
+          <h1>NaijaWatch 2027</h1>
+          <p>Citizen Polling Unit Collation &amp; Verification Portal &bull; Nigeria</p>
+        </div>
+      </div>
+
+      <div class="top-actions">
+        <div class="pill" id="netPill">
+          <span class="dot" id="netDot"></span>
+          <span id="netLabel">Online (WAT)</span>
+        </div>
+        <div class="pill" id="quotaPill">PU Uploads: 0 / 5</div>
+        <button type="button" id="desktopModeBtn" onclick="toggleDesktopMode()">Desktop Mode: OFF</button>
+        <button type="button" class="situation-btn" onclick="openSituationRoom()">The Situation Room</button>
+        <button type="button" class="warn" id="syncBtn" onclick="syncOfflineQueue()">Sync Queue (0)</button>
+      </div>
+    </div>
+    <div class="topbar-inner">
+      <div class="owner-banner" style="width: 100%;">
+        <span><strong>Property of Apps &amp; Algorithm Concept</strong> &bull; Email: <strong>dev@connectorient.com.ng</strong> &bull; <strong>Attention: Douglas Idima</strong></span>
+        <span>All 22 INEC Parties &bull; 10m PU Lock &bull; 3-of-5 Consensus &bull; AI Verification</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="gate-banner">
+      <div>
+        <strong id="roleDisplay">Status: Not Selected</strong>
+        <div style="font-size:0.82rem; color:var(--muted);" id="roleSubDisplay">
+          Select your status/role first to trigger instant Face Photograph + Camera-Lens Bio Thumbprint capture before using the app.
+        </div>
+      </div>
+      <div style="display:flex; flex-wrap:wrap; gap:0.5rem; align-items:center;">
+        <select id="roleSelect" aria-label="Select Your Status or Role" style="width:auto; min-width:225px;">
+          <option value="">-- Select Your Status / Role --</option>
+          <option value="Accredited Polling Observer">Accredited Polling Observer</option>
+          <option value="Party Polling Agent">Party Polling Agent</option>
+          <option value="Citizen Verifier">Citizen Verifier</option>
+          <option value="Accredited Journalist / Media">Accredited Journalist / Media</option>
+        </select>
+        <button type="button" id="openBioGateBtn" onclick="openBiometricGate(document.getElementById('roleSelect').value || currentRole || 'Citizen Verifier')">
+          Capture Face &amp; Thumbprint
+        </button>
+      </div>
+    </section>
+
+    <div id="appLockedNotice" class="card" style="border-color: var(--gold);">
+      <h2>Biometric Camera Lock Active</h2>
+      <p class="sub">
+        Select your status/role above (or tap <strong>Capture Face &amp; Thumbprint</strong>) to capture your <strong>instant Face Photograph</strong> and <strong>Camera-Lens Bio Thumbprint</strong>. Full app access unlocks immediately after both biometric scans are verified.
+      </p>
+    </div>
+
+    <div id="mainAppContent" class="hidden">
+      <nav class="tabs" role="tablist">
+        <button type="button" class="tab-btn active" data-tab="upload" onclick="switchTab('upload')">1. Upload Result Sheet</button>
+        <button type="button" class="tab-btn" data-tab="consensus" onclick="switchTab('consensus')">2. Consensus &amp; Collation</button>
+        <button type="button" class="tab-btn" data-tab="status" onclick="switchTab('status')">3. Role &amp; Accreditation</button>
+        <button type="button" class="tab-btn" data-tab="incidents" onclick="switchTab('incidents')">4. Incident Reports (Photo &amp; Video)</button>
+        <button type="button" class="tab-btn" data-tab="cloud" onclick="switchTab('cloud')">5. Cloud Save &amp; Recall</button>
+      </nav>
+
+      <div class="desktop-workspace">
+        <div class="workspace-main">
+          <!-- TAB 1: UPLOAD RESULT SHEET -->
+          <section id="tab-upload" class="card">
+            <h2>Polling Unit Result Sheet &amp; Official Proof Upload</h2>
+            <p class="sub">
+              Requires strict <strong>10-meter proximity</strong> to the selected Polling Unit GPS coordinates, live sheet photo, <strong>Presiding Officer holding the signed result sheet</strong>, and <strong>Ad-Hoc Staff</strong> photo. Max <strong>5 uploads</strong> per Polling Unit; verified by <strong>3-of-5 consensus</strong>.
+            </p>
+
+            <div class="uploader-chip">
+              <img id="activeUploaderFaceImg" alt="Verified Uploader Face" />
+              <div style="font-size:0.78rem;">
+                <div><strong id="activeUploaderName">Verified Uploader</strong> &bull; <span id="activeUploaderRole">Role</span></div>
+                <div style="color:var(--muted);" id="activeUploaderBioMeta">Face &amp; Camera-Lens Thumbprint Hash Ready</div>
+              </div>
+            </div>
+
+            <div class="grid-3">
+              <div>
+                <label for="electionType">2027 Election Type</label>
+                <select id="electionType" onchange="validateElectionSchedule()">
+                  <option value="PRESIDENTIAL">Presidential Election (Sat, Feb 6, 2027)</option>
+                  <option value="NATIONAL_ASSEMBLY">National Assembly &mdash; Senate &amp; Reps (Sat, Feb 6, 2027)</option>
+                  <option value="GUBERNATORIAL">Governorship Election (Sat, Feb 20, 2027)</option>
+                  <option value="STATE_ASSEMBLY">State House of Assembly (Sat, Feb 20, 2027)</option>
+                  <option value="FCT_AREA_COUNCIL">FCT Area Council Election (Sat, Feb 20, 2027)</option>
+                </select>
+              </div>
+              <div>
+                <label for="modeSelect">Submission Mode</label>
+                <select id="modeSelect" onchange="validateElectionSchedule()">
+                  <option value="LIVE">Live 2027 Election (Date-Locked)</option>
+                  <option value="MOCK">Mock / Simulation Drill (Testing)</option>
+                </select>
+              </div>
+              <div>
+                <label for="sheetSerialInput">Result Sheet Serial / Batch No.</label>
+                <input id="sheetSerialInput" type="text" placeholder="e.g. EC8A-2027-049281" oninput="updateAiAuditPreview()" />
+              </div>
+            </div>
+
+            <div id="scheduleBanner" class="status-box warn" style="margin-top:0.75rem;"></div>
+
+            <div class="grid-2" style="margin-top:0.85rem;">
+              <div>
+                <label for="puSelect">Polling Unit (10m Geofence Target)</label>
+                <select id="puSelect" onchange="onPollingUnitChange()">
+                  <option value="PU-24-01-01-001|Garki Village Square PU 001, AMAC, FCT|9.035800|7.495100">
+                    Garki Village Square PU 001 (AMAC, FCT) &mdash; 10m Lock
+                  </option>
+                  <option value="PU-25-12-04-008|Ikeja GRA Ward 04 PU 008, Ikeja, Lagos|6.583300|3.350000">
+                    Ikeja GRA Ward 04 PU 008 (Ikeja, Lagos) &mdash; 10m Lock
+                  </option>
+                  <option value="PU-20-08-02-014|Nasarawa Gwammaja PU 014, Kano Municipal, Kano|12.002200|8.531900">
+                    Nasarawa Gwammaja PU 014 (Nasarawa, Kano) &mdash; 10m Lock
+                  </option>
+                  <option value="PU-33-05-03-003|Trans-Amadi Civic Centre PU 003, Port Harcourt, Rivers|4.815600|7.049800">
+                    Trans-Amadi Civic Centre PU 003 (Port Harcourt, Rivers) &mdash; 10m Lock
+                  </option>
+                </select>
+              </div>
+              <div>
+                <label for="bvasAccredited">BVAS Accredited Voters Count</label>
+                <input id="bvasAccredited" type="number" min="0" value="250" oninput="updateAiAuditPreview()" />
+              </div>
+            </div>
+
+            <div style="margin-top:0.85rem; display:flex; flex-wrap:wrap; gap:0.5rem; align-items:center;">
+              <button type="button" onclick="captureGpsLocation()">Capture Live GPS (10m Check)</button>
+              <button type="button" onclick="simulateInside10m()">Simulate Inside 10m (Testing)</button>
+              <span id="gpsReadout" class="pill">GPS: Not captured yet</span>
+            </div>
+
+            <div class="grid-2" style="margin-top:0.85rem;">
+              <div>
+                <label for="poSignedCheck">Presiding Officer Signed Sheet?</label>
+                <select id="poSignedCheck" onchange="updateAiAuditPreview()">
+                  <option value="YES">Yes &mdash; Signed &amp; Stamped by Presiding Officer</option>
+                  <option value="NO">No &mdash; Unsigned / Incomplete</option>
+                </select>
+              </div>
+              <div>
+                <label for="agentsSignedCheck">Party Agents Countersigned?</label>
+                <select id="agentsSignedCheck" onchange="updateAiAuditPreview()">
+                  <option value="YES">Yes &mdash; Countersigned by Polling Agents</option>
+                  <option value="PARTIAL">Partial &mdash; Some Agents Signed</option>
+                  <option value="NO">No &mdash; Agent Sign-Off Missing</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="evidence-grid" style="margin-top:0.9rem;">
+              <div class="evidence-card">
+                <label for="sheetPhotoInput">1. Result Sheet Photo (Required)</label>
+                <input id="sheetPhotoInput" type="file" accept="image/*" capture="environment" onchange="handleEvidencePhotoChange(event, 'sheet')" />
+                <img id="sheetPreview" class="preview-img" alt="Result sheet preview" onclick="openLightbox(this.src, 'Result Sheet Photo')" />
+              </div>
+
+              <div class="evidence-card">
+                <label for="poHoldingPhotoInput">2. Presiding Officer Holding Result (Required)</label>
+                <input id="poHoldingPhotoInput" type="file" accept="image/*" capture="environment" onchange="handleEvidencePhotoChange(event, 'po')" />
+                <img id="poHoldingPreview" class="preview-img" alt="Presiding officer holding result preview" onclick="openLightbox(this.src, 'Presiding Officer Holding Result')" />
+              </div>
+
+              <div class="evidence-card">
+                <label for="adhocStaffPhotoInput">3. Ad-Hoc Staff Photo (Required)</label>
+                <input id="adhocStaffPhotoInput" type="file" accept="image/*" capture="environment" onchange="handleEvidencePhotoChange(event, 'adhoc')" />
+                <img id="adhocStaffPreview" class="preview-img" alt="Ad-hoc staff preview" onclick="openLightbox(this.src, 'Polling Unit Ad-Hoc Staff')" />
+              </div>
+            </div>
+
+            <div style="margin-top:1rem;">
+              <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:0.5rem;">
+                <label style="margin:0;">All 22 INEC-Registered Political Parties &amp; Ballot Symbols</label>
+                <button type="button" onclick="runAiSheetDraft()">AI Auto-Draft Votes from Sheet</button>
+              </div>
+              <div id="partyInputsGrid" class="party-grid"></div>
+            </div>
+
+            <div class="ai-panel" id="aiPreSubmitPanel">
+              <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:0.5rem; margin-bottom:0.4rem;">
+                <span class="ai-badge">AI Pre-Submit Audit &amp; Trust Score Engine</span>
+                <strong id="aiTrustScoreBadge">Estimated Trust Score: -- / 100</strong>
+              </div>
+              <div id="aiAuditChecklist" style="font-size:0.8rem; color:var(--muted);">
+                Awaiting GPS, sheet photo, Presiding Officer holding result photo, and Ad-Hoc Staff photo...
+              </div>
+            </div>
+
+            <div style="margin-top:1rem; display:flex; flex-wrap:wrap; gap:0.6rem;">
+              <button type="button" class="primary" id="submitSheetBtn" onclick="submitResultSheet()">
+                Submit Result Sheet for Consensus
+              </button>
+              <button type="button" onclick="resetResultForm()">Clear Form</button>
+            </div>
+
+            <div id="uploadStatus" class="status-box hidden"></div>
+          </section>
+
+          <!-- TAB 2: CONSENSUS & COLLATION -->
+          <section id="tab-consensus" class="card hidden">
+            <h2>3-of-5 Majority Consensus &amp; Central Collation</h2>
+            <p class="sub">
+              Each Polling Unit accepts up to <strong>5 submissions</strong>. Once <strong>at least 3 of the 5</strong> match on party vote totals, the PU result locks as <strong>VERIFIED (3-of-5 Consensus)</strong>.
+            </p>
+
+            <div class="grid-2" style="margin-bottom:0.85rem;">
+              <div>
+                <label for="filterElection">Filter by 2027 Election</label>
+                <select id="filterElection" onchange="renderConsensusAndCollation()">
+                  <option value="ALL">All 2027 Elections</option>
+                  <option value="PRESIDENTIAL">Presidential</option>
+                  <option value="NATIONAL_ASSEMBLY">National Assembly</option>
+                  <option value="GUBERNATORIAL">Gubernatorial</option>
+                  <option value="STATE_ASSEMBLY">State House of Assembly</option>
+                  <option value="FCT_AREA_COUNCIL">FCT Area Council</option>
+                </select>
+              </div>
+              <div>
+                <label for="filterMode">Filter by Mode</label>
+                <select id="filterMode" onchange="renderConsensusAndCollation()">
+                  <option value="ALL">Live &amp; Mock</option>
+                  <option value="LIVE">Live 2027 Only</option>
+                  <option value="MOCK">Mock Drill Only</option>
+                </select>
+              </div>
+            </div>
+
+            <div id="winnerBanner" class="winner-banner"></div>
+
+            <h3 style="font-size:0.95rem; margin-bottom:0.4rem;">Polling Unit Consensus Ledger</h3>
+            <div id="consensusLedger"></div>
+
+            <h3 style="font-size:0.95rem; margin-top:1.1rem; margin-bottom:0.35rem;">
+              Aggregated Standings (All 22 INEC Parties &mdash; Verified 3-of-5 Polling Units)
+            </h3>
+            <div style="overflow-x:auto;">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Rank</th>
+                    <th>Symbol</th>
+                    <th>Party</th>
+                    <th>Verified Votes</th>
+                    <th>Vote Share</th>
+                  </tr>
+                </thead>
+                <tbody id="collationTableBody"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- TAB 3: ROLE & ACCREDITATION -->
+          <section id="tab-status" class="card hidden">
+            <h2>Role &amp; Biometric Accreditation Verification</h2>
+            <p class="sub">
+              Inspect your active role, verified Face Photograph, Camera-Lens Bio Thumbprint hash, and accreditation record.
+            </p>
+
+            <div class="grid-2">
+              <div>
+                <label for="lookupRole">Role / Status</label>
+                <select id="lookupRole">
+                  <option value="Accredited Polling Observer">Accredited Polling Observer</option>
+                  <option value="Party Polling Agent">Party Polling Agent</option>
+                  <option value="Citizen Verifier">Citizen Verifier</option>
+                  <option value="Accredited Journalist / Media">Accredited Journalist / Media</option>
+                </select>
+              </div>
+              <div>
+                <label for="lookupCode">Accreditation / Badge ID (Optional)</label>
+                <input id="lookupCode" type="text" placeholder="e.g. INEC-OBS-2027-8841" />
+              </div>
+            </div>
+
+            <div style="margin-top:0.85rem; display:flex; flex-wrap:wrap; gap:0.5rem;">
+              <button type="button" class="primary" onclick="verifyRoleStatus()">Verify Status &amp; Biometrics</button>
+              <button type="button" onclick="openBiometricGate(document.getElementById('lookupRole').value)">
+                Update Face &amp; Thumbprint
+              </button>
+            </div>
+
+            <div id="statusResultBox" class="status-box" style="margin-top:0.85rem;"></div>
+          </section>
+
+          <!-- TAB 4: INCIDENT REPORTS -->
+          <section id="tab-incidents" class="card hidden">
+            <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:0.5rem;">
+              <div>
+                <h2>Election Incident Reporting (Photos &amp; Videos)</h2>
+                <p class="sub" style="margin-bottom:0.4rem;">
+                  Report polling unit incidents with photographic or video evidence, automatic AI classification, GPS coordinates, and WAT timestamps.
+                </p>
+              </div>
+              <button type="button" class="situation-btn" onclick="openSituationRoom()">Open The Situation Room</button>
+            </div>
+
+            <div class="grid-3" style="margin-top:0.75rem;">
