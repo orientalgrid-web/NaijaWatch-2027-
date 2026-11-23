@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>NaijaWatch 2027 — Citizen Collation &amp; Verification Portal</title>
+  <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
   <style>
     :root {
       --bg: #07130d; --surface: #0e2118; --surface-2: #142f22; --border: #254d39;
@@ -29,7 +30,6 @@
     button.primary { background: var(--green); border-color: var(--green-bright); color: #fff; }
     button.primary:hover:not(:disabled) { background: var(--green-bright); color: #041209; }
     button.warn { background: rgba(234, 179, 8, 0.15); border-color: var(--gold); color: #fde047; }
-    button.situation-btn { background: linear-gradient(135deg, #1d4ed8, #6d28d9); border-color: #818cf8; color: #fff; }
 
     .container { max-width: 1180px; margin: 1.25rem auto; padding: 0 1rem 3rem; }
     .gate-banner { background: linear-gradient(135deg, rgba(22, 163, 74, 0.16), rgba(14, 33, 24, 0.96)); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.15rem; margin-bottom: 1.15rem; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; }
@@ -40,9 +40,9 @@
     .card h2 { font-size: 1.02rem; margin-bottom: 0.35rem; }
     .sub { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.9rem; }
     .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0.85rem; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.85rem; }
     label { display: block; font-size: 0.78rem; font-weight: 600; color: var(--muted); margin-bottom: 0.3rem; }
     input, select, textarea { width: 100%; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 0.55rem 0.7rem; font-size: 0.88rem; }
-    textarea { resize: vertical; min-height: 80px; }
     
     .party-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(225px, 1fr)); gap: 0.7rem; margin-top: 0.6rem; }
     .party-box { background: var(--bg); border: 1px solid var(--border); border-radius: 9px; padding: 0.65rem 0.75rem; display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; }
@@ -54,7 +54,6 @@
     
     .status-box { margin-top: 0.85rem; padding: 0.8rem 0.95rem; border-radius: 9px; font-size: 0.84rem; border: 1px solid var(--border); background: var(--bg); }
     .status-box.ok { border-color: var(--green-bright); background: rgba(22, 163, 74, 0.12); }
-    .status-box.err { border-color: var(--red); background: rgba(239, 68, 68, 0.12); }
     .uploader-chip { display: flex; align-items: center; gap: 0.65rem; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 0.55rem 0.7rem; margin-bottom: 0.85rem; }
     .uploader-chip img { width: 48px; height: 48px; border-radius: 8px; object-fit: cover; border: 1px solid var(--green-bright); }
     .ai-panel { background: linear-gradient(135deg, rgba(56, 189, 248, 0.08), rgba(168, 85, 247, 0.08)); border: 1px solid rgba(56, 189, 248, 0.35); border-radius: 10px; padding: 0.85rem 0.95rem; margin-top: 0.85rem; }
@@ -99,8 +98,10 @@
           <p>Citizen Polling Unit Collation &amp; Verification Portal</p>
         </div>
       </div>
-      <div style="display:flex; gap:10px;">
-        <button type="button" class="situation-btn" onclick="openSituationRoom()">The Situation Room</button>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <label style="font-size:0.75rem; color:var(--text); display:flex; align-items:center; gap:5px; cursor:pointer;">
+          <input type="checkbox" id="mockModeToggle" onchange="toggleMockMode()" style="width:auto;"> Mock/Drill Mode
+        </label>
       </div>
     </div>
     <div class="topbar-inner">
@@ -157,17 +158,35 @@
           </div>
         </div>
 
-        <div class="grid-2" style="margin-top:0.85rem;">
+        <!-- MANUAL PU ENTRY -->
+        <div class="grid-3" style="margin-top:0.85rem;">
           <div>
-            <label>Polling Unit (Target)</label>
-            <select id="puSelect" onchange="resetGPS()">
-              <option value="PU-24-01-01-001|Garki Village Square PU 001 (AMAC, FCT)|9.0358|7.4951">Garki Village Square PU 001 (AMAC, FCT)</option>
-              <option value="PU-25-12-04-008|Ikeja GRA Ward 04 PU 008 (Ikeja, Lagos)|6.5833|3.3500">Ikeja GRA Ward 04 PU 008 (Ikeja, Lagos)</option>
+            <label>State</label>
+            <select id="stateSelect">
+              <option value="">Select State</option>
+              <option value="FCT">FCT - Abuja</option>
+              <option value="Lagos">Lagos</option>
+              <option value="Kano">Kano</option>
             </select>
           </div>
           <div>
-            <label>BVAS Accredited Voters Count</label>
-            <input id="bvasAccredited" type="number" value="250" oninput="updateAiAuditPreview()" />
+            <label>LGA</label>
+            <input type="text" id="lgaInput" placeholder="Enter LGA name" />
+          </div>
+          <div>
+            <label>Ward</label>
+            <input type="text" id="wardInput" placeholder="Enter Ward number/name" />
+          </div>
+        </div>
+
+        <div class="grid-2" style="margin-top:0.85rem;">
+          <div>
+            <label>Polling Unit Code / Name</label>
+            <input type="text" id="puCodeInput" placeholder="e.g., PU-001 / Garki Village Square" />
+          </div>
+          <div>
+            <label>Latitude, Longitude (for 10m Geofence)</label>
+            <input type="text" id="coordsInput" placeholder="e.g., 9.0358, 7.4951" />
           </div>
         </div>
 
@@ -179,7 +198,7 @@
         <div class="evidence-grid" style="margin-top:1rem;">
           <div class="evidence-card">
             <label>1. Result Sheet Photo (Required)</label>
-            <input type="file" id="sheetPhotoInput" accept="image/*" capture="environment" onchange="previewImage(event, 'sheetPreview')" />
+            <input type="file" id="sheetPhotoInput" accept="image/*" capture="environment" onchange="previewImage(event, 'sheetPreview'); runOCR()" />
             <img id="sheetPreview" class="preview-img" alt="Sheet Preview" />
           </div>
           <div class="evidence-card">
@@ -300,10 +319,11 @@
     </div>
   </div>
 
-  <!-- FIREBASE SCRIPTS -->
+  <!-- FIREBASE & OCR SCRIPTS -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getStorage, ref, uploadString, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDb09ShhFEjX7u7LD7t8OqziAX5u5wcEv4",
@@ -317,12 +337,16 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const storage = getStorage(app);
 
-    // Expose Firebase functions to the window object so standard scripts can use them
     window.firebaseDB = db;
     window.firebaseCollection = collection;
     window.firebaseAddDoc = addDoc;
     window.firebaseGetDocs = getDocs;
+    window.firebaseStorage = storage;
+    window.firebaseRef = ref;
+    window.firebaseUploadString = uploadString;
+    window.firebaseGetDownloadURL = getDownloadURL;
     
     console.log("Firebase Connected Successfully!");
     document.dispatchEvent(new Event('firebaseReady'));
@@ -333,12 +357,12 @@
     let currentRole = "";
     let isGpsLocked = false;
     let userCoordinates = null;
-    let submissions = []; // Loaded from Cloud
-    let incidents = [];   // Loaded from Cloud
+    let submissions = []; 
     let videoStream = null;
     let faceVerified = false;
     let thumbVerified = false;
     let faceImageBase64 = "";
+    let isMockMode = false;
 
     const parties = [
       { acronym: "A", name: "Accord", symbol: "🔺" }, { acronym: "AA", name: "Action Alliance", symbol: "🔷" },
@@ -354,22 +378,74 @@
       { acronym: "YPP", name: "Young Peoples Party", symbol: "🌱" }, { acronym: "ZLP", name: "Zenith Labour Party", symbol: "🟨" }
     ];
 
-    // Wait for Firebase to initialize before rendering data
     document.addEventListener("firebaseReady", () => {
       renderPartyInputs();
       loadCloudData();
+      checkElectionDate();
     });
+
+    function checkElectionDate() {
+      const electionDate = new Date("2027-02-06T08:00:00");
+      const now = new Date();
+      const banner = document.getElementById('roleSubDisplay');
+      
+      if (now < electionDate) {
+        banner.innerHTML += `<br><span style="color:var(--gold);">⏳ Election has not started. Live submissions open Feb 6, 2027. (Mock Mode available)</span>`;
+      } else {
+        banner.innerHTML += `<br><span style="color:var(--green-bright);">✅ Live Election Mode Active</span>`;
+      }
+    }
+
+    function toggleMockMode() {
+      isMockMode = document.getElementById('mockModeToggle').checked;
+      if (isMockMode) alert("🧪 Mock Mode ACTIVE. All data will be tagged as DRILL data.");
+    }
+
+    // --- OCR ENGINE (Tesseract) ---
+    async function runOCR() {
+      const file = document.getElementById('sheetPhotoInput').files[0];
+      if (!file) return;
+
+      alert("🤖 AI is scanning the result sheet. Please wait 5-10 seconds...");
+      
+      try {
+        const worker = await Tesseract.createWorker('eng');
+        const { data: { text } } = await worker.recognize(file);
+        await worker.terminate();
+        
+        console.log("OCR Text extracted:", text);
+        
+        const lines = text.split('\n');
+        lines.forEach(line => {
+          if (line.toUpperCase().includes("APC")) {
+            const match = line.match(/\d{2,5}/);
+            if(match) document.getElementById('vote-APC').value = match[0];
+          }
+          if (line.toUpperCase().includes("PDP")) {
+            const match = line.match(/\d{2,5}/);
+            if(match) document.getElementById('vote-PDP').value = match[0];
+          }
+          if (line.toUpperCase().includes("LP")) {
+            const match = line.match(/\d{2,5}/);
+            if(match) document.getElementById('vote-LP').value = match[0];
+          }
+        });
+        
+        alert("✅ OCR Complete. Please verify the vote numbers manually before submitting.");
+        updateAiAuditPreview();
+      } catch (e) {
+        console.error("OCR Error:", e);
+        alert("⚠️ Could not read the text clearly. Please type the numbers manually.");
+      }
+    }
 
     // --- CLOUD DATABASE SYNC ---
     async function loadCloudData() {
-      if (!window.firebaseDB) {
-        console.log("Waiting for Firebase...");
-        return;
-      }
+      if (!window.firebaseDB) return;
       try {
         const querySnapshot = await window.firebaseGetDocs(window.firebaseCollection(window.firebaseDB, "submissions"));
         submissions = querySnapshot.docs.map(doc => doc.data());
-        renderConsensus(); // Re-render the UI with cloud data
+        renderConsensus();
       } catch (e) {
         console.error("Error loading cloud data:", e);
       }
@@ -378,6 +454,14 @@
     // --- GPS LOGIC ---
     function captureGPS() {
       const gpsReadout = document.getElementById('gpsReadout');
+      const coords = document.getElementById('coordsInput').value;
+      
+      if (!coords) {
+        gpsReadout.textContent = "❌ Please enter the Polling Unit Coordinates first.";
+        gpsReadout.className = "gps-indicator gps-error";
+        return;
+      }
+
       gpsReadout.textContent = "Acquiring satellites...";
       gpsReadout.className = "gps-indicator gps-pending";
 
@@ -390,9 +474,7 @@
       navigator.geolocation.getCurrentPosition(
         (position) => {
           userCoordinates = { lat: position.coords.latitude, lng: position.coords.longitude };
-          const puData = document.getElementById('puSelect').value.split('|');
-          const targetLat = parseFloat(puData[2]);
-          const targetLng = parseFloat(puData[3]);
+          const [targetLat, targetLng] = coords.split(',').map(Number);
 
           const distance = calculateDistance(userCoordinates.lat, userCoordinates.lng, targetLat, targetLng);
 
@@ -570,41 +652,69 @@
       document.getElementById('aiAuditChecklist').innerHTML = checklist.join('<br>');
     }
 
-    // --- CLOUD SUBMISSION ---
+    // --- CLOUD SUBMISSION WITH IMAGE UPLOAD ---
     async function submitResultSheet() {
       if (!faceVerified || !isGpsLocked) { alert("Blocked: Complete biometrics and 10m GPS check."); return; }
       
       const sheetFile = document.getElementById('sheetPhotoInput').files[0];
-      if (!sheetFile) { alert("Result Sheet Photo is required."); return; }
+      const poFile = document.getElementById('poPhotoInput').files[0];
+      const adhocFile = document.getElementById('adhocPhotoInput').files[0];
 
-      const sheetHash = await generateHash(sheetFile);
+      if (!sheetFile || !poFile || !adhocFile) { alert("All three evidence photos are required."); return; }
 
-      const votes = {};
-      let totalVotes = 0;
-      parties.forEach(p => {
-        const val = parseInt(document.getElementById(`vote-${p.acronym}`).value) || 0;
-        votes[p.acronym] = val; totalVotes += val;
-      });
+      const statusBox = document.getElementById('uploadStatus');
+      statusBox.classList.remove('hidden'); statusBox.classList.remove('ok');
+      statusBox.className = "status-box";
+      statusBox.innerHTML = "⏳ Uploading evidence to Secure Cloud Storage...";
 
-      if (totalVotes === 0) { alert("Please enter at least one party's vote."); return; }
-
-      const newSubmission = {
-        id: Date.now().toString(),
-        pu: document.getElementById('puSelect').value,
-        role: currentRole, 
-        votes: votes, 
-        totalVotes: totalVotes,
-        hash: sheetHash, 
-        timestamp: new Date().toISOString()
-      };
-
-      // Save to Cloud
       try {
+        // 1. Upload Images to Firebase Storage
+        const uploadImage = async (file, path) => {
+          const storageRef = window.firebaseRef(window.firebaseStorage, `${path}/${Date.now()}_${file.name}`);
+          const base64 = await new Promise(r => { const reader = new FileReader(); reader.onload = e => r(e.target.result); reader.readAsDataURL(file); });
+          await window.firebaseUploadString(storageRef, base64, 'data_url');
+          return await window.firebaseGetDownloadURL(storageRef);
+        };
+
+        const sheetUrl = await uploadImage(sheetFile, 'evidence/sheets');
+        const poUrl = await uploadImage(poFile, 'evidence/po');
+        const adhocUrl = await uploadImage(adhocFile, 'evidence/adhoc');
+
+        // 2. Generate Hash for the result sheet
+        const sheetHash = await generateHash(sheetFile);
+
+        // 3. Gather Votes
+        const votes = {};
+        let totalVotes = 0;
+        parties.forEach(p => {
+          const val = parseInt(document.getElementById(`vote-${p.acronym}`).value) || 0;
+          votes[p.acronym] = val; totalVotes += val;
+        });
+
+        if (totalVotes === 0) { alert("Please enter at least one party's vote."); return; }
+
+        // 4. Save to Firestore with the Secret Key
+        const newSubmission = {
+          id: Date.now().toString(),
+          state: document.getElementById('stateSelect').value,
+          lga: document.getElementById('lgaInput').value,
+          ward: document.getElementById('wardInput').value,
+          pu: document.getElementById('puCodeInput').value,
+          coords: document.getElementById('coordsInput').value,
+          role: currentRole, 
+          votes: votes, 
+          totalVotes: totalVotes,
+          hash: sheetHash, 
+          imageUrls: { sheet: sheetUrl, po: poUrl, adhoc: adhocUrl },
+          timestamp: new Date().toISOString(),
+          secretKey: "NaijaWatch2027SecureKey!",
+          isMock: isMockMode
+        };
+
         await window.firebaseAddDoc(window.firebaseCollection(window.firebaseDB, "submissions"), newSubmission);
         
-        const statusBox = document.getElementById('uploadStatus');
-        statusBox.classList.remove('hidden'); statusBox.classList.remove('err'); statusBox.classList.add('ok');
-        statusBox.innerHTML = `<strong>Success!</strong> Result submitted to Cloud.<br><span style="font-size:10px; color:#aaa;">SHA-256: ${sheetHash.substring(0, 20)}...</span>`;
+        statusBox.classList.add('ok');
+        statusBox.innerHTML = `<strong>Success!</strong> Result and images secured to Cloud.`;
         
         // Reset Form
         parties.forEach(p => document.getElementById(`vote-${p.acronym}`).value = "");
@@ -616,12 +726,13 @@
         document.getElementById('adhocPreview').style.display = "none";
         resetGPS();
 
-        // Reload data from cloud
         loadCloudData();
         
       } catch (e) {
         console.error("Error saving to cloud: ", e);
-        alert("Failed to save to Cloud. Check console.");
+        statusBox.classList.remove('ok');
+        statusBox.classList.add('err');
+        statusBox.innerHTML = `<strong>Error!</strong> Failed to upload to Cloud. Check console.`;
       }
     }
 
@@ -635,7 +746,8 @@
         id: Date.now().toString(),
         category: category,
         description: desc,
-        timestamp: new Date().toLocaleString()
+        timestamp: new Date().toLocaleString(),
+        secretKey: "NaijaWatch2027SecureKey!" // Secret key added
       };
 
       try {
@@ -665,7 +777,7 @@
       
       const grouped = {};
       submissions.forEach(sub => {
-        const puId = sub.pu.split('|')[0];
+        const puId = `${sub.state}-${sub.lga}-${sub.ward}-${sub.pu}`;
         if(!grouped[puId]) grouped[puId] = [];
         grouped[puId].push(sub);
       });
@@ -675,7 +787,6 @@
       parties.forEach(p => totalAggregatedVotes[p.acronym] = 0);
 
       for (const [puId, subs] of Object.entries(grouped)) {
-        const puName = subs[0].pu.split('|')[1];
         let status = "Pending (Needs 3 matching)";
         let tagClass = "tag";
         
@@ -692,7 +803,7 @@
         ledgerHtml += `
           <div class="ledger-item">
             <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
-              <strong>${puName}</strong>
+              <strong>${subs[0].pu} (${subs[0].state}, ${subs[0].lga})</strong>
               <span class="${tagClass}">${status}</span>
             </div>
             <div style="font-size:12px; color:#aaa;">Total Cloud Uploads: ${subs.length}</div>
@@ -759,21 +870,6 @@
           <input type="number" id="vote-${p.acronym}" min="0" placeholder="0" oninput="updateAiAuditPreview()" />
         </div>
       `).join('');
-    }
-
-    // --- SITUATION ROOM ---
-    function openSituationRoom() {
-      const meetings = {
-        zoom: "https://zoom.us/j/123456789",
-        meet: "https://meet.google.com/abc-defg-hij",
-        teams: "https://teams.microsoft.com",
-        jitsi: "https://meet.jit.si/NaijaWatch2027"
-      };
-      const choice = prompt("Select platform:\n1. Zoom\n2. Google Meet\n3. Microsoft Teams\n4. Jitsi Meet");
-      if (choice === "1") window.open(meetings.zoom, "_blank");
-      else if (choice === "2") window.open(meetings.meet, "_blank");
-      else if (choice === "3") window.open(meetings.teams, "_blank");
-      else if (choice === "4") window.open(meetings.jitsi, "_blank");
     }
   </script>
 </body>
