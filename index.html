@@ -6,462 +6,98 @@
   <title>NaijaWatch 2027 — Citizen Collation &amp; Verification Portal</title>
   <style>
     :root {
-      --bg: #07130d;
-      --surface: #0e2118;
-      --surface-2: #142f22;
-      --border: #254d39;
-      --text: #eef7f1;
-      --muted: #9eb8a8;
-      --green: #16a34a;
-      --green-bright: #22c55e;
-      --gold: #eab308;
-      --red: #ef4444;
-      --blue: #38bdf8;
-      --purple: #a855f7;
+      --bg: #07130d; --surface: #0e2118; --surface-2: #142f22; --border: #254d39;
+      --text: #eef7f1; --muted: #9eb8a8; --green: #16a34a; --green-bright: #22c55e;
+      --gold: #eab308; --red: #ef4444; --blue: #38bdf8; --purple: #a855f7;
     }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    }
-
-    body {
-      background: radial-gradient(circle at top right, #113021, var(--bg) 55%);
-      color: var(--text);
-      min-height: 100vh;
-      line-height: 1.5;
-    }
-
-    .topbar {
-      background: rgba(9, 24, 17, 0.94);
-      border-bottom: 1px solid var(--border);
-      padding: 0.9rem 1.25rem;
-      position: sticky;
-      top: 0;
-      z-index: 40;
-      backdrop-filter: blur(10px);
-    }
-
-    .topbar-inner {
-      max-width: 1180px;
-      margin: 0 auto;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.75rem;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-
-    .brand-flag {
-      display: grid;
-      grid-template-columns: repeat(3, 8px);
-      height: 28px;
-      border-radius: 4px;
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.2);
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background: radial-gradient(circle at top right, #113021, var(--bg) 55%); color: var(--text); min-height: 100vh; line-height: 1.5; }
+    
+    .topbar { background: rgba(9, 24, 17, 0.94); border-bottom: 1px solid var(--border); padding: 0.9rem 1.25rem; position: sticky; top: 0; z-index: 40; backdrop-filter: blur(10px); }
+    .topbar-inner { max-width: 1180px; margin: 0 auto; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem; }
+    .brand { display: flex; align-items: center; gap: 0.75rem; }
+    .brand-flag { display: grid; grid-template-columns: repeat(3, 8px); height: 28px; border-radius: 4px; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); }
     .brand-flag span:nth-child(odd) { background: #16a34a; }
     .brand-flag span:nth-child(even) { background: #ffffff; }
+    .brand h1 { font-size: 1.15rem; font-weight: 800; }
+    .brand p { font-size: 0.76rem; color: var(--muted); }
+    .owner-banner { margin-top: 0.55rem; padding-top: 0.5rem; border-top: 1px dashed rgba(158, 184, 168, 0.25); font-size: 0.75rem; color: #d8efe2; display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: space-between; }
+    
+    button { cursor: pointer; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); padding: 0.52rem 0.85rem; border-radius: 8px; font-size: 0.84rem; font-weight: 600; transition: 0.15s ease; }
+    button:hover:not(:disabled) { border-color: var(--green-bright); transform: translateY(-1px); }
+    button:disabled { opacity: 0.45; cursor: not-allowed; }
+    button.primary { background: var(--green); border-color: var(--green-bright); color: #fff; }
+    button.primary:hover:not(:disabled) { background: var(--green-bright); color: #041209; }
+    button.warn { background: rgba(234, 179, 8, 0.15); border-color: var(--gold); color: #fde047; }
 
-    .brand h1 {
-      font-size: 1.15rem;
-      font-weight: 800;
-      letter-spacing: 0.02em;
-    }
-
-    .brand p {
-      font-size: 0.76rem;
-      color: var(--muted);
-    }
-
-    .owner-banner {
-      margin-top: 0.55rem;
-      padding-top: 0.5rem;
-      border-top: 1px dashed rgba(158, 184, 168, 0.25);
-      font-size: 0.75rem;
-      color: #d8efe2;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.6rem;
-      justify-content: space-between;
-    }
-
-    .top-actions {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      padding: 0.35rem 0.65rem;
-      border-radius: 999px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      background: var(--surface-2);
-      border: 1px solid var(--border);
-    }
-
-    .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--green-bright);
-    }
-
-    button {
-      cursor: pointer;
-      border: 1px solid var(--border);
-      background: var(--surface-2);
-      color: var(--text);
-      padding: 0.52rem 0.85rem;
-      border-radius: 8px;
-      font-size: 0.84rem;
-      font-weight: 600;
-      transition: 0.15s ease;
-    }
-
-    button:hover:not(:disabled) {
-      border-color: var(--green-bright);
-      transform: translateY(-1px);
-    }
-
-    button:disabled {
-      opacity: 0.45;
-      cursor: not-allowed;
-    }
-
-    button.primary {
-      background: var(--green);
-      border-color: var(--green-bright);
-      color: #fff;
-    }
-
-    button.warn {
-      background: rgba(234, 179, 8, 0.15);
-      border-color: var(--gold);
-      color: #fde047;
-    }
-
-    .container {
-      max-width: 1180px;
-      margin: 1.25rem auto;
-      padding: 0 1rem 3rem;
-    }
-
-    .gate-banner {
-      background: linear-gradient(135deg, rgba(22, 163, 74, 0.16), rgba(14, 33, 24, 0.96));
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1rem 1.15rem;
-      margin-bottom: 1.15rem;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-    }
-
-    .tabs {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-bottom: 1.1rem;
-    }
-
-    .tab-btn {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      padding: 0.6rem 0.95rem;
-      border-radius: 9px;
-      font-size: 0.86rem;
-    }
-
-    .tab-btn.active {
-      background: var(--green);
-      border-color: var(--green-bright);
-      color: #fff;
-    }
-
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1.15rem;
-      margin-bottom: 1rem;
-    }
-
-    .card h2 {
-      font-size: 1.02rem;
-      margin-bottom: 0.35rem;
-    }
-
-    .sub {
-      font-size: 0.82rem;
-      color: var(--muted);
-      margin-bottom: 0.9rem;
-    }
-
-    .grid-2 {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 0.85rem;
-    }
-
-    label {
-      display: block;
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: var(--muted);
-      margin-bottom: 0.3rem;
-    }
-
-    input, select {
-      width: 100%;
-      background: var(--bg);
-      color: var(--text);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 0.55rem 0.7rem;
-      font-size: 0.88rem;
-    }
-
-    .party-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(225px, 1fr));
-      gap: 0.7rem;
-      margin-top: 0.6rem;
-    }
-
-    .party-box {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 9px;
-      padding: 0.65rem 0.75rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.6rem;
-    }
-
-    .party-meta {
-      display: flex;
-      align-items: center;
-      gap: 0.55rem;
-      min-width: 0;
-    }
-
-    .party-symbol {
-      width: 36px;
-      height: 36px;
-      border-radius: 8px;
-      background: var(--surface-2);
-      border: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.15rem;
-    }
-
-    .party-acronym {
-      font-weight: 800;
-      font-size: 0.88rem;
-    }
-
-    .party-name {
-      font-size: 0.7rem;
-      color: var(--muted);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 112px;
-    }
-
-    .party-box input {
-      width: 78px;
-      text-align: right;
-      font-weight: 700;
-    }
-
-    .status-box {
-      margin-top: 0.85rem;
-      padding: 0.8rem 0.95rem;
-      border-radius: 9px;
-      font-size: 0.84rem;
-      border: 1px solid var(--border);
-      background: var(--bg);
-    }
-
-    .status-box.ok {
-      border-color: var(--green-bright);
-      background: rgba(22, 163, 74, 0.12);
-    }
-
-    .uploader-chip {
-      display: flex;
-      align-items: center;
-      gap: 0.65rem;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 0.55rem 0.7rem;
-      margin-bottom: 0.85rem;
-    }
-
-    .uploader-chip img {
-      width: 48px;
-      height: 48px;
-      border-radius: 8px;
-      object-fit: cover;
-      border: 1px solid var(--green-bright);
-    }
-
-    .ai-panel {
-      background: linear-gradient(135deg, rgba(56, 189, 248, 0.08), rgba(168, 85, 247, 0.08));
-      border: 1px solid rgba(56, 189, 248, 0.35);
-      border-radius: 10px;
-      padding: 0.85rem 0.95rem;
-      margin-top: 0.85rem;
-    }
-
-    .ai-badge {
-      display: inline-flex;
-      align-items: center;
-      padding: 0.2rem 0.55rem;
-      border-radius: 999px;
-      font-size: 0.72rem;
-      font-weight: 700;
-      background: rgba(56, 189, 248, 0.16);
-      color: #7dd3fc;
-      border: 1px solid rgba(56, 189, 248, 0.4);
-    }
-
-    .ledger-item {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 0.9rem;
-      margin-bottom: 0.75rem;
-    }
-
-    .tag {
-      display: inline-block;
-      padding: 0.2rem 0.55rem;
-      border-radius: 6px;
-      font-size: 0.72rem;
-      font-weight: 700;
-      background: rgba(234, 179, 8, 0.2);
-      border: 1px solid var(--gold);
-      color: #fde047;
-    }
-
-    .winner-banner {
-      background: linear-gradient(135deg, rgba(22, 163, 74, 0.24), rgba(234, 179, 8, 0.14));
-      border: 1px solid var(--green-bright);
-      border-radius: 10px;
-      padding: 0.9rem 1rem;
-      margin-bottom: 0.85rem;
-    }
-
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.85);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 1rem;
-      z-index: 90;
-    }
-
-    .modal-backdrop.open {
-      display: flex;
-    }
-
-    .modal {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      max-width: 500px;
-      width: 100%;
-      padding: 1.25rem;
-    }
-
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0.75rem;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    .camera-container {
-      position: relative;
-      width: 100%;
-      height: 300px;
-      background: #000;
-      border-radius: 12px;
-      overflow: hidden;
-      margin-bottom: 1rem;
-      border: 2px solid var(--border);
-    }
-
-    #videoFeed, #snapshotPreview {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    #snapshotPreview {
-      display: none;
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
-
-    .scanner-overlay {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 200px;
-      height: 250px;
-      border: 2px dashed var(--green-bright);
-      border-radius: 50% 50% 45% 45%;
-      box-shadow: 0 0 0 999px rgba(0,0,0,0.5);
-      display: none;
-    }
+    .container { max-width: 1180px; margin: 1.25rem auto; padding: 0 1rem 3rem; }
+    .gate-banner { background: linear-gradient(135deg, rgba(22, 163, 74, 0.16), rgba(14, 33, 24, 0.96)); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.15rem; margin-bottom: 1.15rem; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; }
+    .tabs { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.1rem; }
+    .tab-btn { background: var(--surface); border: 1px solid var(--border); padding: 0.6rem 0.95rem; border-radius: 9px; font-size: 0.86rem; }
+    .tab-btn.active { background: var(--green); border-color: var(--green-bright); color: #fff; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.15rem; margin-bottom: 1rem; }
+    .card h2 { font-size: 1.02rem; margin-bottom: 0.35rem; }
+    .sub { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.9rem; }
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0.85rem; }
+    label { display: block; font-size: 0.78rem; font-weight: 600; color: var(--muted); margin-bottom: 0.3rem; }
+    input, select, textarea { width: 100%; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 0.55rem 0.7rem; font-size: 0.88rem; }
+    textarea { resize: vertical; min-height: 80px; }
+    
+    .party-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(225px, 1fr)); gap: 0.7rem; margin-top: 0.6rem; }
+    .party-box { background: var(--bg); border: 1px solid var(--border); border-radius: 9px; padding: 0.65rem 0.75rem; display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; }
+    .party-meta { display: flex; align-items: center; gap: 0.55rem; min-width: 0; }
+    .party-symbol { width: 36px; height: 36px; border-radius: 8px; background: var(--surface-2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 1.15rem; }
+    .party-acronym { font-weight: 800; font-size: 0.88rem; }
+    .party-name { font-size: 0.7rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 112px; }
+    .party-box input { width: 78px; text-align: right; font-weight: 700; }
+    
+    .status-box { margin-top: 0.85rem; padding: 0.8rem 0.95rem; border-radius: 9px; font-size: 0.84rem; border: 1px solid var(--border); background: var(--bg); }
+    .status-box.ok { border-color: var(--green-bright); background: rgba(22, 163, 74, 0.12); }
+    .status-box.err { border-color: var(--red); background: rgba(239, 68, 68, 0.12); }
+    .uploader-chip { display: flex; align-items: center; gap: 0.65rem; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 0.55rem 0.7rem; margin-bottom: 0.85rem; }
+    .uploader-chip img { width: 48px; height: 48px; border-radius: 8px; object-fit: cover; border: 1px solid var(--green-bright); }
+    .ai-panel { background: linear-gradient(135deg, rgba(56, 189, 248, 0.08), rgba(168, 85, 247, 0.08)); border: 1px solid rgba(56, 189, 248, 0.35); border-radius: 10px; padding: 0.85rem 0.95rem; margin-top: 0.85rem; }
+    .ai-badge { display: inline-flex; align-items: center; padding: 0.2rem 0.55rem; border-radius: 999px; font-size: 0.72rem; font-weight: 700; background: rgba(56, 189, 248, 0.16); color: #7dd3fc; border: 1px solid rgba(56, 189, 248, 0.4); }
+    
+    .ledger-item { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem; margin-bottom: 0.75rem; }
+    .tag { display: inline-block; padding: 0.2rem 0.55rem; border-radius: 6px; font-size: 0.72rem; font-weight: 700; background: rgba(234, 179, 8, 0.2); border: 1px solid var(--gold); color: #fde047; }
+    .tag.verified { background: rgba(22, 163, 74, 0.2); border-color: var(--green-bright); color: #86efac; }
+    .winner-banner { background: linear-gradient(135deg, rgba(22, 163, 74, 0.24), rgba(234, 179, 8, 0.14)); border: 1px solid var(--green-bright); border-radius: 10px; padding: 0.9rem 1rem; margin-bottom: 0.85rem; }
+    
+    /* Projected Winner Table */
+    .results-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.85rem; }
+    .results-table th, .results-table td { padding: 8px; border-bottom: 1px solid var(--border); text-align: left; }
+    .results-table th { color: var(--muted); font-weight: 600; }
+    
+    .modal-backdrop { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); display: none; align-items: center; justify-content: center; padding: 1rem; z-index: 90; }
+    .modal-backdrop.open { display: flex; }
+    .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; max-width: 500px; width: 100%; padding: 1.25rem; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+    .hidden { display: none !important; }
+    
+    .camera-container { position: relative; width: 100%; height: 300px; background: #000; border-radius: 12px; overflow: hidden; margin-bottom: 1rem; border: 2px solid var(--border); }
+    #videoFeed, #snapshotPreview { width: 100%; height: 100%; object-fit: cover; }
+    #snapshotPreview { display: none; position: absolute; top: 0; left: 0; }
+    
+    .gps-indicator { font-weight: bold; padding: 5px 10px; border-radius: 5px; display: inline-block; margin-top: 10px; }
+    .gps-pending { background-color: rgba(234, 179, 8, 0.2); color: var(--gold); border: 1px solid var(--gold); }
+    .gps-success { background-color: rgba(22, 163, 74, 0.2); color: var(--green-bright); border: 1px solid var(--green-bright); }
+    .gps-error { background-color: rgba(239, 68, 68, 0.2); color: var(--red); border: 1px solid var(--red); }
+    
+    .evidence-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.85rem; margin-top: 0.5rem; }
+    .evidence-card { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 0.75rem; }
+    .preview-img { margin-top: 0.65rem; max-width: 100%; max-height: 120px; border-radius: 8px; border: 1px solid var(--border); display: none; }
   </style>
 </head>
 <body>
   <header class="topbar">
     <div class="topbar-inner">
       <div class="brand">
-        <div class="brand-flag" aria-hidden="true">
-          <span></span><span></span><span></span>
-        </div>
+        <div class="brand-flag"><span></span><span></span><span></span></div>
         <div>
           <h1>NaijaWatch 2027</h1>
           <p>Citizen Polling Unit Collation &amp; Verification Portal</p>
         </div>
-      </div>
-      <div class="top-actions">
-        <div class="pill"><span class="dot"></span><span>Online (WAT)</span></div>
       </div>
     </div>
     <div class="topbar-inner">
@@ -503,9 +139,11 @@
     <div id="mainAppContent" class="hidden">
       <nav class="tabs">
         <button type="button" class="tab-btn active" data-tab="upload" onclick="switchTab('upload')">1. Upload Result Sheet</button>
-        <button type="button" class="tab-btn" data-tab="consensus" onclick="switchTab('consensus')">2. Consensus &amp; Collation</button>
+        <button type="button" class="tab-btn" data-tab="consensus" onclick="switchTab('consensus')">2. Consensus &amp; Projection</button>
+        <button type="button" class="tab-btn" data-tab="incidents" onclick="switchTab('incidents')">3. Incident Reports</button>
       </nav>
 
+      <!-- TAB 1: UPLOAD -->
       <section id="tab-upload" class="card">
         <h2>Polling Unit Result Sheet Upload</h2>
         <div class="uploader-chip">
@@ -519,9 +157,9 @@
         <div class="grid-2" style="margin-top:0.85rem;">
           <div>
             <label>Polling Unit (Target)</label>
-            <select id="puSelect" onchange="onPollingUnitChange()">
-              <option value="PU-24-01-01-001|Garki">Garki Village Square PU 001 (AMAC, FCT)</option>
-              <option value="PU-25-12-04-008|Ikeja">Ikeja GRA Ward 04 PU 008 (Ikeja, Lagos)</option>
+            <select id="puSelect" onchange="resetGPS()">
+              <option value="PU-24-01-01-001|Garki Village Square PU 001 (AMAC, FCT)|9.0358|7.4951">Garki Village Square PU 001 (AMAC, FCT)</option>
+              <option value="PU-25-12-04-008|Ikeja GRA Ward 04 PU 008 (Ikeja, Lagos)|6.5833|3.3500">Ikeja GRA Ward 04 PU 008 (Ikeja, Lagos)</option>
             </select>
           </div>
           <div>
@@ -530,12 +168,30 @@
           </div>
         </div>
 
-        <div style="margin-top:0.85rem; display:flex; flex-wrap:wrap; gap:0.5rem; align-items:center;">
-          <button type="button" onclick="simulateGps()">Capture Live GPS</button>
-          <span id="gpsReadout" class="pill" style="border-color:var(--red); color:var(--red);">GPS: Not captured</span>
+        <div style="margin-top:0.85rem; display:flex; flex-direction:column; gap:0.5rem;">
+          <button type="button" class="primary" onclick="captureGPS()">📍 Capture Live GPS (10m Check)</button>
+          <div id="gpsReadout" class="gps-indicator gps-pending">GPS: Pending satellite lock...</div>
         </div>
 
-        <div style="margin-top:1rem;">
+        <div class="evidence-grid" style="margin-top:1rem;">
+          <div class="evidence-card">
+            <label>1. Result Sheet Photo (Required)</label>
+            <input type="file" id="sheetPhotoInput" accept="image/*" capture="environment" onchange="previewImage(event, 'sheetPreview')" />
+            <img id="sheetPreview" class="preview-img" alt="Sheet Preview" />
+          </div>
+          <div class="evidence-card">
+            <label>2. PO Holding Result Sheet (Required)</label>
+            <input type="file" id="poPhotoInput" accept="image/*" capture="environment" onchange="previewImage(event, 'poPreview')" />
+            <img id="poPreview" class="preview-img" alt="PO Preview" />
+          </div>
+          <div class="evidence-card">
+            <label>3. Ad-Hoc Staff Photo (Required)</label>
+            <input type="file" id="adhocPhotoInput" accept="image/*" capture="environment" onchange="previewImage(event, 'adhocPreview')" />
+            <img id="adhocPreview" class="preview-img" alt="Adhoc Preview" />
+          </div>
+        </div>
+
+        <div style="margin-top:1.5rem;">
           <label style="margin:0;">All 22 INEC-Registered Political Parties</label>
           <div id="partyInputsGrid" class="party-grid"></div>
         </div>
@@ -546,7 +202,7 @@
             <strong id="aiTrustScoreBadge">Estimated Trust Score: -- / 100</strong>
           </div>
           <div id="aiAuditChecklist" style="font-size:0.8rem; color:var(--muted);">
-            Awaiting GPS capture...
+            Awaiting data...
           </div>
         </div>
 
@@ -556,10 +212,66 @@
         <div id="uploadStatus" class="status-box hidden"></div>
       </section>
 
+      <!-- TAB 2: CONSENSUS & PROJECTION -->
       <section id="tab-consensus" class="card hidden">
-        <h2>3-of-5 Majority Consensus &amp; Collation</h2>
+        <h2>Consensus &amp; Projected Winner</h2>
+        <p class="sub">Aggregated verified results across all polling units.</p>
+        
         <div id="winnerBanner" class="winner-banner">Waiting for verified polling unit results...</div>
-        <div id="consensusLedger" style="margin-top: 1rem;">No submissions yet.</div>
+        
+        <h3 style="font-size:0.95rem; margin-top:1rem; margin-bottom:0.5rem;">National Aggregation Table</h3>
+        <div style="overflow-x:auto;">
+          <table class="results-table">
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>Party</th>
+                <th>Total Votes</th>
+                <th>Vote Share</th>
+              </tr>
+            </thead>
+            <tbody id="aggregationTableBody">
+              <tr><td colspan="4" style="text-align:center;">No verified results yet.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 style="font-size:0.95rem; margin-top:1.5rem; margin-bottom:0.5rem;">Polling Unit Ledger</h3>
+        <div id="consensusLedger">No submissions yet.</div>
+      </section>
+
+      <!-- TAB 3: INCIDENT REPORTS -->
+      <section id="tab-incidents" class="card hidden">
+        <h2>Election Incident Reporting</h2>
+        <p class="sub">Report irregularities, violence, or logistical issues with photo/video evidence.</p>
+
+        <div class="grid-2">
+          <div>
+            <label>Incident Category</label>
+            <select id="incidentCategory">
+              <option>Voter Intimidation</option>
+              <option>BVAS Machine Failure</option>
+              <option>Late Arrival of Officials</option>
+              <option>Violence / Thuggery</option>
+              <option>Vote Buying</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div>
+            <label>Attachment (Photo or Video)</label>
+            <input type="file" id="incidentMedia" accept="image/*,video/*" />
+          </div>
+        </div>
+
+        <div style="margin-top:0.85rem;">
+          <label>Description of Incident</label>
+          <textarea id="incidentDescription" placeholder="Describe what happened..."></textarea>
+        </div>
+
+        <div style="margin-top:1rem;">
+          <button type="button" class="warn" onclick="submitIncident()">⚠️ Submit Incident Report</button>
+        </div>
+        <div id="incidentStatus" class="status-box hidden"></div>
       </section>
     </div>
   </main>
@@ -573,7 +285,6 @@
       <div class="camera-container">
         <video id="videoFeed" autoplay playsinline></video>
         <img id="snapshotPreview" alt="Face Capture">
-        <div class="scanner-overlay" id="faceOverlay"></div>
       </div>
       <div style="display: flex; flex-direction: column; gap: 10px;">
         <button type="button" id="btnCaptureFace" class="primary" onclick="captureFace()">1. Capture Face</button>
@@ -587,9 +298,12 @@
   </div>
 
   <script>
+    // --- Global State ---
     let currentRole = "";
-    let gpsCaptured = false;
-    let submissions = []; 
+    let isGpsLocked = false;
+    let userCoordinates = null;
+    let submissions = JSON.parse(localStorage.getItem('naijaWatchSubmissions')) || []; 
+    let incidents = JSON.parse(localStorage.getItem('naijaWatchIncidents')) || [];
     let videoStream = null;
     let faceVerified = false;
     let thumbVerified = false;
@@ -609,8 +323,95 @@
       { acronym: "YPP", name: "Young Peoples Party", symbol: "🌱" }, { acronym: "ZLP", name: "Zenith Labour Party", symbol: "🟨" }
     ];
 
-    document.addEventListener("DOMContentLoaded", () => { renderPartyInputs(); });
+    document.addEventListener("DOMContentLoaded", () => { 
+      renderPartyInputs(); 
+      renderConsensus(); 
+    });
 
+    // --- GPS LOGIC ---
+    function captureGPS() {
+      const gpsReadout = document.getElementById('gpsReadout');
+      gpsReadout.textContent = "Acquiring satellites...";
+      gpsReadout.className = "gps-indicator gps-pending";
+
+      if (!navigator.geolocation) {
+        gpsReadout.textContent = "❌ Geolocation not supported.";
+        gpsReadout.className = "gps-indicator gps-error";
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          userCoordinates = { lat: position.coords.latitude, lng: position.coords.longitude };
+          const puData = document.getElementById('puSelect').value.split('|');
+          const targetLat = parseFloat(puData[2]);
+          const targetLng = parseFloat(puData[3]);
+
+          const distance = calculateDistance(userCoordinates.lat, userCoordinates.lng, targetLat, targetLng);
+
+          if (distance <= 10) {
+            isGpsLocked = true;
+            gpsReadout.textContent = `✅ GPS Locked: Inside 10m zone (${distance.toFixed(1)}m)`;
+            gpsReadout.className = "gps-indicator gps-success";
+          } else {
+            isGpsLocked = false;
+            gpsReadout.textContent = `❌ GPS Rejected: You are ${distance.toFixed(1)}m away (Max 10m).`;
+            gpsReadout.className = "gps-indicator gps-error";
+          }
+          updateAiAuditPreview();
+        },
+        (error) => {
+          isGpsLocked = false;
+          gpsReadout.textContent = `❌ GPS Error: ${error.message}`;
+          gpsReadout.className = "gps-indicator gps-error";
+          updateAiAuditPreview();
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+      );
+    }
+
+    function calculateDistance(lat1, lon1, lat2, lon2) {
+      const R = 6371e3;
+      const φ1 = lat1 * Math.PI/180;
+      const φ2 = lat2 * Math.PI/180;
+      const Δφ = (lat2-lat1) * Math.PI/180;
+      const Δλ = (lon2-lon1) * Math.PI/180;
+      const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) + Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ/2) * Math.sin(Δλ/2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      return R * c;
+    }
+
+    function resetGPS() {
+      isGpsLocked = false;
+      userCoordinates = null;
+      const gpsReadout = document.getElementById('gpsReadout');
+      gpsReadout.textContent = "GPS: Pending satellite lock...";
+      gpsReadout.className = "gps-indicator gps-pending";
+      updateAiAuditPreview();
+    }
+
+    // --- IMAGE PREVIEWS ---
+    function previewImage(event, previewId) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById(previewId).src = e.target.result;
+          document.getElementById(previewId).style.display = 'block';
+        }
+        reader.readAsDataURL(file);
+      }
+      updateAiAuditPreview();
+    }
+
+    async function generateHash(file) {
+      if (!file) return "No file";
+      const arrayBuffer = await file.arrayBuffer();
+      const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer);
+      return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    // --- BIOMETRICS ---
     async function triggerBiometricGate() {
       currentRole = document.getElementById('roleSelect').value;
       if (!currentRole) { alert("Please select a status/role first."); return; }
@@ -627,14 +428,12 @@
       document.getElementById('btnFinish').style.display = 'none';
       document.getElementById('snapshotPreview').style.display = 'none';
       document.getElementById('videoFeed').style.display = 'block';
-      document.getElementById('faceOverlay').style.display = 'none';
 
       try {
         videoStream = await navigator.mediaDevices.getUserMedia({ video: true });
         document.getElementById('videoFeed').srcObject = videoStream;
-        document.getElementById('faceOverlay').style.display = 'block';
       } catch (err) {
-        alert("Camera access denied. Please use HTTPS and grant permissions.");
+        alert("Camera access denied. Please ensure you are using HTTPS.");
         closeBiometricModal();
       }
     }
@@ -652,7 +451,6 @@
       document.getElementById('snapshotPreview').src = faceImageBase64;
       document.getElementById('snapshotPreview').style.display = 'block';
       video.style.display = 'none';
-      document.getElementById('faceOverlay').style.display = 'none';
 
       document.getElementById('btnCaptureFace').style.display = 'none';
       document.getElementById('btnScanThumb').style.display = 'block';
@@ -661,10 +459,9 @@
     }
 
     function scanThumbprint() {
-      document.getElementById('bioStatus').textContent = "Scanning sensor... Please hold still.";
+      document.getElementById('bioStatus').textContent = "Scanning sensor...";
       document.getElementById('btnScanThumb').disabled = true;
       
-      // Simulate scan delay
       setTimeout(() => {
         thumbVerified = true;
         document.getElementById('bioStatus').textContent = "Thumbprint Verified!";
@@ -695,6 +492,198 @@
       document.getElementById('biometricModal').classList.remove('open');
     }
 
+    // --- AI AUDIT ---
+    function updateAiAuditPreview() {
+      let score = 0;
+      let checklist = [];
+
+      if (faceVerified && thumbVerified) { score += 30; checklist.push("✅ Biometrics Verified"); } 
+      else { checklist.push("❌ Biometrics Pending"); }
+
+      if (isGpsLocked) { score += 30; checklist.push("✅ 10m Geofence Locked"); } 
+      else { checklist.push("❌ GPS Lock Pending"); }
+
+      const hasSheet = document.getElementById('sheetPhotoInput').files.length > 0;
+      const hasPO = document.getElementById('poPhotoInput').files.length > 0;
+      const hasAdhoc = document.getElementById('adhocPhotoInput').files.length > 0;
+      
+      if (hasSheet && hasPO && hasAdhoc) { score += 20; checklist.push("✅ 3 Evidence Photos Attached"); } 
+      else { checklist.push("❌ Missing Evidence Photos"); }
+
+      let votesEntered = 0;
+      parties.forEach(p => {
+        const val = document.getElementById(`vote-${p.acronym}`).value;
+        if (val && parseInt(val) > 0) votesEntered++;
+      });
+      
+      if (votesEntered > 0) { score += 20; checklist.push(`✅ Votes Entered (${votesEntered} parties)`); } 
+      else { checklist.push("❌ No Votes Entered"); }
+
+      document.getElementById('aiTrustScoreBadge').textContent = `Estimated Trust Score: ${score} / 100`;
+      document.getElementById('aiAuditChecklist').innerHTML = checklist.join('<br>');
+    }
+
+    // --- SUBMISSION ---
+    async function submitResultSheet() {
+      if (!faceVerified || !isGpsLocked) { alert("Blocked: Complete biometrics and 10m GPS check."); return; }
+      
+      const sheetFile = document.getElementById('sheetPhotoInput').files[0];
+      if (!sheetFile) { alert("Result Sheet Photo is required."); return; }
+
+      const sheetHash = await generateHash(sheetFile);
+
+      const votes = {};
+      let totalVotes = 0;
+      parties.forEach(p => {
+        const val = parseInt(document.getElementById(`vote-${p.acronym}`).value) || 0;
+        votes[p.acronym] = val; totalVotes += val;
+      });
+
+      if (totalVotes === 0) { alert("Please enter at least one party's vote."); return; }
+
+      submissions.push({
+        id: Date.now().toString(),
+        pu: document.getElementById('puSelect').value,
+        role: currentRole, votes: votes, totalVotes: totalVotes,
+        hash: sheetHash, timestamp: new Date().toISOString()
+      });
+
+      localStorage.setItem('naijaWatchSubmissions', JSON.stringify(submissions));
+
+      const statusBox = document.getElementById('uploadStatus');
+      statusBox.classList.remove('hidden'); statusBox.classList.remove('err'); statusBox.classList.add('ok');
+      statusBox.innerHTML = `<strong>Success!</strong> Result submitted.<br><span style="font-size:10px; color:#aaa;">SHA-256: ${sheetHash.substring(0, 20)}...</span>`;
+      
+      parties.forEach(p => document.getElementById(`vote-${p.acronym}`).value = "");
+      document.getElementById('sheetPhotoInput').value = "";
+      document.getElementById('poPhotoInput').value = "";
+      document.getElementById('adhocPhotoInput').value = "";
+      document.getElementById('sheetPreview').style.display = "none";
+      document.getElementById('poPreview').style.display = "none";
+      document.getElementById('adhocPreview').style.display = "none";
+      resetGPS();
+    }
+
+    // --- INCIDENT REPORTING ---
+    async function submitIncident() {
+      const category = document.getElementById('incidentCategory').value;
+      const desc = document.getElementById('incidentDescription').value;
+      const mediaFile = document.getElementById('incidentMedia').files[0];
+
+      if (!desc) { alert("Please provide a description of the incident."); return; }
+
+      // Simulate GPS capture for incident
+      const gpsTimestamp = new Date().toLocaleString();
+
+      const newIncident = {
+        id: Date.now().toString(),
+        category: category,
+        description: desc,
+        timestamp: gpsTimestamp,
+        hasMedia: !!mediaFile
+      };
+
+      incidents.push(newIncident);
+      localStorage.setItem('naijaWatchIncidents', JSON.stringify(incidents));
+
+      const statusBox = document.getElementById('incidentStatus');
+      statusBox.classList.remove('hidden'); statusBox.classList.add('ok');
+      statusBox.innerHTML = `<strong>Incident Logged!</strong> Category: ${category} at ${gpsTimestamp}`;
+
+      document.getElementById('incidentDescription').value = "";
+      document.getElementById('incidentMedia').value = "";
+    }
+
+    // --- CONSENSUS & PROJECTION ---
+    function renderConsensus() {
+      const ledger = document.getElementById('consensusLedger');
+      const winnerBanner = document.getElementById('winnerBanner');
+      const tableBody = document.getElementById('aggregationTableBody');
+
+      if (submissions.length === 0) { 
+        ledger.innerHTML = "No submissions yet."; 
+        winnerBanner.textContent = "Waiting for verified polling unit results...";
+        tableBody.innerHTML = `<tr><td colspan="4" style="text-align:center;">No verified results yet.</td></tr>`;
+        return; 
+      }
+      
+      // Group by Polling Unit
+      const grouped = {};
+      submissions.forEach(sub => {
+        const puId = sub.pu.split('|')[0];
+        if(!grouped[puId]) grouped[puId] = [];
+        grouped[puId].push(sub);
+      });
+
+      let ledgerHtml = "";
+      let totalAggregatedVotes = {};
+      parties.forEach(p => totalAggregatedVotes[p.acronym] = 0);
+
+      for (const [puId, subs] of Object.entries(grouped)) {
+        const puName = subs[0].pu.split('|')[1];
+        let status = "Pending (Needs 3 matching)";
+        let tagClass = "tag";
+        
+        // Simplified Consensus: Assume if >=3 uploads, the most recent one's votes are verified
+        if (subs.length >= 3) {
+           status = "✅ Verified (3-of-5 Consensus)";
+           tagClass = "tag verified";
+           
+           // Add votes to national aggregation
+           const verifiedVotes = subs[subs.length - 1].votes;
+           Object.keys(verifiedVotes).forEach(party => {
+             totalAggregatedVotes[party] += verifiedVotes[party];
+           });
+        }
+
+        ledgerHtml += `
+          <div class="ledger-item">
+            <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+              <strong>${puName}</strong>
+              <span class="${tagClass}">${status}</span>
+            </div>
+            <div style="font-size:12px; color:#aaa;">Uploads: ${subs.length} / 5</div>
+          </div>
+        `;
+      }
+      ledger.innerHTML = ledgerHtml;
+
+      // Calculate Winner & Aggregate Table
+      let totalVotesCast = 0;
+      let winnerAcronym = "";
+      let maxVotes = -1;
+
+      const sortedParties = Object.entries(totalAggregatedVotes)
+        .sort(([,a], [,b]) => b - a)
+        .map(([acronym, votes]) => {
+          totalVotesCast += votes;
+          if (votes > maxVotes && votes > 0) {
+            maxVotes = votes;
+            winnerAcronym = acronym;
+          }
+          return { acronym, votes };
+        });
+
+      if (totalVotesCast > 0) {
+        winnerBanner.innerHTML = `🏆 <strong>Projected Winner: ${winnerAcronym}</strong> (${maxVotes.toLocaleString()} Votes)`;
+        tableBody.innerHTML = sortedParties.map((p, index) => {
+          if (p.votes === 0) return ""; // Hide 0 votes
+          const share = ((p.votes / totalVotesCast) * 100).toFixed(1);
+          return `
+            <tr>
+              <td>${index + 1}</td>
+              <td><strong>${p.acronym}</strong></td>
+              <td>${p.votes.toLocaleString()}</td>
+              <td>${share}%</td>
+            </tr>
+          `;
+        }).join('');
+      } else {
+        winnerBanner.textContent = "Waiting for verified polling unit results...";
+      }
+    }
+
+    // --- UI UTILS ---
     function switchTab(tabName) {
       document.querySelectorAll('section').forEach(sec => {
         if(sec.id.startsWith('tab-')) sec.classList.add('hidden');
@@ -718,90 +707,6 @@
           <input type="number" id="vote-${p.acronym}" min="0" placeholder="0" oninput="updateAiAuditPreview()" />
         </div>
       `).join('');
-    }
-
-    function simulateGps() {
-      gpsCaptured = true;
-      const gpsReadout = document.getElementById('gpsReadout');
-      gpsReadout.textContent = "GPS: Inside 10m (Locked)";
-      gpsReadout.style.borderColor = "var(--green-bright)";
-      gpsReadout.style.color = "var(--green-bright)";
-      updateAiAuditPreview();
-    }
-
-    function onPollingUnitChange() {
-      gpsCaptured = false;
-      const gpsReadout = document.getElementById('gpsReadout');
-      gpsReadout.textContent = "GPS: Not captured";
-      gpsReadout.style.borderColor = "var(--red)";
-      gpsReadout.style.color = "var(--red)";
-      updateAiAuditPreview();
-    }
-
-    function updateAiAuditPreview() {
-      let score = 0;
-      let checklist = [];
-
-      if (faceVerified && thumbVerified) { score += 30; checklist.push("✅ Biometrics Verified"); } 
-      else { checklist.push("❌ Biometrics Pending"); }
-
-      if (gpsCaptured) { score += 30; checklist.push("✅ 10m Geofence Locked"); } 
-      else { checklist.push("❌ GPS Pending"); }
-
-      let votesEntered = 0;
-      parties.forEach(p => {
-        const val = document.getElementById(`vote-${p.acronym}`).value;
-        if (val && parseInt(val) > 0) votesEntered++;
-      });
-      
-      if (votesEntered > 0) { score += 40; checklist.push(`✅ Votes Entered (${votesEntered} parties)`); } 
-      else { checklist.push("❌ No Votes Entered"); }
-
-      document.getElementById('aiTrustScoreBadge').textContent = `Estimated Trust Score: ${score} / 100`;
-      document.getElementById('aiAuditChecklist').innerHTML = checklist.join('<br>');
-    }
-
-    function submitResultSheet() {
-      if (!faceVerified || !gpsCaptured) { alert("Complete biometrics and capture GPS first."); return; }
-      
-      const votes = {};
-      let totalVotes = 0;
-      parties.forEach(p => {
-        const val = parseInt(document.getElementById(`vote-${p.acronym}`).value) || 0;
-        votes[p.acronym] = val; totalVotes += val;
-      });
-
-      if (totalVotes === 0) { alert("Please enter at least one party's vote."); return; }
-
-      submissions.push({
-        pu: document.getElementById('puSelect').value,
-        role: currentRole, votes: votes, timestamp: new Date().toISOString()
-      });
-
-      const statusBox = document.getElementById('uploadStatus');
-      statusBox.classList.remove('hidden'); statusBox.classList.add('ok');
-      statusBox.innerHTML = `<strong>Success!</strong> Result submitted. Total votes: ${totalVotes}`;
-      
-      parties.forEach(p => document.getElementById(`vote-${p.acronym}`).value = "");
-      gpsCaptured = false; onPollingUnitChange();
-    }
-
-    function renderConsensus() {
-      const ledger = document.getElementById('consensusLedger');
-      if (submissions.length === 0) { ledger.innerHTML = "No submissions yet."; return; }
-      
-      ledger.innerHTML = submissions.map((sub) => {
-        let topParty = Object.keys(sub.votes).reduce((a, b) => sub.votes[a] > sub.votes[b] ? a : b);
-        return `
-          <div class="ledger-item">
-            <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
-              <strong>PU: ${sub.pu.split('|')[1]}</strong>
-              <span class="tag">Pending Consensus</span>
-            </div>
-            <div>Leading: <strong>${topParty}</strong> (${sub.votes[topParty]} votes)</div>
-          </div>
-        `;
-      }).join('');
     }
   </script>
 </body>
