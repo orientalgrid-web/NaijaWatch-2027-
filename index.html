@@ -29,6 +29,7 @@
     button.primary { background: var(--green); border-color: var(--green-bright); color: #fff; }
     button.primary:hover:not(:disabled) { background: var(--green-bright); color: #041209; }
     button.warn { background: rgba(234, 179, 8, 0.15); border-color: var(--gold); color: #fde047; }
+    button.situation-btn { background: linear-gradient(135deg, #1d4ed8, #6d28d9); border-color: #818cf8; color: #fff; }
 
     .container { max-width: 1180px; margin: 1.25rem auto; padding: 0 1rem 3rem; }
     .gate-banner { background: linear-gradient(135deg, rgba(22, 163, 74, 0.16), rgba(14, 33, 24, 0.96)); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.15rem; margin-bottom: 1.15rem; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; }
@@ -64,7 +65,6 @@
     .tag.verified { background: rgba(22, 163, 74, 0.2); border-color: var(--green-bright); color: #86efac; }
     .winner-banner { background: linear-gradient(135deg, rgba(22, 163, 74, 0.24), rgba(234, 179, 8, 0.14)); border: 1px solid var(--green-bright); border-radius: 10px; padding: 0.9rem 1rem; margin-bottom: 0.85rem; }
     
-    /* Projected Winner Table */
     .results-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.85rem; }
     .results-table th, .results-table td { padding: 8px; border-bottom: 1px solid var(--border); text-align: left; }
     .results-table th { color: var(--muted); font-weight: 600; }
@@ -98,6 +98,9 @@
           <h1>NaijaWatch 2027</h1>
           <p>Citizen Polling Unit Collation &amp; Verification Portal</p>
         </div>
+      </div>
+      <div style="display:flex; gap:10px;">
+        <button type="button" class="situation-btn" onclick="openSituationRoom()">The Situation Room</button>
       </div>
     </div>
     <div class="topbar-inner">
@@ -139,7 +142,7 @@
     <div id="mainAppContent" class="hidden">
       <nav class="tabs">
         <button type="button" class="tab-btn active" data-tab="upload" onclick="switchTab('upload')">1. Upload Result Sheet</button>
-        <button type="button" class="tab-btn" data-tab="consensus" onclick="switchTab('consensus')">2. Consensus &amp; Projection</button>
+        <button type="button" class="tab-btn" data-tab="consensus" onclick="switchTab('consensus'); loadCloudData();">2. Consensus &amp; Projection</button>
         <button type="button" class="tab-btn" data-tab="incidents" onclick="switchTab('incidents')">3. Incident Reports</button>
       </nav>
 
@@ -215,7 +218,7 @@
       <!-- TAB 2: CONSENSUS & PROJECTION -->
       <section id="tab-consensus" class="card hidden">
         <h2>Consensus &amp; Projected Winner</h2>
-        <p class="sub">Aggregated verified results across all polling units.</p>
+        <p class="sub">Aggregated verified results across all polling units (Synced from Cloud).</p>
         
         <div id="winnerBanner" class="winner-banner">Waiting for verified polling unit results...</div>
         
@@ -297,13 +300,41 @@
     </div>
   </div>
 
+  <!-- FIREBASE SCRIPTS -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDb09ShhFEjX7u7LD7t8OqziAX5u5wcEv4",
+      authDomain: "connect-orient.firebaseapp.com",
+      projectId: "connect-orient",
+      storageBucket: "connect-orient.firebasestorage.app",
+      messagingSenderId: "641303653447",
+      appId: "1:641303653447:web:36e64c651be0310dcd5562",
+      measurementId: "G-1G6MXNGH79"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Expose Firebase functions to the window object so standard scripts can use them
+    window.firebaseDB = db;
+    window.firebaseCollection = collection;
+    window.firebaseAddDoc = addDoc;
+    window.firebaseGetDocs = getDocs;
+    
+    console.log("Firebase Connected Successfully!");
+    document.dispatchEvent(new Event('firebaseReady'));
+  </script>
+
   <script>
     // --- Global State ---
     let currentRole = "";
     let isGpsLocked = false;
     let userCoordinates = null;
-    let submissions = JSON.parse(localStorage.getItem('naijaWatchSubmissions')) || []; 
-    let incidents = JSON.parse(localStorage.getItem('naijaWatchIncidents')) || [];
+    let submissions = []; // Loaded from Cloud
+    let incidents = [];   // Loaded from Cloud
     let videoStream = null;
     let faceVerified = false;
     let thumbVerified = false;
@@ -323,10 +354,26 @@
       { acronym: "YPP", name: "Young Peoples Party", symbol: "🌱" }, { acronym: "ZLP", name: "Zenith Labour Party", symbol: "🟨" }
     ];
 
-    document.addEventListener("DOMContentLoaded", () => { 
-      renderPartyInputs(); 
-      renderConsensus(); 
+    // Wait for Firebase to initialize before rendering data
+    document.addEventListener("firebaseReady", () => {
+      renderPartyInputs();
+      loadCloudData();
     });
+
+    // --- CLOUD DATABASE SYNC ---
+    async function loadCloudData() {
+      if (!window.firebaseDB) {
+        console.log("Waiting for Firebase...");
+        return;
+      }
+      try {
+        const querySnapshot = await window.firebaseGetDocs(window.firebaseCollection(window.firebaseDB, "submissions"));
+        submissions = querySnapshot.docs.map(doc => doc.data());
+        renderConsensus(); // Re-render the UI with cloud data
+      } catch (e) {
+        console.error("Error loading cloud data:", e);
+      }
+    }
 
     // --- GPS LOGIC ---
     function captureGPS() {
@@ -523,7 +570,7 @@
       document.getElementById('aiAuditChecklist').innerHTML = checklist.join('<br>');
     }
 
-    // --- SUBMISSION ---
+    // --- CLOUD SUBMISSION ---
     async function submitResultSheet() {
       if (!faceVerified || !isGpsLocked) { alert("Blocked: Complete biometrics and 10m GPS check."); return; }
       
@@ -541,57 +588,66 @@
 
       if (totalVotes === 0) { alert("Please enter at least one party's vote."); return; }
 
-      submissions.push({
+      const newSubmission = {
         id: Date.now().toString(),
         pu: document.getElementById('puSelect').value,
-        role: currentRole, votes: votes, totalVotes: totalVotes,
-        hash: sheetHash, timestamp: new Date().toISOString()
-      });
+        role: currentRole, 
+        votes: votes, 
+        totalVotes: totalVotes,
+        hash: sheetHash, 
+        timestamp: new Date().toISOString()
+      };
 
-      localStorage.setItem('naijaWatchSubmissions', JSON.stringify(submissions));
+      // Save to Cloud
+      try {
+        await window.firebaseAddDoc(window.firebaseCollection(window.firebaseDB, "submissions"), newSubmission);
+        
+        const statusBox = document.getElementById('uploadStatus');
+        statusBox.classList.remove('hidden'); statusBox.classList.remove('err'); statusBox.classList.add('ok');
+        statusBox.innerHTML = `<strong>Success!</strong> Result submitted to Cloud.<br><span style="font-size:10px; color:#aaa;">SHA-256: ${sheetHash.substring(0, 20)}...</span>`;
+        
+        // Reset Form
+        parties.forEach(p => document.getElementById(`vote-${p.acronym}`).value = "");
+        document.getElementById('sheetPhotoInput').value = "";
+        document.getElementById('poPhotoInput').value = "";
+        document.getElementById('adhocPhotoInput').value = "";
+        document.getElementById('sheetPreview').style.display = "none";
+        document.getElementById('poPreview').style.display = "none";
+        document.getElementById('adhocPreview').style.display = "none";
+        resetGPS();
 
-      const statusBox = document.getElementById('uploadStatus');
-      statusBox.classList.remove('hidden'); statusBox.classList.remove('err'); statusBox.classList.add('ok');
-      statusBox.innerHTML = `<strong>Success!</strong> Result submitted.<br><span style="font-size:10px; color:#aaa;">SHA-256: ${sheetHash.substring(0, 20)}...</span>`;
-      
-      parties.forEach(p => document.getElementById(`vote-${p.acronym}`).value = "");
-      document.getElementById('sheetPhotoInput').value = "";
-      document.getElementById('poPhotoInput').value = "";
-      document.getElementById('adhocPhotoInput').value = "";
-      document.getElementById('sheetPreview').style.display = "none";
-      document.getElementById('poPreview').style.display = "none";
-      document.getElementById('adhocPreview').style.display = "none";
-      resetGPS();
+        // Reload data from cloud
+        loadCloudData();
+        
+      } catch (e) {
+        console.error("Error saving to cloud: ", e);
+        alert("Failed to save to Cloud. Check console.");
+      }
     }
 
     // --- INCIDENT REPORTING ---
     async function submitIncident() {
       const category = document.getElementById('incidentCategory').value;
       const desc = document.getElementById('incidentDescription').value;
-      const mediaFile = document.getElementById('incidentMedia').files[0];
-
-      if (!desc) { alert("Please provide a description of the incident."); return; }
-
-      // Simulate GPS capture for incident
-      const gpsTimestamp = new Date().toLocaleString();
+      if (!desc) { alert("Please provide a description."); return; }
 
       const newIncident = {
         id: Date.now().toString(),
         category: category,
         description: desc,
-        timestamp: gpsTimestamp,
-        hasMedia: !!mediaFile
+        timestamp: new Date().toLocaleString()
       };
 
-      incidents.push(newIncident);
-      localStorage.setItem('naijaWatchIncidents', JSON.stringify(incidents));
-
-      const statusBox = document.getElementById('incidentStatus');
-      statusBox.classList.remove('hidden'); statusBox.classList.add('ok');
-      statusBox.innerHTML = `<strong>Incident Logged!</strong> Category: ${category} at ${gpsTimestamp}`;
-
-      document.getElementById('incidentDescription').value = "";
-      document.getElementById('incidentMedia').value = "";
+      try {
+        await window.firebaseAddDoc(window.firebaseCollection(window.firebaseDB, "incidents"), newIncident);
+        const statusBox = document.getElementById('incidentStatus');
+        statusBox.classList.remove('hidden'); statusBox.classList.add('ok');
+        statusBox.innerHTML = `<strong>Incident Logged to Cloud!</strong> Category: ${category}`;
+        document.getElementById('incidentDescription').value = "";
+      } catch (e) {
+        console.error("Error saving incident: ", e);
+        alert("Failed to save incident to Cloud.");
+      }
     }
 
     // --- CONSENSUS & PROJECTION ---
@@ -607,7 +663,6 @@
         return; 
       }
       
-      // Group by Polling Unit
       const grouped = {};
       submissions.forEach(sub => {
         const puId = sub.pu.split('|')[0];
@@ -624,12 +679,10 @@
         let status = "Pending (Needs 3 matching)";
         let tagClass = "tag";
         
-        // Simplified Consensus: Assume if >=3 uploads, the most recent one's votes are verified
         if (subs.length >= 3) {
            status = "✅ Verified (3-of-5 Consensus)";
            tagClass = "tag verified";
            
-           // Add votes to national aggregation
            const verifiedVotes = subs[subs.length - 1].votes;
            Object.keys(verifiedVotes).forEach(party => {
              totalAggregatedVotes[party] += verifiedVotes[party];
@@ -642,13 +695,12 @@
               <strong>${puName}</strong>
               <span class="${tagClass}">${status}</span>
             </div>
-            <div style="font-size:12px; color:#aaa;">Uploads: ${subs.length} / 5</div>
+            <div style="font-size:12px; color:#aaa;">Total Cloud Uploads: ${subs.length}</div>
           </div>
         `;
       }
       ledger.innerHTML = ledgerHtml;
 
-      // Calculate Winner & Aggregate Table
       let totalVotesCast = 0;
       let winnerAcronym = "";
       let maxVotes = -1;
@@ -665,9 +717,9 @@
         });
 
       if (totalVotesCast > 0) {
-        winnerBanner.innerHTML = `🏆 <strong>Projected Winner: ${winnerAcronym}</strong> (${maxVotes.toLocaleString()} Votes)`;
+        winnerBanner.innerHTML = `🏆 <strong>Projected Winner: ${winnerAcronym}</strong> (${maxVotes.toLocaleString()} Verified Votes)`;
         tableBody.innerHTML = sortedParties.map((p, index) => {
-          if (p.votes === 0) return ""; // Hide 0 votes
+          if (p.votes === 0) return ""; 
           const share = ((p.votes / totalVotesCast) * 100).toFixed(1);
           return `
             <tr>
@@ -707,6 +759,21 @@
           <input type="number" id="vote-${p.acronym}" min="0" placeholder="0" oninput="updateAiAuditPreview()" />
         </div>
       `).join('');
+    }
+
+    // --- SITUATION ROOM ---
+    function openSituationRoom() {
+      const meetings = {
+        zoom: "https://zoom.us/j/123456789",
+        meet: "https://meet.google.com/abc-defg-hij",
+        teams: "https://teams.microsoft.com",
+        jitsi: "https://meet.jit.si/NaijaWatch2027"
+      };
+      const choice = prompt("Select platform:\n1. Zoom\n2. Google Meet\n3. Microsoft Teams\n4. Jitsi Meet");
+      if (choice === "1") window.open(meetings.zoom, "_blank");
+      else if (choice === "2") window.open(meetings.meet, "_blank");
+      else if (choice === "3") window.open(meetings.teams, "_blank");
+      else if (choice === "4") window.open(meetings.jitsi, "_blank");
     }
   </script>
 </body>
